@@ -438,6 +438,17 @@
         .from('[data-highlights-cards] .highlights__item', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.15 }, 0.2);
     }
 
+    /* ---------- why choose us section ---------- */
+    var whyChoose = document.querySelector('.why-choose');
+    if (whyChoose) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.why-choose', start: 'top 78%', once: true }
+      })
+        .from('[data-why-intro]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0)
+        .from('[data-why-header]', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out' }, 0.1)
+        .from('[data-why-card]', { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', stagger: 0.09 }, 0.25);
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {
