@@ -3034,11 +3034,15 @@ body {
   z-index: 2;
   isolation: isolate;
   overflow: hidden;
-  background-color: #080c14;
+  background-color: #06090e;
   background-image:
+    url("../images/footer-bg.png"),
     radial-gradient(ellipse 900px 500px at 15% 0%, rgba(127, 209, 193, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse 700px 450px at 85% 20%, rgba(26, 117, 102, 0.07) 0%, transparent 70%),
     linear-gradient(180deg, #090e17 0%, #06080d 100%);
+  background-position: center bottom, center top, center top, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, auto, auto, auto;
   color: #ffffff;
   font-family: var(--font-sans);
   padding-top: clamp(3.5rem, 6vw, 5.5rem);
@@ -3221,7 +3225,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(1.75rem, 3.2vw, 3.5rem);
-  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: clamp(6rem, 12vw, 14rem);
 }
 
 .footer-col {
@@ -3348,29 +3352,13 @@ body {
   transform: translateY(0);
 }
 
-/* ---------- Hospital Architectural Skyline Panorama (Edge to Edge) ---------- */
-.footer-skyline {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  pointer-events: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.footer-skyline__img {
-  width: 100%;
-  max-width: 100%;
-  height: clamp(120px, 16vw, 280px);
-  object-fit: cover;
-  object-position: center bottom;
-  display: block;
-}
-
 /* ---------- BOTTOM BAR ---------- */
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-block: 1.5rem;
+  background: rgba(6, 9, 14, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding-block: 1.25rem;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.5);
 }

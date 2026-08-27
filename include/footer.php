@@ -126,11 +126,6 @@
 
     </div>
 
-    <!-- Hospital Architectural Skyline Panorama (matching reference layout) -->
-    <div class="footer-skyline" aria-hidden="true" data-footer-skyline>
-      <img class="footer-skyline__img" src="assets/images/footer-bg.png" alt="" loading="lazy" decoding="async">
-    </div>
-
     <!-- Bottom Bar -->
     <div class="footer-bottom" data-footer-bottom>
       <div class="footer-bottom__inner">

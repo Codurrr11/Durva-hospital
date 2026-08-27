@@ -425,8 +425,7 @@
       })
         .from('[data-footer-top]', { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, 0)
         .from('[data-footer-col]', { opacity: 0, y: 25, duration: 0.7, ease: 'power3.out', stagger: 0.1 }, 0.15)
-        .from('[data-footer-skyline]', { opacity: 0, y: 20, duration: 1, ease: 'power2.out' }, 0.35)
-        .from('[data-footer-bottom]', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.45);
+        .from('[data-footer-bottom]', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35);
     }
   }
 
