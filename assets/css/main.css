@@ -4279,7 +4279,7 @@ body {
 }
 
 .why-choose__label {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: var(--fw-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4297,10 +4297,10 @@ body {
 .why-choose__title {
   margin: 0;
   font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
-  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.038em;
   color: #0a0d12;
   text-wrap: pretty;
 }
@@ -4311,22 +4311,22 @@ body {
   grid-row: 2;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
   padding-right: clamp(1rem, 2vw, 2.5rem);
   align-self: start;
 }
 
 .why-choose__lead {
-  font-size: clamp(0.9375rem, 1.05vw, 1rem);
-  line-height: 1.68;
-  color: #5d6b7e;
+  font-size: clamp(1.0625rem, 1.25vw, 1.25rem);
+  line-height: 1.62;
+  color: #334155;
   margin: 0;
   text-wrap: pretty;
 }
 
 .why-choose__statement {
-  font-size: clamp(0.9375rem, 1.05vw, 1rem);
-  line-height: 1.5;
+  font-size: clamp(1.125rem, 1.35vw, 1.35rem);
+  line-height: 1.45;
   font-weight: 700;
   color: #0a0d12;
   margin: 0;
@@ -4340,7 +4340,7 @@ body {
   border: none;
   border-radius: 0;
   padding: clamp(2.5rem, 3.5vw, 3.5rem) clamp(2rem, 2.8vw, 2.8rem);
-  min-height: clamp(420px, 46vh, 480px);
+  min-height: clamp(440px, 48vh, 500px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -4393,10 +4393,10 @@ body {
 .why-card__title {
   margin: 0;
   font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
-  font-size: clamp(1.4rem, 1.9vw, 1.65rem);
+  font-size: clamp(1.5rem, 2.1vw, 1.85rem);
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: #0a0d12;
   margin-bottom: auto;
 }
@@ -4409,7 +4409,7 @@ body {
 
 .why-card__tagline {
   margin: 0 0 0.65rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: var(--fw-semibold);
   letter-spacing: 0.01em;
   color: #e54d38;
@@ -4418,9 +4418,9 @@ body {
 
 .why-card__desc {
   margin: 0;
-  font-size: 0.8125rem;
-  line-height: 1.68;
-  color: #64748b;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #475467;
   text-wrap: pretty;
 }
 
