@@ -2588,43 +2588,30 @@ body {
   z-index: 1;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(2rem, 5vw, 4.5rem) var(--gutter);
+  padding: clamp(4.5rem, 7vw, 7.5rem) var(--gutter);
   font-family: var(--font-sans);
   color: var(--c-paper-ink);
-  background-color: #c9d8cb;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% 10%, rgba(127, 209, 193, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 450px at 85% 80%, rgba(26, 117, 102, 0.1) 0%, transparent 70%),
+    linear-gradient(145deg, #f4faf8 0%, #e9f5f2 50%, #f7fbf9 100%);
+  border-top: 1px solid rgba(26, 117, 102, 0.08);
+  border-bottom: 1px solid rgba(26, 117, 102, 0.08);
 
-  --blog-card-w: clamp(13rem, 25vw, 23rem);
-  --blog-gap: clamp(0.75rem, 1.1vw, 1.125rem);
+  --blog-card-w: clamp(14rem, 26vw, 24rem);
+  --blog-gap: clamp(0.875rem, 1.2vw, 1.25rem);
   --blog-radius: 16px;
 }
 
-/* ---------- media / backdrop image ---------- */
-.blog__media {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.blog__bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
-}
-
-/* ---------- the panel ---------- */
+/* ---------- the panel (Full Space) ---------- */
 .blog__panel {
   max-width: 82rem;
   margin-inline: auto;
-  padding: clamp(1.75rem, 3.5vw, 3.25rem);
-  border-radius: clamp(20px, 2.2vw, 32px);
-  background-color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 32px 64px -16px rgba(10, 25, 20, 0.22),
-    0 12px 28px -10px rgba(10, 25, 20, 0.12);
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 /* ==========================================================================
