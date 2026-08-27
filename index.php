@@ -425,6 +425,10 @@ if (!function_exists('cc_src')) {
       links to "#" — point them at real posts before this goes live.
     -->
     <section class="blog" id="blog" aria-labelledby="blog-title">
+      <div class="blog__media" aria-hidden="true">
+        <img class="blog__bg-img" src="https://images.unsplash.com/photo-1489367874814-f5d040621dd8?q=80&w=1146&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" loading="lazy" decoding="async" draggable="false">
+      </div>
+
       <div class="blog__panel">
 
         <div class="blog__head">
@@ -534,8 +538,4 @@ if (!function_exists('cc_src')) {
 
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="assets/js/main.js"></script>
-</body>
-</html>
+<?php include __DIR__ . '/include/footer.php'; ?>
