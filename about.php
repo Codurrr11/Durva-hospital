@@ -4,25 +4,35 @@ include __DIR__ . '/include/header.php';
 ?>
 
   <main>
-    <!-- About Page Hero / Header Banner -->
+    <!-- About Page Compact Hero / Header Banner -->
     <section class="about-hero" id="about-hero">
       <div class="about-hero__media" aria-hidden="true">
         <img class="about-hero__bg-img" src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" decoding="async">
         <div class="about-hero__veil"></div>
       </div>
 
-      <div class="about-hero__content">
-        <span class="about-hero__badge">About Durva Hospital</span>
-        <h1 class="about-hero__title">
-          Pioneering Advanced Orthopaedics<br>
-          <em class="about-hero__title-em">&amp; Compassionate Care</em>
-        </h1>
-        <p class="about-hero__desc">
-          Restoring pain-free movement through world-class arthroscopy, precision joint replacement, and dedicated patient-first rehabilitation in Kota.
-        </p>
-        <div class="about-hero__actions">
-          <a class="btn btn--light" href="#appointment">Book Consultation</a>
-          <a class="btn btn--ghost" href="#about-overview">Explore Our Story</a>
+      <div class="about-hero__inner">
+        <!-- Left Bottom: Breadcrumbs -->
+        <div class="about-hero__left">
+          <nav class="about-breadcrumbs" aria-label="Breadcrumb">
+            <ol class="about-breadcrumbs__list">
+              <li class="about-breadcrumbs__item">
+                <a class="about-breadcrumbs__link" href="index.php">Home</a>
+              </li>
+              <li class="about-breadcrumbs__sep" aria-hidden="true">/</li>
+              <li class="about-breadcrumbs__item" aria-current="page">
+                <span>About Us</span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Right Bottom: Title and Paragraph -->
+        <div class="about-hero__right">
+          <h1 class="about-hero__title">About Durva Hospital</h1>
+          <p class="about-hero__desc">
+            Pioneering advanced orthopaedics, arthroscopy, and compassionate patient care in Kota.
+          </p>
         </div>
       </div>
     </section>
