@@ -245,10 +245,10 @@ include __DIR__ . '/include/header.php';
 
           <!-- Category Filter Tabs (Pill Capsule) -->
           <div class="impact-tabs" role="tablist" aria-label="Impact categories">
-            <button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-tab-target="sports">Sports &amp; Athletics</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="mobility">Daily Mobility</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="longevity">Joint Longevity</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="work">Work &amp; Activity</button>
+            <button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-tab-target="sports" onclick="switchImpactTab('sports', this)">Sports &amp; Athletics</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="mobility" onclick="switchImpactTab('mobility', this)">Daily Mobility</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="longevity" onclick="switchImpactTab('longevity', this)">Joint Longevity</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="work" onclick="switchImpactTab('work', this)">Work &amp; Activity</button>
           </div>
         </div>
 
@@ -583,6 +583,43 @@ include __DIR__ . '/include/header.php';
 
       </div>
     </section>
+
+    <script>
+      function switchImpactTab(targetId, btn) {
+        var impactSec = document.querySelector('.impact-sec');
+        if (!impactSec) return;
+
+        var tabs = impactSec.querySelectorAll('[data-tab-target]');
+        var panels = impactSec.querySelectorAll('[data-panel-id]');
+
+        tabs.forEach(function (t) {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+
+        if (btn) {
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+        }
+
+        panels.forEach(function (panel) {
+          if (panel.getAttribute('data-panel-id') === targetId) {
+            panel.classList.add('is-active');
+            panel.style.display = 'block';
+            var cards = panel.querySelectorAll('.impact-card');
+            if (window.gsap) {
+              gsap.fromTo(cards,
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 0.4, stagger: 0.06, ease: 'power2.out', clearProps: 'transform,opacity' }
+              );
+            }
+          } else {
+            panel.classList.remove('is-active');
+            panel.style.display = 'none';
+          }
+        });
+      }
+    </script>
 
   </main>
 
