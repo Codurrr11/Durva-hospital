@@ -122,6 +122,8 @@
           </div>
         </div>
 
+      </div>
+
       <!-- Bottom Bar (sitting cleanly above the skyline, matching reference) -->
       <div class="footer-bottom" data-footer-bottom>
         <div class="footer-bottom__inner">

@@ -3351,7 +3351,8 @@ body {
 /* ---------- BOTTOM BAR (Sitting cleanly above skyline illustration) ---------- */
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-block: 1.75rem clamp(2rem, 3.5vw, 3rem);
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -3393,21 +3394,23 @@ body {
   font-size: 0.65rem;
 }
 
-/* ---------- Hospital Architectural Skyline Panorama (At Very Bottom Edge) ---------- */
+/* ---------- Hospital Architectural Skyline Panorama (Edge to Edge at Very Bottom) ---------- */
 .footer-skyline {
   position: relative;
   width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   line-height: 0;
   pointer-events: none;
-  margin-top: 0;
 }
 
 .footer-skyline__img {
   width: 100%;
+  min-width: 100%;
   max-width: 100%;
   height: auto;
-  max-height: clamp(140px, 20vw, 280px);
+  max-height: clamp(160px, 24vw, 340px);
   object-fit: cover;
   object-position: center bottom;
   display: block;
