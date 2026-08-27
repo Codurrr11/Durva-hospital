@@ -118,7 +118,11 @@ include __DIR__ . '/include/header.php';
             <!-- Header Meta Bar (Square marker & Dual numbering) -->
             <div class="highlights__meta">
               <div class="highlights__meta-left">
-                <span class="highlights__marker" aria-hidden="true"></span>
+                <span class="highlights__marker" aria-hidden="true">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+                    <rect width="8" height="8" rx="1"/>
+                  </svg>
+                </span>
                 <span class="highlights__index">00—1</span>
               </div>
               <span class="highlights__index highlights__index--right">00—1</span>
@@ -132,11 +136,15 @@ include __DIR__ . '/include/header.php';
 
             <!-- Caption Row -->
             <div class="highlights__caption">
-              <span class="highlights__arrow" aria-hidden="true">&rarr;</span>
+              <span class="highlights__arrow" aria-hidden="true">
+                <svg class="highlights__arrow-icon" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h9.5M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
               <p class="highlights__text">
                 <strong class="highlights__label">Recovery Program</strong>
                 <span class="highlights__dot" aria-hidden="true">&bull;</span>
-                <span>A personalized rehabilitation strategy that restores mobility after joint surgery.</span>
+                <span class="highlights__desc">A personalized rehabilitation strategy that restores mobility after joint surgery.</span>
               </p>
             </div>
           </article>
@@ -146,7 +154,11 @@ include __DIR__ . '/include/header.php';
             <!-- Header Meta Bar (Square marker & Dual numbering) -->
             <div class="highlights__meta">
               <div class="highlights__meta-left">
-                <span class="highlights__marker" aria-hidden="true"></span>
+                <span class="highlights__marker" aria-hidden="true">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+                    <rect width="8" height="8" rx="1"/>
+                  </svg>
+                </span>
                 <span class="highlights__index">00—2</span>
               </div>
               <span class="highlights__index highlights__index--right">00—2</span>
@@ -163,6 +175,8 @@ include __DIR__ . '/include/header.php';
             <div class="highlights__caption">
               <p class="highlights__text">
                 <strong class="highlights__label">Durva Specialist Care</strong>
+                <span class="highlights__dot" aria-hidden="true">&bull;</span>
+                <span class="highlights__desc">Advanced minimally invasive orthopaedic center in Kota.</span>
               </p>
             </div>
           </article>

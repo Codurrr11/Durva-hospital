@@ -4054,14 +4054,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0.625rem;
-  border-bottom: 1px solid #14181f;
-  margin-bottom: 0.75rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1.5px solid #0a0e14;
+  margin-bottom: 0.85rem;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: var(--fw-medium);
-  letter-spacing: 0.02em;
-  color: #14181f;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #0a0e14;
 }
 
 .highlights__meta-left {
@@ -4071,16 +4071,14 @@ body {
 }
 
 .highlights__marker {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  background-color: #14181f;
-  border-radius: 1px;
+  display: inline-flex;
+  align-items: center;
+  color: #0a0e14;
 }
 
 .highlights__index {
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
 }
 
 .highlights__index--right {
@@ -4093,7 +4091,7 @@ body {
   width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -4169,35 +4167,58 @@ body {
 /* ---------- Caption Row ---------- */
 .highlights__caption {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-top: 0.875rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: #14181f;
+  align-items: flex-start;
+  gap: 0.625rem;
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #0a0e14;
 }
 
 .highlights__arrow {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #14181f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #0a0e14;
   flex-shrink: 0;
+  margin-top: 0.15rem;
+  transition: transform 300ms var(--ease-out);
+}
+
+.highlights__item:hover .highlights__arrow {
+  transform: translateX(4px);
+}
+
+.highlights__arrow-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .highlights__text {
   margin: 0;
-  color: #4a5568;
+  color: #475467;
+  font-size: 0.9375rem;
+  line-height: 1.55;
 }
 
 .highlights__label {
   font-weight: 700;
-  color: #0a0d12;
+  color: #0a0e14;
+  letter-spacing: -0.01em;
 }
 
 .highlights__dot {
   display: inline-block;
-  margin-inline: 0.25rem;
-  color: #14181f;
+  margin-inline: 0.35rem;
+  color: #98a2b3;
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
+.highlights__desc {
+  color: #475467;
 }
 
 /* ---------- Responsive ---------- */
