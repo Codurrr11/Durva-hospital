@@ -3348,19 +3348,27 @@ body {
   transform: translateY(0);
 }
 
-/* ---------- Decorative Medical Pulse Motif Silhouette ---------- */
-.site-footer__motif {
+/* ---------- Hospital Architectural Skyline Panorama ---------- */
+.footer-skyline {
+  position: relative;
   width: 100%;
   overflow: hidden;
   line-height: 0;
   pointer-events: none;
-  opacity: 0.85;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.site-footer__motif-svg {
+.footer-skyline__img {
   width: 100%;
-  height: clamp(34px, 4vw, 54px);
+  max-width: 82rem;
+  margin-inline: auto;
+  height: clamp(100px, 14vw, 210px);
+  object-fit: contain;
+  object-position: center bottom;
   display: block;
+  opacity: 0.94;
+  mix-blend-mode: lighten;
+  filter: drop-shadow(0 -8px 24px rgba(127, 209, 193, 0.12));
 }
 
 /* ---------- BOTTOM BAR ---------- */

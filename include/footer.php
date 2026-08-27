@@ -126,16 +126,9 @@
 
     </div>
 
-    <!-- Decorative Medical/Anatomical Pulse Motif Silhouette -->
-    <div class="site-footer__motif" aria-hidden="true" data-footer-motif>
-      <svg class="site-footer__motif-svg" viewBox="0 0 1440 64" preserveAspectRatio="none" fill="none">
-        <path class="motif-line motif-line--base" d="M0 42h220l12-14 18 24 15-38 18 42 14-14h180c40 0 65-18 95-18s55 18 95 18h160l12-18 16 30 14-44 18 50 16-18h180c35 0 60-14 90-14s55 14 90 14h167" stroke="rgba(127, 209, 193, 0.16)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path class="motif-line motif-line--glow" d="M0 42h220l12-14 18 24 15-38 18 42 14-14h180c40 0 65-18 95-18s55 18 95 18h160l12-18 16 30 14-44 18 50 16-18h180c35 0 60-14 90-14s55 14 90 14h167" stroke="rgba(127, 209, 193, 0.3)" stroke-width="1" stroke-dasharray="8 6"/>
-        <circle cx="283" cy="14" r="3" fill="rgba(127, 209, 193, 0.6)"/>
-        <circle cx="283" cy="14" r="7" stroke="rgba(127, 209, 193, 0.25)" stroke-width="1"/>
-        <circle cx="927" cy="12" r="3" fill="rgba(127, 209, 193, 0.6)"/>
-        <circle cx="927" cy="12" r="7" stroke="rgba(127, 209, 193, 0.25)" stroke-width="1"/>
-      </svg>
+    <!-- Hospital Architectural Skyline Panorama (matching reference layout) -->
+    <div class="footer-skyline" aria-hidden="true" data-footer-skyline>
+      <img class="footer-skyline__img" src="assets/images/hospital-skyline.jpg" alt="" loading="lazy" decoding="async">
     </div>
 
     <!-- Bottom Bar -->
