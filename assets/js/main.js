@@ -390,6 +390,22 @@
       });
     }
 
+    /* ---------- doctor CTA (ACL page) ----------
+       Only present on the service pages; the guard means the home page skips
+       it rather than throwing on a null trigger. */
+    var dctaItems = gsap.utils.toArray('[data-dcta-item]');
+    if (dctaItems.length) {
+      gsap.from(dctaItems, {
+        opacity: 0,
+        y: 26,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.09,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '[data-dcta]', start: 'top 84%', once: true }
+      });
+    }
+
     /* ---------- footer ----------
        One stagger across the whole block. The footer is the last thing on
        the page, so it is usually already in view by the time it is reached —

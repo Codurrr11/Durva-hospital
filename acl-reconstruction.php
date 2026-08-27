@@ -584,6 +584,63 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Doctor CTA ================= -->
+    <section class="dcta" id="acl-specialist" aria-labelledby="dcta-title">
+      <div class="dcta__inner" data-dcta>
+
+        <div class="dcta__body">
+
+          <p class="dcta__eyebrow" data-dcta-item>
+            <span class="dcta__eyebrow-rule" aria-hidden="true"></span>
+            Your ACL Specialist
+          </p>
+
+          <h2 class="dcta__title" id="dcta-title" data-dcta-item>
+            Detailed evaluation.<br>
+            <em class="dcta__title-em">Individual surgical planning.</em>
+          </h2>
+
+          <p class="dcta__lead" data-dcta-item>
+            Dr. Hitesh Mangal is an orthopaedic surgeon in Kota with a clinical
+            focus on arthroscopy, sports injuries and joint replacement — ACL and
+            PCL injuries, meniscus and cartilage damage, and complex knee and
+            shoulder sports injuries.
+          </p>
+
+          <ul class="dcta__list" data-dcta-item>
+            <li class="dcta__item">MBBS and MS in Orthopaedics</li>
+            <li class="dcta__item">Fellowship training in arthroscopy, sports injury and joint replacement</li>
+            <li class="dcta__item">Management of associated meniscus and cartilage injuries</li>
+            <li class="dcta__item">Structured rehabilitation and follow-up</li>
+          </ul>
+
+          <div class="dcta__actions" data-dcta-item>
+            <a class="dcta__cta" href="index.php#doctors">
+              View doctor profile
+              <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="dcta__tel" href="tel:+917014584948">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.6 2.7 7 5.4 5.6 6.9c.5 1.4 2.1 3 3.5 3.5l1.5-1.4 2.7 1.4-.3 2.2c-.1.6-.6 1-1.2 1C7.4 13.5 2.5 8.6 2.4 3.2c0-.6.4-1.1 1-1.2l2.2-.3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              +91 70145 84948
+            </a>
+          </div>
+
+        </div>
+
+        <figure class="dcta__figure" data-dcta-figure>
+          <span class="dcta__ring" aria-hidden="true"></span>
+          <img class="dcta__img" src="assets/images/doctor.jpg"
+               alt="Dr. Hitesh Mangal, orthopaedic surgeon"
+               width="683" height="1024" loading="lazy" decoding="async">
+          <figcaption class="dcta__caption">
+            <span class="dcta__caption-name">Dr. Hitesh Mangal</span>
+            <span class="dcta__caption-role">Knee &amp; Shoulder Specialist</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </section>
+
     <script>
       function switchImpactTab(targetId, btn) {
         var impactSec = document.querySelector('.impact-sec');
