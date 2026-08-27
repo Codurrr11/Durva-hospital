@@ -5011,6 +5011,21 @@ body {
   box-shadow: 0 2px 8px rgba(14, 22, 34, 0.2);
 }
 
+/* Multi-Panel Container */
+.impact-panels {
+  position: relative;
+  width: 100%;
+}
+
+.impact-panel {
+  display: none;
+  width: 100%;
+}
+
+.impact-panel.is-active {
+  display: block;
+}
+
 /* 4-Card Grid Row */
 .impact-cards {
   display: grid;

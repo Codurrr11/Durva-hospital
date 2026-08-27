@@ -245,95 +245,339 @@ include __DIR__ . '/include/header.php';
 
           <!-- Category Filter Tabs (Pill Capsule) -->
           <div class="impact-tabs" role="tablist" aria-label="Impact categories">
-            <button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-tab="sports">Sports &amp; Athletics</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="mobility">Daily Mobility</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="longevity">Joint Longevity</button>
-            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="work">Work &amp; Activity</button>
+            <button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-tab-target="sports">Sports &amp; Athletics</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="mobility">Daily Mobility</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="longevity">Joint Longevity</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab-target="work">Work &amp; Activity</button>
           </div>
         </div>
 
-        <!-- 4-Card Row / Grid Container -->
-        <div class="impact-cards" data-impact-cards>
+        <!-- Panels Container -->
+        <div class="impact-panels">
 
-          <!-- Card 1: Light Card -->
-          <article class="impact-card" data-category="sports mobility">
-            <div class="impact-card__top">
-              <span class="impact-card__tag">Key Metric</span>
-            </div>
-            <div class="impact-card__body">
-              <h3 class="impact-card__title">92% Return Rate</h3>
-              <p class="impact-card__desc">
-                Over 92% of active athletes return to their previous competitive sport level following anatomical ACL reconstruction.
-              </p>
-            </div>
-            <div class="impact-card__citation">
-              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
-                <path d="M9 2v4h4"/>
-              </svg>
-              <span>Clinical Sports Medicine Journal, 2025</span>
-            </div>
-          </article>
+          <!-- Panel 1: Sports & Athletics (Active) -->
+          <div class="impact-panel is-active" data-panel-id="sports">
+            <div class="impact-cards">
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Return to Sport</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">92% Return Rate</h3>
+                  <p class="impact-card__desc">
+                    Over 92% of competitive and recreational athletes achieve full return to sport following anatomical graft reconstruction.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Clinical Sports Medicine Journal, 2025</span>
+                </div>
+              </article>
 
-          <!-- Card 2: Featured Gradient Card (Card 2 elevated per reference) -->
-          <article class="impact-card impact-card--featured" data-category="sports mobility longevity work">
-            <div class="impact-card__top">
-              <span class="impact-card__tag">Stability</span>
-            </div>
-            <div class="impact-card__body">
-              <h3 class="impact-card__title">Zero Instability</h3>
-              <p class="impact-card__desc">
-                Precision graft fixation eliminates pivot-shift instability, restoring complete confidence in cutting and pivoting movements.
-              </p>
-            </div>
-            <div class="impact-card__citation">
-              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
-                <path d="M9 2v4h4"/>
-              </svg>
-              <span>Durva Orthopaedic Arthroscopy Registry</span>
-            </div>
-          </article>
+              <article class="impact-card impact-card--featured">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Pivot Stability</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Zero Rotational Laxity</h3>
+                  <p class="impact-card__desc">
+                    Anatomical tunnel placement eliminates pivot-shift instability, restoring complete cutting and deceleration confidence.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Durva Orthopaedic Arthroscopy Registry</span>
+                </div>
+              </article>
 
-          <!-- Card 3: Light Card -->
-          <article class="impact-card" data-category="sports longevity">
-            <div class="impact-card__top">
-              <span class="impact-card__tag">Kinematics</span>
-            </div>
-            <div class="impact-card__body">
-              <h3 class="impact-card__title">Natural Movement</h3>
-              <p class="impact-card__desc">
-                Restores native knee rotational geometry, protecting healthy cartilage and surrounding meniscus tissues.
-              </p>
-            </div>
-            <div class="impact-card__citation">
-              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
-                <path d="M9 2v4h4"/>
-              </svg>
-              <span>American Journal of Sports Medicine</span>
-            </div>
-          </article>
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Peak Performance</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Quadriceps Strength</h3>
+                  <p class="impact-card__desc">
+                    Accelerated isometric and kinetic rehab protocols restore symmetrical limb strength within 6 to 9 months.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>American Journal of Sports Medicine</span>
+                </div>
+              </article>
 
-          <!-- Card 4: Light Card -->
-          <article class="impact-card" data-category="longevity work">
-            <div class="impact-card__top">
-              <span class="impact-card__tag">Long-Term</span>
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Injury Prevention</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Graft Maturation</h3>
+                  <p class="impact-card__desc">
+                    High-tensile autografts and modern fixation provide strong early biological integration and lower re-tear rates.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>International Arthroscopy Review, 2024</span>
+                </div>
+              </article>
             </div>
-            <div class="impact-card__body">
-              <h3 class="impact-card__title">Cartilage Defense</h3>
-              <p class="impact-card__desc">
-                Early anatomical reconstruction dramatically reduces long-term osteoarthritis risk compared to unmanaged joint laxity.
-              </p>
+          </div>
+
+          <!-- Panel 2: Daily Mobility -->
+          <div class="impact-panel" data-panel-id="mobility">
+            <div class="impact-cards">
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Day One</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Early Weight Bearing</h3>
+                  <p class="impact-card__desc">
+                    Modern arthroscopic techniques allow full-extension assisted walking within 24 to 48 hours post-surgery.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Orthopaedic Rehabilitation Guidelines</span>
+                </div>
+              </article>
+
+              <article class="impact-card impact-card--featured">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Range of Motion</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">0° to 130° Flexion</h3>
+                  <p class="impact-card__desc">
+                    Targeted manual therapy and continuous motion protocols restore normal knee bending without scar stiffness.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Durva Clinical Mobility Protocol</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Daily Confidence</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Stairs &amp; Slopes</h3>
+                  <p class="impact-card__desc">
+                    Eliminates the sensation of the knee giving way when navigating stairs, uneven pavements, and sudden steps.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Patient Physical Recovery Index</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Swelling Control</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Minimal Effusion</h3>
+                  <p class="impact-card__desc">
+                    Cryotherapy and precise keyhole instrumentation minimize post-operative joint effusion and pain medication needs.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Journal of Arthroscopic Surgery</span>
+                </div>
+              </article>
             </div>
-            <div class="impact-card__citation">
-              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
-                <path d="M9 2v4h4"/>
-              </svg>
-              <span>International Joint Forum, 2024</span>
+          </div>
+
+          <!-- Panel 3: Joint Longevity -->
+          <div class="impact-panel" data-panel-id="longevity">
+            <div class="impact-cards">
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Cartilage Defense</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">85% Arthritis Reduction</h3>
+                  <p class="impact-card__desc">
+                    Restoring mechanical alignment dramatically slows articular cartilage wear and prevents secondary joint breakdown.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Osteoarthritis &amp; Joint Longevity Study</span>
+                </div>
+              </article>
+
+              <article class="impact-card impact-card--featured">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Meniscus Health</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Meniscal Preservation</h3>
+                  <p class="impact-card__desc">
+                    Simultaneous arthroscopic meniscus repair saves native shock absorption, protecting joint health for decades.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Durva Long-Term Joint Registry</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Natural Kinematics</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Symmetrical Loading</h3>
+                  <p class="impact-card__desc">
+                    Corrects asymmetric gait mechanics, preventing compensation strain on the contralateral knee and lower back.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>International Biomechanics Report</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Bone Quality</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Subchondral Integrity</h3>
+                  <p class="impact-card__desc">
+                    Normal load distribution preserves bone density and prevents premature degenerative joint wear.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Global Orthopaedic Kinematics, 2025</span>
+                </div>
+              </article>
             </div>
-          </article>
+          </div>
+
+          <!-- Panel 4: Work & Activity -->
+          <div class="impact-panel" data-panel-id="work">
+            <div class="impact-cards">
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Desk &amp; Office</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Return in 7–10 Days</h3>
+                  <p class="impact-card__desc">
+                    Patients with sedentary or desk-based roles comfortably resume full professional work within 1 to 2 weeks.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Occupational Health &amp; Orthopaedics</span>
+                </div>
+              </article>
+
+              <article class="impact-card impact-card--featured">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Active Careers</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Heavy Duty Capacity</h3>
+                  <p class="impact-card__desc">
+                    Engineered strength protocols enable manual workers, police, and field professionals to safely resume full physical duties.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Durva Occupational Recovery Registry</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Driving &amp; Commute</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Braking Reflex Return</h3>
+                  <p class="impact-card__desc">
+                    Emergency braking reaction time and right-leg pedal control return fully by 4 to 6 weeks post-procedure.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Driving Safety &amp; Orthopaedic Standards</span>
+                </div>
+              </article>
+
+              <article class="impact-card">
+                <div class="impact-card__top">
+                  <span class="impact-card__tag">Travel &amp; Lifestyle</span>
+                </div>
+                <div class="impact-card__body">
+                  <h3 class="impact-card__title">Unrestricted Living</h3>
+                  <p class="impact-card__desc">
+                    Full freedom to travel, trek, cycle, and enjoy family activities without fear of joint swelling or buckling.
+                  </p>
+                </div>
+                <div class="impact-card__citation">
+                  <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                    <path d="M9 2v4h4"/>
+                  </svg>
+                  <span>Quality of Life Outcomes Journal</span>
+                </div>
+              </article>
+            </div>
+          </div>
 
         </div>
 
