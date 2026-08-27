@@ -417,14 +417,15 @@
       }
     }
 
-    /* ---------- about page: story section ---------- */
-    var story = document.querySelector('.story');
-    if (story) {
+    /* ---------- about page: founding section ---------- */
+    var founding = document.querySelector('.founding');
+    if (founding) {
       gsap.timeline({
-        scrollTrigger: { trigger: '.story', start: 'top 80%', once: true }
+        scrollTrigger: { trigger: '.founding', start: 'top 78%', once: true }
       })
-        .from('[data-story-card]', { opacity: 0, y: 40, scale: 0.96, duration: 1, ease: 'power3.out' }, 0)
-        .from('[data-story-content] > *', { opacity: 0, y: 28, duration: 0.85, ease: 'power3.out', stagger: 0.12 }, 0.15);
+        .from('[data-founding-head]', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out' }, 0)
+        .from('[data-founding-copy]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0.2)
+        .from('[data-founding-portrait]', { opacity: 0, y: 45, scale: 0.96, duration: 1.1, ease: 'power3.out' }, 0.15);
     }
 
     /* ---------- footer ---------- */

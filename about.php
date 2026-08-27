@@ -39,58 +39,70 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
-    <!-- ================= Our Story ================= -->
-    <section class="story" id="our-story" aria-labelledby="story-title">
-      <div class="story__container">
+    <!-- ================= Founding Story (Full-Bleed Obsidian Canvas) ================= -->
+    <section class="founding" id="our-story" aria-labelledby="founding-headline">
+      <div class="founding__inner">
 
-        <div class="story__grid">
+        <!-- Top Giant Statement Headline -->
+        <header class="founding__header" data-founding-head>
+          <p class="founding__label">Clinical Leadership &bull; Founder's Vision</p>
+          <h2 class="founding__headline" id="founding-headline">
+            Where surgical precision meets <em class="founding__serif">patient-first</em> healing.
+          </h2>
+        </header>
 
-          <!-- Left Column: Copy & Actions -->
-          <div class="story__content" data-story-content>
-            <div class="story__eyebrow">
-              <span class="story__eyebrow-mark" aria-hidden="true"></span>
-              <span class="story__eyebrow-text">Our Founding Story</span>
+        <!-- Lower Asymmetrical Composition -->
+        <div class="founding__layout">
+
+          <!-- Left Column: Narrative Copy & Integrated Credentials -->
+          <div class="founding__narrative" data-founding-copy>
+            <p class="founding__lead">
+              Movement is the foundation of human independence. Founded in Kota by Dr. Hitesh Mangal, Durva Hospital was established with a singular conviction: that super-specialist arthroscopy and advanced joint care should be precise, minimally invasive, and uncompromising in quality.
+            </p>
+
+            <p class="founding__text">
+              Trained across leading surgical institutes in South Korea, Bangkok, and India, Dr. Mangal built Durva Hospital to redefine recovery timelines. Every diagnostic evaluation, arthroscopic keyhole reconstruction, and rehabilitation protocol is engineered to protect healthy tissue and restore natural joint mechanics without limits.
+            </p>
+
+            <!-- Integrated Typographic Credential Lockup (No floating boxes) -->
+            <div class="founding__creds">
+              <div class="founding__doctor">
+                <span class="founding__doctor-name">Dr. Hitesh Mangal</span>
+                <span class="founding__doctor-degree">M.B.B.S., M.S. (Ortho) &bull; Lead Arthroscopy &amp; Joint Surgeon</span>
+                <span class="founding__doctor-fellowship">Knee &amp; Shoulder Fellowship Trained &bull; South Korea &amp; Bangkok</span>
+              </div>
+
+              <div class="founding__metrics">
+                <div class="founding__metric">
+                  <span class="founding__metric-num">5,000+</span>
+                  <span class="founding__metric-lbl">Arthroscopic Surgeries</span>
+                </div>
+                <div class="founding__metric">
+                  <span class="founding__metric-num">15+</span>
+                  <span class="founding__metric-lbl">Years Surgical Mastery</span>
+                </div>
+              </div>
             </div>
 
-            <h2 class="story__title" id="story-title">
-              Where Surgical Precision Meets <em class="story__serif">Patient-First</em> Healing
-            </h2>
-
-            <div class="story__body">
-              <p class="story__lead">
-                Movement is fundamental to the human experience. Founded with the conviction that advanced orthopaedic care should be uncompromising, compassionate, and accessible, Durva Hospital was established in Kota by Dr. Hitesh Mangal to deliver world-class arthroscopy and joint reconstruction under one dedicated roof.
-              </p>
-              <p class="story__text">
-                From pioneering minimally invasive keyhole surgeries to personalized post-operative rehabilitation protocols, our clinical practice combines international surgical benchmarks with deep patient empathy. Every diagnosis, procedure, and recovery milestone is guided by one singular objective: helping you regain strength, confidence, and pain-free mobility without limits.
-              </p>
-            </div>
-
-            <div class="story__actions">
-              <a class="story-btn story-btn--primary" href="#appointment">
+            <!-- Action CTAs -->
+            <div class="founding__actions">
+              <a class="founding-btn founding-btn--primary" href="#appointment">
                 <span>Book Consultation</span>
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3.33 8h9.34M8.67 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
-              <a class="story-btn story-btn--ghost" href="#contact">
-                <span>Contact Us</span>
+              <a class="founding-btn founding-btn--ghost" href="#contact">
+                <span>Contact Clinic</span>
               </a>
             </div>
           </div>
 
-          <!-- Right Column: Dominant Vertical Portrait Card with Tonal Glow -->
-          <div class="story__media-col" data-story-card>
-            <div class="story__card-glow" aria-hidden="true"></div>
-            <div class="story__card-frame">
-              <figure class="story__figure">
-                <img class="story__portrait" src="assets/images/hitesh-mangal.png" alt="Dr. Hitesh Mangal — Lead Orthopaedic &amp; Arthroscopy Surgeon" width="600" height="780" loading="lazy" decoding="async">
-                <figcaption class="story__caption">
-                  <div class="story__doctor-meta">
-                    <span class="story__doctor-name">Dr. Hitesh Mangal</span>
-                    <span class="story__doctor-role">M.B.B.S., M.S. (Ortho) &bull; Lead Arthroscopy &amp; Joint Surgeon</span>
-                  </div>
-                </figcaption>
-              </figure>
+          <!-- Right Column: Full-Bleed Architectural Portrait Portal -->
+          <div class="founding__portrait-wrap" data-founding-portrait>
+            <div class="founding__portrait-backdrop" aria-hidden="true"></div>
+            <div class="founding__portrait-frame">
+              <img class="founding__portrait-img" src="assets/images/hitesh-mangal.png" alt="Dr. Hitesh Mangal — Lead Orthopaedic Surgeon" width="680" height="920" loading="lazy" decoding="async">
             </div>
           </div>
 
