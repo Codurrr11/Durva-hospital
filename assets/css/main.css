@@ -1,0 +1,3013 @@
+/* ==========================================================================
+   assets/css/main.css — Durva Hospital, single stylesheet.
+
+   CONTENTS
+     1. Design tokens + reset      (was root.css)
+     2. Site header / nav          (was header.css)
+     3. Hero                       (was hero.css)
+     4. Community care             (was community-care.css)
+     5. About section
+
+   NOTE: blocks 2–5 are listed in the order they were merged, not in DOM
+   order. On the page, About sits between the Hero and Community Care.
+
+   Order matters: tokens first, then components in DOM order. Each block keeps
+   its own media queries at the end of that block rather than pooling them in
+   one place — that way a component's breakpoints stay next to the rules they
+   override.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DESIGN TOKENS + RESET
+   ========================================================================== */
+
+:root {
+  /* ==========================================================================
+     TYPOGRAPHY
+     ========================================================================== */
+  --font-serif: "Playfair Display", "Iowan Old Style", Georgia, serif;
+  --font-sans:
+    "Manrope", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial,
+    sans-serif;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --fs-nav: 0.8125rem;
+  --fs-btn: 0.8125rem;
+  --fs-menu: 0.8125rem;
+  --fs-lead: clamp(0.875rem, 0.92vw, 0.9375rem);
+  --fs-hero: clamp(1.75rem, 3.5vw, 3.125rem);
+  --fs-display: clamp(2.25rem, 6.2vw, 5.5rem);
+  --fs-card: clamp(0.75rem, 0.88vw, 0.8125rem);
+  --fs-card-sm: clamp(0.6875rem, 0.8vw, 0.75rem);
+
+  --lh-hero: 1.12;
+  --lh-body: 1.62;
+  --ls-hero: -0.015em;
+  --ls-nav: 0.005em;
+
+  /* ==========================================================================
+     COLOR — dark, cinematic. One warm off-white for solid surfaces.
+     ========================================================================== */
+  --c-bg: #0a0c0f;
+  --c-fg: #ffffff;
+  --c-fg-soft: rgba(255, 255, 255, 0.72);
+  --c-fg-mute: rgba(255, 255, 255, 0.54);
+  --c-light: #f4f2ee;
+  --c-dark: #13161a;
+  --c-accent: #7fd1c1;
+  /* small accent mark (eyebrow squares, link hovers) — logo teal, deep enough
+     to read at 7px on a light ground where --c-accent would wash out */
+  --c-mark: #1a7566;
+  /* accent navy for hover states on light sections — the palette had no navy
+     after the rebuild; --c-paper-ink is neutral near-black, not navy */
+  --c-navy: #16283c;
+
+  /* glass */
+  --c-glass: rgba(16, 19, 24, 0.42);
+  --c-glass-strong: rgba(14, 17, 21, 0.72);
+  --c-glass-line: rgba(255, 255, 255, 0.14);
+  --c-glass-hi: rgba(255, 255, 255, 0.1);
+  --blur-glass: blur(22px) saturate(160%);
+
+  --sh-glass:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 40px -24px rgba(0, 0, 0, 0.8);
+  --sh-panel:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 26px 60px -26px rgba(0, 0, 0, 0.85);
+  --sh-light: 0 10px 26px -14px rgba(0, 0, 0, 0.6);
+
+  /* light sections (below the hero) */
+  --c-surface: #ffffff;
+  --c-paper: #f7f6f4;
+  /* ---------- testimonials palette ----------
+     Four muted tints as bare rgb triplets, so the section can mix them at
+     any alpha without a second set of tokens. They drive both the mesh
+     behind the section and the per-card identities. Sober by construction:
+     every one of them is desaturated well below the logo teal. */
+  --tint-sand: 186, 148, 102;
+  --tint-sage: 56, 130, 116;
+  --tint-navy: 70, 98, 148;
+  --tint-clay: 168, 116, 100;
+  --c-teal-deep: #0f5a4c; /* headline accent — deeper than --c-mark */
+  --c-paper-rgb: 247, 246, 244; /* same colour, for rgba() — keep in sync */
+  --c-paper-ink: #14161a;
+  --c-paper-ink-soft: #6b7078;
+  --c-paper-line: rgba(20, 22, 26, 0.1);
+
+  /* dark card floating on a light section */
+  --c-card: rgba(26, 27, 31, 0.74);
+  --c-card-line: rgba(255, 255, 255, 0.12);
+  --c-card-hi: rgba(255, 255, 255, 0.07);
+  --c-card-fg: rgba(255, 255, 255, 0.88);
+  --c-card-mute: rgba(255, 255, 255, 0.52);
+  --c-bubble: rgba(246, 245, 243, 0.92);
+  --sh-card:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 40px 80px -40px rgba(12, 14, 18, 0.7);
+
+  /* hero overlay + grade */
+  --c-veil: 8, 10, 13;
+  --video-filter: brightness(0.76) contrast(1.07) saturate(0.92);
+
+  /* ==========================================================================
+     SPACE / SHAPE / MOTION
+     ========================================================================== */
+  --gutter: clamp(1.25rem, 3vw, 2.5rem);
+  --header-inset: clamp(0.75rem, 1.5vw, 1.25rem);
+  --logo-h: clamp(1.875rem, 2.4vw, 2.25rem);
+  --maxw-hero: 60rem;
+  --maxw-section: 78rem; /* standard content width for light sections */
+  --maxw-title: 34ch;
+  --maxw-lead: 34rem;
+  --maxw-menu: 16.75rem;
+
+  --r-pill: 999px;
+  --r-panel: 18px;
+  --r-item: 11px;
+
+  --dur-fast: 170ms;
+  --dur-base: 300ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-menu: cubic-bezier(0.22, 0.9, 0.28, 1);
+
+  --z-hero-media: 0;
+  --z-hero-content: 1;
+  --z-header: 60;
+  --z-menu: 70;
+
+  /* breakpoints (reference values) */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body,
+h1,
+h2,
+p,
+figure,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-body);
+  color: var(--c-fg);
+  background-color: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-fg);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--c-dark);
+  background-color: var(--c-light);
+}
+
+/* ==========================================================================
+   Entrance
+   ========================================================================== */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.u-rise {
+  animation: rise 900ms var(--ease-out) both;
+}
+
+.u-d1 {
+  animation-delay: 120ms;
+}
+.u-d2 {
+  animation-delay: 240ms;
+}
+.u-d3 {
+  animation-delay: 380ms;
+}
+.u-d4 {
+  animation-delay: 500ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   2. SITE HEADER / NAV
+   ========================================================================== */
+
+/* `absolute`, not `fixed`: the bar belongs to the hero and scrolls away with
+   it. As `fixed` it rode over every section below — no z-index or overflow
+   setting can prevent that, since a fixed bar is by definition always on top.
+   To make it sticky again, change this one line back to `fixed` and give
+   `.community` (and every later section) top padding to clear it. */
+.site-header {
+  position: absolute;
+  top: var(--header-inset);
+  right: var(--header-inset);
+  left: var(--header-inset);
+  z-index: var(--z-header);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  /* the bar is three floating islands — clicks pass through the gaps */
+  pointer-events: none;
+}
+
+.site-header > * {
+  pointer-events: auto;
+}
+
+/* ---------- brand (outside the pill, per reference) ---------- */
+.brand {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  padding-left: clamp(0.25rem, 1.2vw, 1rem);
+  line-height: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.brand:hover {
+  opacity: 0.8;
+}
+
+.brand__img {
+  height: var(--logo-h);
+  width: auto;
+  max-width: none;
+}
+
+/* ==========================================================================
+   Shared glass capsule
+   ========================================================================== */
+.capsule {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+  border: 1px solid var(--c-glass-line);
+  border-radius: var(--r-pill);
+  background-color: var(--c-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  box-shadow: var(--sh-glass);
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .capsule,
+  .menu__panel {
+    background-color: var(--c-glass-strong);
+  }
+}
+
+/* ==========================================================================
+   Centre nav
+   ========================================================================== */
+.nav {
+  justify-self: center;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.nav__item {
+  position: relative;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-nav);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-nav);
+  white-space: nowrap;
+  color: var(--c-fg-soft);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__link:hover,
+.nav__item:focus-within > .nav__link {
+  color: var(--c-fg);
+  background-color: var(--c-glass-hi);
+}
+
+.nav__link.is-active {
+  color: var(--c-fg);
+  background-color: var(--c-glass-hi);
+}
+
+.nav__caret {
+  width: 0.5rem;
+  height: 0.5rem;
+  opacity: 0.7;
+  transition: transform var(--dur-base) var(--ease-menu);
+}
+
+/* ==========================================================================
+   Submenu
+   ========================================================================== */
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: var(--maxw-menu);
+  padding-top: 0.7rem;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    visibility var(--dur-base) var(--ease-out);
+}
+
+.menu__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.0625rem;
+  padding: 0.375rem;
+  border: 1px solid var(--c-glass-line);
+  border-radius: var(--r-panel);
+  background-color: var(--c-glass-strong);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  box-shadow: var(--sh-panel);
+  transform: translateY(-6px);
+  transition: transform var(--dur-base) var(--ease-menu);
+}
+
+.menu__link {
+  display: block;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--r-item);
+  font-size: var(--fs-menu);
+  font-weight: var(--fw-medium);
+  line-height: 1.35;
+  color: var(--c-fg-soft);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.menu__link:hover,
+.menu__link:focus-visible {
+  color: var(--c-fg);
+  background-color: var(--c-glass-hi);
+}
+
+.nav__item:hover > .menu,
+.nav__item:focus-within > .menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.nav__item:hover > .menu .menu__panel,
+.nav__item:focus-within > .menu .menu__panel {
+  transform: translateY(0);
+}
+
+.nav__item:hover > .nav__link .nav__caret,
+.nav__item:focus-within > .nav__link .nav__caret {
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   Actions
+   ========================================================================== */
+.actions {
+  justify-self: end;
+  gap: 0.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-btn);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.btn--ghost {
+  padding: 0.55rem 0.95rem;
+  color: var(--c-fg-soft);
+}
+
+.btn--ghost:hover {
+  color: var(--c-fg);
+  background-color: var(--c-glass-hi);
+}
+
+.btn--light {
+  padding: 0.6rem 1.05rem;
+  color: var(--c-dark);
+  background-color: var(--c-light);
+  box-shadow: var(--sh-light);
+}
+
+.btn--light:hover {
+  background-color: #ffffff;
+}
+
+/* ---------- hamburger ---------- */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--r-pill);
+  color: var(--c-fg);
+}
+
+.nav-toggle__bars {
+  position: relative;
+}
+
+.nav-toggle__bars,
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  display: block;
+  width: 17px;
+  height: 1.5px;
+  border-radius: var(--r-pill);
+  background-color: currentColor;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) linear;
+}
+
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle__bars::before {
+  top: -5px;
+}
+.nav-toggle__bars::after {
+  top: 5px;
+}
+
+.site-header.is-open .nav-toggle__bars {
+  background-color: transparent;
+}
+
+.site-header.is-open .nav-toggle__bars::before {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.site-header.is-open .nav-toggle__bars::after {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   Tablet + mobile — up to 1024px
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .site-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .actions .btn--ghost {
+    display: none;
+  }
+
+  /* nav leaves the bar and becomes a full-screen sheet */
+  .nav {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    padding: var(--gutter);
+    background-color: rgba(var(--c-veil), 0.94);
+    -webkit-backdrop-filter: var(--blur-glass);
+    backdrop-filter: var(--blur-glass);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      visibility var(--dur-base) var(--ease-out);
+  }
+
+  .site-header.is-open .nav {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    gap: 0.25rem;
+    width: min(24rem, 100%);
+    max-height: 76vh;
+    overflow-y: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .nav__item {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav__link {
+    justify-content: center;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1.0625rem;
+  }
+
+  /* submenu becomes an inline accordion */
+  .menu {
+    position: static;
+    width: auto;
+    padding-top: 0;
+    transform: none;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: grid-template-rows var(--dur-base) var(--ease-out);
+  }
+
+  .menu__panel {
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .menu__link {
+    padding: 0.5rem;
+    text-align: center;
+    color: var(--c-fg-mute);
+  }
+
+  /* hover must not open it on touch — only the class does */
+  .nav__item:hover > .menu,
+  .nav__item:focus-within > .menu {
+    grid-template-rows: 0fr;
+  }
+
+  .nav__item.is-open > .menu {
+    grid-template-rows: 1fr;
+    padding-block: 0.25rem 0.5rem;
+  }
+
+  .nav__item.is-open > .nav__link .nav__caret {
+    transform: rotate(180deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .btn--light {
+    padding: 0.55rem 0.85rem;
+  }
+}
+
+/* ==========================================================================
+   3. HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 100svh;
+  padding: calc(var(--header-inset) + 6rem) var(--gutter) clamp(2.25rem, 5.2vh, 3.5rem);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* ---------- media ---------- */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-hero-media);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border: 0;
+  font-size: 0;
+  color: transparent;
+  filter: var(--video-filter);
+  animation: settle 1600ms var(--ease-out) both;
+}
+
+/* Original cinematic dark overlay */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      to top,
+      rgba(var(--c-veil), 0.92) 0%,
+      rgba(var(--c-veil), 0.62) 26%,
+      rgba(var(--c-veil), 0.18) 54%,
+      rgba(var(--c-veil), 0.42) 100%
+    ),
+    radial-gradient(
+      140% 100% at 50% 50%,
+      transparent 38%,
+      rgba(var(--c-veil), 0.55) 100%
+    );
+}
+
+/* ---------- content ---------- */
+.hero__inner {
+  position: relative;
+  z-index: var(--z-hero-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 58rem;
+}
+
+/* Soft spotlight behind copy for enhanced contrast over video */
+.hero__inner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: 132%;
+  height: 190%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    58% 50% at 50% 50%,
+    rgba(var(--c-veil), 0.55) 0%,
+    rgba(var(--c-veil), 0.28) 45%,
+    transparent 72%
+  );
+  pointer-events: none;
+  animation: fade-in 1400ms var(--ease-out) 200ms both;
+}
+
+/* ---------- title (matching reference geometric font & styling) ---------- */
+.hero__title {
+  max-width: 28ch;
+  margin: 0;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2.25rem, 5.2vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.hero__tm {
+  font-size: 0.44em;
+  vertical-align: 0.72em;
+  font-weight: 600;
+  margin-left: 0.08em;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Each line is its own mask */
+.hero__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.hero__line-in {
+  display: block;
+  animation: line-rise 1100ms var(--ease-out) both;
+}
+
+.hero__line:nth-child(1) .hero__line-in {
+  animation-delay: 180ms;
+}
+.hero__line:nth-child(2) .hero__line-in {
+  animation-delay: 320ms;
+}
+
+/* ---------- action buttons (matching reference) ---------- */
+.hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  animation: rise 900ms var(--ease-out) 400ms both;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.65rem;
+  border-radius: 12px;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: transform 180ms var(--ease-out), background-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out), border-color 180ms var(--ease-out);
+  cursor: pointer;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+}
+
+.hero-btn:active {
+  transform: translateY(0);
+}
+
+.hero-btn--primary {
+  background-color: #0b0f14;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.hero-btn--primary:hover {
+  background-color: #1a222c;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+}
+
+.hero-btn--secondary {
+  background-color: #eceef1;
+  color: #0b0f14;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.hero-btn--secondary:hover {
+  background-color: #ffffff;
+}
+
+/* ---------- hero keyframes ---------- */
+@keyframes line-rise {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gem-in {
+  from {
+    transform: rotate(45deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(45deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes swash {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Tablet — up to 1024px
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero {
+    padding-top: calc(var(--header-inset) + 5rem);
+  }
+
+  :root {
+    --maxw-title: 30ch;
+  }
+}
+
+/* ==========================================================================
+   Mobile — up to 768px
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero {
+    justify-content: flex-end;
+    padding-bottom: clamp(2.25rem, 6vh, 3.25rem);
+  }
+
+  .hero__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .hero-btn {
+    flex: 1 1 140px;
+  }
+}
+
+/* ==========================================================================
+   4. COMMUNITY CARE
+   ========================================================================== */
+
+/* ==========================================================================
+   CONTAINMENT — read before editing.
+
+   This section owns its own stacking context and clips its own children, so
+   it can never inherit or be overlapped by the hero's fade:
+
+   1. `isolation: isolate`  — new stacking context. No sibling section's
+      positioned/blended layer can composite into this one.
+   2. `overflow: hidden`    — clips anything this section overhangs.
+   3. `background-color`    — set explicitly, not inherited.
+   4. `z-index: 1`          — sits above the preceding section.
+
+   The hero also carries `overflow: hidden`, so containment holds from both
+   sides. Do NOT add a top gradient/ramp here — the hero→section transition
+   is a clean edge by design.
+   ========================================================================== */
+.community {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--c-paper);
+
+  /* ---- brand gradient, light ----
+     Same navy→teal→blue-gray hues as the dark version, lifted to tints and
+     opened up with white at both ends. Type on this band is DARK. */
+  --cc-g1: #ffffff;
+  --cc-g2: #eef5f6;
+  --cc-g3: #ddeeed;
+  --cc-g4: #cbe7e0; /* logo green, as a tint */
+  --cc-g5: #c9e2e6;
+  --cc-g6: #dbe9f1;
+  --cc-g7: #f4f8fb; /* soft blue-white close */
+
+  /* ---- type on the light band ---- */
+  --cc-ink: #0c1c33;
+  --cc-ink-soft: #41576b;
+
+  /* ---- card row ---- */
+  --cc-row-max: 78rem;
+  --cc-gap: clamp(0.75rem, 1.2vw, 1.25rem);
+  --cc-radius: 18px;
+  --cc-bleed: clamp(4.5rem, 10vw, 8.5rem);
+}
+
+/* ==========================================================================
+   Gradient banner
+   ========================================================================== */
+.community__banner {
+  position: relative;
+  z-index: 0;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter)
+    calc(var(--cc-bleed) + clamp(2.25rem, 4.5vw, 3.75rem));
+  text-align: center;
+  /* seven stops keep the ramp smooth instead of banding */
+  background-image: linear-gradient(
+    104deg,
+    var(--cc-g1) 0%,
+    var(--cc-g2) 18%,
+    var(--cc-g3) 36%,
+    var(--cc-g4) 54%,
+    var(--cc-g5) 68%,
+    var(--cc-g6) 84%,
+    var(--cc-g7) 100%
+  );
+}
+
+.community__title {
+  max-width: 18ch;
+  margin-inline: auto;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 4.6vw, 3.75rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--cc-ink);
+}
+
+.community__sub {
+  max-width: 46ch;
+  margin: clamp(0.9rem, 1.6vw, 1.35rem) auto 0;
+  font-size: clamp(0.875rem, 1.05vw, 1rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  color: var(--cc-ink-soft);
+}
+
+/* ---------- CTAs (inverted for the light band) ---------- */
+.community__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3rem;
+  padding-inline: 0.5rem;
+  border-radius: var(--r-pill);
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+}
+
+.pill--solid {
+  padding-right: 1.25rem;
+  color: #ffffff;
+  background-color: var(--cc-ink);
+}
+
+.pill--solid:hover {
+  background-color: #14294a;
+}
+
+.pill--ghost {
+  padding-left: 1.25rem;
+  color: var(--cc-ink);
+  border: 1px solid rgba(12, 28, 51, 0.28);
+}
+
+.pill--ghost:hover {
+  background-color: rgba(12, 28, 51, 0.06);
+}
+
+.pill__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+/* on the solid pill the badge is light; on the ghost pill it is dark */
+.pill__badge--dark {
+  color: var(--cc-ink);
+  background-color: #ffffff;
+}
+
+.pill__badge--light {
+  color: #ffffff;
+  background-color: var(--cc-ink);
+}
+
+.pill__badge svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* ==========================================================================
+   Card row — contained, all three fully in frame
+   ========================================================================== */
+.community__cards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cc-gap);
+  width: 100%;
+  max-width: var(--cc-row-max);
+  margin-inline: auto;
+  margin-top: calc(var(--cc-bleed) * -1);
+  padding-inline: var(--gutter);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.cc-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(12, 28, 51, 0.1);
+  border-radius: var(--cc-radius);
+  background-color: var(--c-surface);
+  box-shadow: 0 22px 50px -30px rgba(9, 20, 30, 0.45);
+  overflow: hidden;
+}
+
+.cc-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* scrim carries the title only — kept shallow so the photo stays open */
+.cc-card::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 40%;
+  background-image: linear-gradient(
+    to top,
+    rgba(10, 16, 24, 0.72) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.cc-card__title {
+  position: absolute;
+  right: clamp(0.9rem, 1.4vw, 1.25rem);
+  bottom: clamp(0.85rem, 1.3vw, 1.15rem);
+  left: clamp(0.9rem, 1.4vw, 1.25rem);
+  z-index: 2;
+  font-size: clamp(0.875rem, 1.05vw, 1rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.005em;
+  color: #ffffff;
+}
+
+/* ---------- play button ---------- */
+.cc-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.75rem, 3.8vw, 3.4rem);
+  height: clamp(2.75rem, 3.8vw, 3.4rem);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translate(-50%, -50%);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.cc-play:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.14);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.cc-play svg {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  margin-left: 2px;
+}
+
+/* ==========================================================================
+   Tablet — up to 1024px
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .community {
+    --cc-bleed: clamp(3.5rem, 9vw, 6rem);
+  }
+}
+
+/* ==========================================================================
+   Mobile — up to 768px: single column, no bleed
+   ========================================================================== */
+@media (max-width: 768px) {
+  .community {
+    --cc-bleed: 0rem;
+  }
+
+  .community__banner {
+    padding-bottom: clamp(2.5rem, 7vw, 3.5rem);
+  }
+
+  .community__cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: clamp(1.5rem, 5vw, 2.25rem);
+  }
+
+  .cc-card {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 420px) {
+  .community__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pill {
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   ===== ABOUT SECTION =====
+   Sits between the hero and Community Care. Same containment discipline as
+   every other section: own stacking context, clips its own children, paints
+   its own background — so it can neither inherit the hero's edge nor bleed
+   into the section below.
+   ========================================================================== */
+.about {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--c-surface);
+  color: var(--c-paper-ink);
+}
+
+.about__inner {
+  max-width: var(--maxw-section);
+  margin-inline: auto;
+  padding: clamp(4.5rem, 10vw, 8rem) var(--gutter);
+}
+
+/* ---------- statement headline ---------- */
+.about__headline {
+  max-width: 26ch;
+  font-family: var(--font-sans);
+  font-size: clamp(1.625rem, 3.3vw, 3rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  text-wrap: pretty;
+}
+
+.about__marker {
+  margin-right: 0.35em;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ---------- two-column row ----------
+   `align-items: end` is what baseline-aligns the aside with the BOTTOM of the
+   image rather than its top, per the reference. */
+.about__row {
+  display: grid;
+  grid-template-columns: minmax(0, 30fr) minmax(0, 65fr);
+  align-items: end;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.about__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.25rem, 2.2vw, 1.75rem);
+  padding-bottom: 0.25rem;
+}
+
+.about__text {
+  max-width: 34ch;
+  font-size: clamp(0.875rem, 1.05vw, 1rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.65;
+  color: var(--c-paper-ink-soft);
+}
+
+.about__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.35rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-btn);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  color: var(--c-surface);
+  background-color: var(--c-dark);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.about__cta:hover {
+  transform: translateY(-1px);
+  background-color: var(--c-bg);
+}
+
+/* ---------- image ---------- */
+.about__figure {
+  margin: 0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.about__img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---------- tablet + mobile: single column ---------- */
+@media (max-width: 900px) {
+  .about__headline {
+    max-width: none;
+  }
+
+  /* headline → image → paragraph + button */
+  .about__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 2.25rem);
+  }
+
+  .about__figure {
+    order: 1;
+  }
+
+  .about__aside {
+    order: 2;
+    padding-bottom: 0;
+  }
+
+  .about__text {
+    max-width: 52ch;
+  }
+
+  .about__img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ==========================================================================
+   ===== SERVICES SECTION =====
+   Header block, horizontally snapping card row, stats grid. Same containment
+   discipline as the other sections. The slider is the one part that is NOT
+   clipped by the section — it deliberately runs to the viewport edge so the
+   last card crops, signalling that the row scrolls.
+   ========================================================================== */
+.services {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(3rem, 5.5vw, 4.75rem);
+  background-color: var(--c-paper);
+  color: var(--c-paper-ink);
+}
+
+/* Full-bleed, not a centred column. Every block in this section — headline,
+   link, card row, stats — shares one edge token so they line up exactly. */
+.services__inner {
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: var(--svc-edge);
+}
+
+/* ---------- eyebrow ---------- */
+/* reference sets this in sentence case at near-normal tracking — the
+   tracked-out caps we had were reading far louder than the source */
+.svc-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--c-paper-ink-soft);
+}
+
+.svc-eyebrow__mark {
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 2px;
+  background-color: var(--c-mark);
+}
+
+/* ---------- header row ---------- */
+.services__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: clamp(0.6rem, 1.2vw, 1rem);
+}
+
+.services__title {
+  max-width: 26ch;
+  font-family: var(--font-sans);
+  font-size: clamp(1.75rem, 3.5vw, 3.25rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.16;
+  letter-spacing: -0.026em;
+  text-wrap: pretty;
+}
+
+/* the one gray phrase inside the black headline */
+.services__title-muted {
+  color: var(--c-paper-ink-soft);
+}
+
+/* ==========================================================================
+   Slider
+   ========================================================================== */
+.services__slider {
+  position: relative;
+  margin-top: clamp(1.75rem, 3.4vw, 2.75rem);
+}
+
+/* Card 1 starts at the section's left edge; the row runs to the viewport edge
+   on the right so the last card crops rather than stopping short. */
+.services__track {
+  display: flex;
+  gap: var(--svc-gap);
+  padding-inline: var(--svc-edge);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--svc-edge);
+  /* momentum on iOS; scrollbar hidden — the arrows convey navigation affordance */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.services__track::-webkit-scrollbar {
+  display: none;
+}
+
+.svc-card {
+  flex: 0 0 var(--svc-card-w);
+  scroll-snap-align: start;
+}
+
+/* Clickable service card link */
+.svc-card__figure {
+  position: relative;
+  display: block;
+  margin: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--c-surface);
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  box-shadow:
+    0 1px 3px rgba(12, 18, 28, 0.05),
+    0 8px 24px -10px rgba(12, 18, 28, 0.08);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out),
+    transform 420ms var(--ease-out);
+}
+
+.svc-card__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 520ms var(--ease-out);
+}
+
+/* Smooth multi-stop dark gradient scrim at the bottom for crystal-clear readability */
+.svc-card__figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: linear-gradient(
+    to top,
+    rgba(8, 12, 18, 0.82) 0%,
+    rgba(8, 12, 18, 0.6) 24%,
+    rgba(8, 12, 18, 0.22) 48%,
+    rgba(8, 12, 18, 0.03) 68%,
+    transparent 100%
+  );
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-out);
+}
+
+.svc-card:hover .svc-card__figure,
+.svc-card:focus-within .svc-card__figure {
+  border-color: rgba(15, 23, 42, 0.3);
+  box-shadow:
+    0 18px 44px -18px rgba(12, 22, 38, 0.26),
+    0 4px 12px -2px rgba(12, 22, 38, 0.06);
+  transform: translateY(-3px);
+}
+
+.svc-card:hover .svc-card__img,
+.svc-card:focus-within .svc-card__img {
+  transform: scale(1.05);
+}
+
+.svc-card:hover .svc-card__figure::after,
+.svc-card:focus-within .svc-card__figure::after {
+  opacity: 0.94;
+}
+
+.svc-card__label {
+  position: absolute;
+  right: clamp(0.9rem, 1.4vw, 1.25rem);
+  bottom: clamp(0.85rem, 1.4vw, 1.25rem);
+  left: clamp(0.9rem, 1.4vw, 1.25rem);
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  transition: transform 360ms var(--ease-out);
+}
+
+.svc-card:hover .svc-card__label,
+.svc-card:focus-within .svc-card__label {
+  transform: translateY(-2px);
+}
+
+/* ---------- arrows ---------- */
+/* Arrows are the header's right-hand column now that the link is gone. The
+   section's inline padding comes from .services__inner, so no edge token or
+   margin of its own. */
+.services__nav {
+  display: flex;
+  justify-self: end;
+  align-self: start;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+}
+
+/* rounded-square glass, same language as the header dropdown */
+.svc-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(20, 22, 26, 0.1);
+  border-radius: 13px;
+  color: var(--c-paper-ink);
+  background-color: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 8px 20px -12px rgba(20, 30, 45, 0.35);
+  transition:
+    background-color 200ms var(--ease-out),
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+
+/* square now that the glyph is the hooked arrow shared with the blog
+   carousel — the old 16x10 box belonged to a flat arrow */
+.svc-arrow svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* thin stroke — the markup ships 1.5, this keeps it light at the larger size */
+.svc-arrow svg path {
+  stroke-width: 1.2;
+}
+
+.svc-arrow:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.86);
+  transform: scale(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 26px -12px rgba(20, 30, 45, 0.42);
+}
+
+.svc-arrow:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.svc-arrow:disabled {
+  opacity: 0.32;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   Stats
+   ========================================================================== */
+/* The stats block follows .services__slider, not another __inner — the old
+   `__inner + __inner` / `__nav + __inner` selectors never matched anything,
+   so this spacing was silently absent. */
+.services__slider + .services__inner {
+  margin-top: clamp(2.5rem, 4.6vw, 4rem);
+}
+
+.svc-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding-top: clamp(1.5rem, 2.8vw, 2.25rem);
+  border-top: 1px solid var(--c-paper-line);
+}
+
+/* grid children default to min-width:auto, which lets long captions push the
+   column wider than its track */
+.svc-stat {
+  min-width: 0;
+}
+
+/* Bigger but lighter: the reference numbers are medium weight at a larger
+   size, which reads as confident rather than shouty. Bold at a smaller size
+   was the wrong trade. */
+.svc-stat__value {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  /* count-up rewrites this text — tabular figures stop the width jittering */
+  font-variant-numeric: tabular-nums;
+}
+
+/* hairline rule between the figure and its caption, as in the reference */
+.svc-stat__label {
+  max-width: 24ch;
+  margin: 0.85rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--c-paper-line);
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.55;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ==========================================================================
+   Sizing tokens
+   ========================================================================== */
+.services {
+  /* single edge token for the whole section — headline, link, cards, nav and
+     stats all resolve their inline padding from this one value */
+  --svc-edge: var(--gutter);
+
+  /* card width tracks the viewport now that the row is full-bleed, so the
+     cap is raised: at 1440 this is ~4.9 cards visible with the next cropped */
+  --svc-card-w: clamp(15.5rem, 22vw, 24rem);
+  --svc-gap: clamp(0.625rem, 1vw, 1rem);
+}
+
+/* ---------- tablet ---------- */
+@media (max-width: 900px) {
+  .services__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .services__title {
+    max-width: none;
+  }
+
+  .svc-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 5vw, 2.5rem);
+  }
+}
+
+/* ---------- mobile: smaller cards, bigger peek, no arrows ---------- */
+@media (max-width: 640px) {
+  .services {
+    --svc-card-w: min(72vw, 17rem);
+  }
+
+  .services__nav {
+    display: none;
+  }
+
+  /* touch has no hover — pin the resting state so nothing sticks after a tap */
+  .svc-card:hover .svc-card__img {
+    transform: none;
+  }
+
+  .svc-card:hover .svc-card__figure {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   ===== DOCTORS SECTION =====
+   The credibility centrepiece. Same containment discipline as its neighbours
+   — own stacking context, own background, clips its own children.
+
+   COMPOSITION — read before moving anything.
+   The cutout is the spine of the section, not an item in a three-column
+   grid. Three things do the work:
+
+     1. The ground is split. Navy tint bleeds in from the left, sand from the
+        right, and they cross over at roughly the centre line, where the
+        figure stands — so each surgeon has their own atmosphere and the two
+        dissolve into each other exactly where the two people meet.
+
+     2. The two detail blocks are NOT mirrored. Left sits high and is set
+        flush right; right sits low, runs wider, and is set flush left. Their
+        accent marks differ in kind (a rule over the name vs a rule beside
+        the block), not just in colour. The diagonal that falls out of this
+        is the reading order.
+
+     3. The blocks tuck UNDER the figure. --doc-overlap is a negative margin
+        pulling each block into the image column, and the figure outranks
+        them on z-index. The PNG carries roughly 10% transparent margin on
+        each side, which is the clearance that keeps type off the scrubs —
+        if the image is ever re-exported tighter, raise the block max-widths
+        or the text will collide with a shoulder.
+   ========================================================================== */
+.doc {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  /* the bottom padding is not whitespace — the contact shadow is translated
+     42% below the figure, and the section clips its own children */
+  padding-block: clamp(3.5rem, 6vw, 5.5rem) clamp(2.25rem, 3.5vw, 3.5rem);
+  font-family: var(--font-sans);
+  color: var(--c-paper-ink);
+
+  /* The split. Two tints of the existing palette crossing at the middle —
+     navy holds the left third, sand the right, and both fall to almost
+     nothing across 46–54% so the hand-off is a blend, not a seam. */
+  background-color: var(--c-surface);
+  background-image:
+    linear-gradient(
+      100deg,
+      rgba(var(--tint-navy), 0.17) 0%,
+      rgba(var(--tint-navy), 0.1) 26%,
+      rgba(var(--tint-navy), 0.03) 44%,
+      rgba(var(--tint-sand), 0.04) 56%,
+      rgba(var(--tint-sand), 0.13) 76%,
+      rgba(var(--tint-sand), 0.21) 100%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #fcfbf9 60%, #f6f4f0 100%);
+
+  --doc-overlap: clamp(0.75rem, 2.6vw, 3rem);
+}
+
+/* ---------- header ---------- */
+.doc__head {
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  text-align: center;
+}
+
+.doc__eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-mark);
+}
+
+.doc__title {
+  margin: clamp(0.55rem, 1vw, 0.85rem) 0 0;
+  font-size: clamp(1.75rem, 3.4vw, 3rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+}
+
+.doc__title-em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-teal-deep);
+}
+
+/* ==========================================================================
+   Stage
+   ========================================================================== */
+/* Three columns, the middle one widest. The figure sizes itself from that
+   middle column, which is what makes the whole composition scale from one
+   number instead of from a pile of viewport units. */
+.doc__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: center;
+  max-width: 86rem;
+  margin-top: clamp(1.5rem, 3vw, 2.75rem);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- watermark ----------
+   Outlined, not filled: at this size a filled word would fight the split
+   ground, while an outline reads as drawn on it. It is wider than the
+   viewport on purpose — the section clips it, and the bleed is what gives
+   the composition its sense of scale.
+
+   VERTICAL POSITION IS LOAD-BEARING. Centred, this word ran straight
+   through the left surgeon's bio and the letterforms made the copy hard to
+   read. It now sits at the foot of the stage, cropped by the section's own
+   bottom edge, so it passes behind the legs and below BOTH detail blocks.
+
+   `translateY(100% - 4rem)` is what pins it there: 100% is the word's own
+   height, so whatever the font-size clamp resolves to, the top of the
+   letterforms always lands exactly 4rem above the bottom of the stage. Move
+   this and check the right-hand block still clears it — that block is the
+   lowest piece of type in the section. */
+.doc__watermark {
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, calc(100% - 4rem));
+  font-size: clamp(4rem, 15.5vw, 15rem);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(var(--tint-navy), 0.2);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- figure ---------- */
+.doc__figure {
+  position: relative;
+  z-index: 2; /* outranks the cards — this is what makes them tuck under */
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  align-self: end;
+}
+
+.doc__img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Contact shadow, product-photography style: a wide soft ellipse under the
+   feet rather than a drop shadow on the cutout, which would trace the
+   silhouette and give the whole thing away. */
+.doc__figure::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 0;
+  width: 74%;
+  height: 4.5rem;
+  transform: translate(-50%, 42%);
+  border-radius: 50%;
+  background-image: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(var(--tint-navy), 0.28) 0%,
+    rgba(var(--tint-navy), 0.1) 46%,
+    rgba(var(--tint-navy), 0) 72%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Detail blocks
+   ========================================================================== */
+.doc-card {
+  position: relative;
+  z-index: 1;
+  grid-row: 1;
+}
+
+/* left: high, narrow, flush right, pulled into the image column */
+.doc-card--left {
+  grid-column: 1;
+  align-self: start;
+  max-width: 22rem;
+  margin-top: clamp(2rem, 7vh, 5.5rem);
+  margin-left: auto;
+  margin-right: calc(var(--doc-overlap) * -1);
+  text-align: right;
+}
+
+/* right: low, wider, flush left, pulled the other way */
+.doc-card--right {
+  grid-column: 3;
+  align-self: end;
+  max-width: 24rem;
+  margin-bottom: clamp(2.5rem, 9vh, 7rem);
+  margin-left: calc(var(--doc-overlap) * -1);
+  padding-left: clamp(0.875rem, 1.4vw, 1.25rem);
+  text-align: left;
+}
+
+/* ---------- the two accent marks ----------
+   Different in kind, not just in colour: a rule ABOVE the name on the left,
+   a rule BESIDE the block on the right. */
+.doc-card--left .doc-card__mark {
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-left: auto;
+  margin-bottom: clamp(0.875rem, 1.5vw, 1.25rem);
+  border-radius: 2px;
+  background-image: linear-gradient(
+    to left,
+    var(--c-mark),
+    rgba(26, 117, 102, 0)
+  );
+}
+
+.doc-card--right .doc-card__mark {
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  width: 2px;
+  height: 3.25rem;
+  border-radius: 2px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(var(--tint-clay), 1),
+    rgba(var(--tint-clay), 0)
+  );
+}
+
+/* ---------- type ---------- */
+.doc-card__name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.375rem);
+  font-weight: var(--fw-regular);
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  color: var(--c-paper-ink);
+}
+
+.doc-card__role {
+  margin: clamp(0.4rem, 0.7vw, 0.55rem) 0 0;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.doc-card--left .doc-card__role {
+  color: var(--c-mark);
+}
+
+/* the right block echoes its own half of the split background */
+.doc-card--right .doc-card__role {
+  color: rgb(var(--tint-clay));
+}
+
+.doc-card__bio {
+  margin: clamp(0.875rem, 1.5vw, 1.125rem) 0 0;
+  font-size: clamp(0.875rem, 0.96vw, 0.9375rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.72;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+/* ---------- second credential line ----------
+   Sits directly under the role: lighter, ink-soft, and NOT tracked, so the
+   pair reads as one credential block with a loud line and a quiet one rather
+   than as two competing labels. */
+.doc-card__creds {
+  margin: 0.3rem 0 0;
+  font-size: clamp(0.75rem, 0.85vw, 0.8125rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.5;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+/* ==========================================================================
+   Doctors — narrow desktop
+   ========================================================================== */
+/* The middle column keeps its share while the outer two shrink, so the type
+   blocks run out of room before the figure does. Give them the room back by
+   flattening the ratio. */
+@media (max-width: 1200px) {
+  .doc__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  }
+
+  .doc-card--left {
+    margin-top: clamp(1.5rem, 5vh, 3.5rem);
+  }
+
+  .doc-card--right {
+    margin-bottom: clamp(1.5rem, 6vh, 4.5rem);
+  }
+}
+
+/* ==========================================================================
+   Doctors — stacked
+   ========================================================================== */
+/* One column: figure, then left surgeon, then right surgeon. The asymmetry
+   survives the stack — the blocks keep their own widths, their own marks and
+   their own alignment rather than collapsing into two identical rows. */
+@media (max-width: 900px) {
+  .doc__stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  /* stacked, the foot of the stage is under the last card, not under the
+     figure — so the word goes back up behind the figure, where the only
+     thing it can sit behind is the photo */
+  .doc__watermark {
+    top: 15%;
+    bottom: auto;
+    transform: translate(-50%, 0);
+    font-size: clamp(3.25rem, 19vw, 8rem);
+  }
+
+  .doc__figure {
+    width: min(80%, 24rem);
+    align-self: center;
+  }
+
+  .doc-card {
+    width: 100%;
+  }
+
+  /* margins that pulled the blocks sideways have nothing to pull against
+     once the columns are gone */
+  .doc-card--left,
+  .doc-card--right {
+    max-width: 32rem;
+    margin: 0;
+  }
+
+  .doc-card--left {
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  /* the mark flips to the start edge with the text */
+  .doc-card--left .doc-card__mark {
+    margin-left: 0;
+    background-image: linear-gradient(
+      to right,
+      var(--c-mark),
+      rgba(26, 117, 102, 0)
+    );
+  }
+
+  /* the right block stays inset and narrower — this is what keeps the two
+     from reading as an identical pair once they are one above the other */
+  .doc-card--right {
+    align-self: flex-end;
+    max-width: 30rem;
+    padding-left: clamp(0.875rem, 2vw, 1.25rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .doc-card--left,
+  .doc-card--right {
+    align-self: stretch;
+  }
+
+  .doc__figure {
+    width: min(92%, 20rem);
+  }
+}
+
+/* ==========================================================================
+   ===== TESTIMONIALS SECTION =====
+   Dark band closing the page, built on Apple's dark-mode system palette.
+
+   iOS DARK, NOT "BLACK". The difference is the whole look:
+     - the ground is a near-black with a cool cast, lifted by two very low
+       blooms, not a flat #000 — flat black kills every soft shadow on it;
+     - surfaces are TRANSLUCENT white over that ground with a blur behind
+       them, the way Apple's materials work, rather than a lighter opaque
+       grey. That is what makes the cards sit on the background instead of
+       being pasted onto it;
+     - every card carries a 1px hairline plus an inset top highlight, which
+       is how iOS suggests a lit edge;
+     - type runs on the three-step label ramp (label / secondary / tertiary)
+       rather than on arbitrary greys.
+
+   MOTION: two columns drifting in opposite directions, forever, with no
+   controls. Everything is CSS; there is no carousel JS for this section.
+   ========================================================================== */
+.tst {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  /* No vertical padding on the section: the card rail runs edge to edge and
+     is cut by the section's own boundary. The intro column carries the
+     padding instead, so only it is inset. */
+  padding-block: 0;
+  font-family: var(--font-sans);
+
+  /* ---------- iOS dark system palette ---------- */
+  --tst-bg: #0a0b0e;
+  --tst-surface: rgba(255, 255, 255, 0.055);
+  --tst-line: rgba(255, 255, 255, 0.09);
+  --tst-hairline: rgba(255, 255, 255, 0.07);
+  --tst-label: #f5f5f7; /* label */
+  --tst-label-2: rgba(235, 235, 245, 0.6); /* secondaryLabel */
+  --tst-label-3: rgba(235, 235, 245, 0.32); /* tertiaryLabel */
+  --tst-star: #ff9f0a; /* systemOrange, dark */
+
+  /* ---------- sizing ---------- */
+  --tst-gap: clamp(0.75rem, 1vw, 1.125rem);
+  --tst-radius: 18px;
+  --tst-pad: clamp(1.125rem, 1.5vw, 1.375rem);
+  /* drives the section height, and therefore the rail height — the rail is
+     stretched to the grid row rather than given a height of its own */
+  --tst-rail-h: clamp(40rem, 92vh, 60rem);
+
+  /* one loop = one card set; B is offset by direction only */
+  --tst-speed: 52s;
+
+  background-color: var(--tst-bg);
+  background-image:
+    radial-gradient(
+      52% 44% at 14% 8%,
+      rgba(var(--tint-sage), 0.16) 0%,
+      rgba(var(--tint-sage), 0) 62%
+    ),
+    radial-gradient(
+      48% 42% at 88% 84%,
+      rgba(var(--tint-navy), 0.2) 0%,
+      rgba(var(--tint-navy), 0) 64%
+    );
+  color: var(--tst-label);
+}
+
+/* Grain. On a near-black ground an eight-bit gradient bands badly; this is
+   what stops the two blooms from ringing. */
+.tst::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+.tst__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(2rem, 5vw, 5rem);
+  min-height: var(--tst-rail-h);
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ==========================================================================
+   Intro column
+   ========================================================================== */
+/* stretch is for the rail; the intro re-centres itself inside the row and
+   carries the vertical padding the section gave up */
+.tst__intro {
+  align-self: center;
+  max-width: 32rem;
+  padding-block: clamp(3rem, 5.5vw, 5rem);
+}
+
+.tst__label {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  color: var(--tst-label-2);
+}
+
+.tst__title {
+  margin: clamp(0.75rem, 1.4vw, 1.125rem) 0 0;
+  font-size: clamp(1.625rem, 2.9vw, 2.625rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.18;
+  letter-spacing: -0.028em;
+  color: var(--tst-label);
+  text-wrap: pretty;
+}
+
+/* the accent is carried by colour alone — one typeface in this section */
+.tst__title-em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-accent);
+}
+
+.tst__lead {
+  margin: clamp(0.875rem, 1.5vw, 1.25rem) 0 0;
+  max-width: 34ch;
+  font-size: clamp(0.875rem, 1vw, 0.9375rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.65;
+  color: var(--tst-label-2);
+  text-wrap: pretty;
+}
+
+/* the one solid element in the section — iOS puts its primary action in a
+   filled white capsule on dark */
+.tst__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--r-pill);
+  background-color: var(--tst-label);
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  color: #0a0b0e;
+  text-decoration: none;
+  box-shadow: 0 12px 30px -16px rgba(0, 0, 0, 0.9);
+  transition:
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out),
+    background-color 240ms var(--ease-out);
+}
+
+.tst__cta svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: none;
+  transition: transform 240ms var(--ease-out);
+}
+
+.tst__cta:hover {
+  background-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px -16px rgba(0, 0, 0, 0.95);
+}
+
+.tst__cta:hover svg {
+  transform: translateX(2px);
+}
+
+.tst__cta:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Rail
+   ========================================================================== */
+/* Two columns, fixed height, clipped hard.
+
+   There is deliberately NO fade mask on this. A top/bottom dissolve reads as
+   empty space at the ends of the rail rather than as a soft edge — the
+   cards look like they stop short. Cutting them mid-card against the rail
+   edge is what says the column keeps going. */
+/* The columns are ABSOLUTE inside this, and that is load-bearing. As normal
+   flow children they are ~2700px tall, and `overflow: hidden` does not stop a
+   stretched grid item from sizing to its content — the section grew to the
+   full column height and the rail stopped being a window at all. Taking them
+   out of flow leaves the rail with no content height, so it stretches to the
+   grid row, which is set by the intro and --tst-rail-h. */
+.tst__rail {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Each column prints its set three times (see index.php).
+
+   THE SHIFT. One loop must travel exactly one set — N cards and their N
+   gaps. As a fraction of the column that is NOT 100%/3: a column of C copies
+   has C×N cards but only C×N−1 gaps, so it is one gap short of C whole sets.
+   The correction is + gap/C. Card heights vary with quote length, which is
+   why this is expressed as a percentage plus a gap rather than an absolute
+   height like the horizontal version used. Change the copy count in the PHP
+   and both divisors here have to change with it. */
+.tst__col {
+  position: absolute;
+  top: 0;
+  width: calc((100% - var(--tst-gap)) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tst-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: transform;
+}
+
+.tst__col--a {
+  left: 0;
+  animation: tst-drift-up var(--tst-speed) linear infinite;
+}
+
+.tst__col--b {
+  right: 0;
+  animation: tst-drift-down var(--tst-speed) linear infinite;
+}
+
+/* hovering holds just the column under the cursor, so a quote can be read
+   without freezing the section */
+.tst__rail:hover .tst__col {
+  animation-play-state: paused;
+}
+
+@keyframes tst-drift-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc((-100% / 3) - (var(--tst-gap) / 3)));
+  }
+}
+
+@keyframes tst-drift-down {
+  from {
+    transform: translateY(calc((-100% / 3) - (var(--tst-gap) / 3)));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+/* Translucent white over the ground with a blur behind it — an iOS material,
+   not an opaque grey panel. The inset highlight on the top edge is the lit
+   edge; without it the card reads as a flat hole. */
+.tst-card {
+  padding: var(--tst-pad);
+  border: 1px solid var(--tst-line);
+  border-radius: var(--tst-radius);
+  background-color: var(--tst-surface);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 8px 24px -18px rgba(0, 0, 0, 0.9);
+}
+
+.tst-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  margin: 0 0 clamp(0.75rem, 1.2vw, 1rem);
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--tst-star);
+}
+
+.tst-card__star {
+  width: 0.875rem;
+  height: 0.8125rem;
+  flex: none;
+}
+
+.tst-card__quote {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.92vw, 0.9375rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  letter-spacing: -0.006em;
+  color: var(--tst-label);
+  text-wrap: pretty;
+}
+
+.tst-card__quote p {
+  margin: 0;
+}
+
+/* the divider is the card's only rule — iOS separator weight, not a border */
+.tst-card__author {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: clamp(0.875rem, 1.4vw, 1.125rem) 0 0;
+  padding-top: clamp(0.875rem, 1.4vw, 1.125rem);
+  border-top: 1px solid var(--tst-hairline);
+}
+
+.tst-card__avatar {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  object-fit: cover;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.tst-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.0625rem;
+  min-width: 0;
+}
+
+.tst-card__name {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+  color: var(--tst-label);
+}
+
+.tst-card__role {
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.3;
+  color: var(--tst-label-3);
+}
+
+/* ==========================================================================
+   Testimonials — stacked
+   ========================================================================== */
+/* The intro moves above the rail. The rail keeps BOTH columns as long as
+   there is room for them — two narrow columns still read as a wall of
+   feedback, which one column does not. */
+@media (max-width: 900px) {
+  .tst__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .tst__intro {
+    max-width: 34rem;
+    padding-block: clamp(3rem, 7vw, 4rem) 0;
+  }
+
+  /* one column, so the rail is no longer stretched by the row — it needs a
+     height again, and it still sits flush against the section's bottom */
+  .tst__rail {
+    height: var(--tst-rail-h);
+  }
+
+  .tst {
+    --tst-rail-h: clamp(34rem, 78vh, 46rem);
+  }
+}
+
+/* ==========================================================================
+   Testimonials — mobile
+   ========================================================================== */
+@media (max-width: 560px) {
+  /* two columns at this width would leave ~20 characters a line */
+  .tst__col--a {
+    width: 100%;
+  }
+
+  /* with one column the second is redundant — hide it rather than ship
+     twice the DOM for nothing */
+  .tst__col--b {
+    display: none;
+  }
+
+  .tst {
+    --tst-rail-h: clamp(30rem, 76vh, 38rem);
+  }
+}
+
+/* ==========================================================================
+   Testimonials — reduced motion
+   ========================================================================== */
+/* The global reset zeroes EVERY animation-duration, which would strand the
+   columns at translateY(0) and leave the rail showing four cards and a hole.
+   The section is exempted deliberately: `.tst__col` outranks the reset's `*`
+   selector, so the duration is handed back.
+
+   Hovering a column still pauses it, which is the pause mechanism WCAG 2.2.2
+   asks for. To hand the columns back to the user's setting instead, delete
+   this block and give .tst__rail `overflow-y: auto` so the cards stay
+   reachable. */
+@media (prefers-reduced-motion: reduce) {
+  .tst__col {
+    animation-duration: var(--tst-speed) !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
+/* ==========================================================================
+   ===== BLOG SECTION =====
+   A white panel floating on a photograph. The photo is the section; the
+   panel is inset from it on all four sides, so a border of the image frames
+   the content — that framing is the whole device, which is why the section
+   padding here is structural rather than decorative.
+
+   The panel is two stacked grids:
+     head  — headline left, intro paragraph right
+     body  — a narrow meta column (counter, active line, buttons) and the
+             card track beside it
+
+   The counter and the line under it track the carousel, so the left column
+   is a readout of the track rather than a static caption. Both are driven
+   from main.js.
+   ========================================================================== */
+.blog {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.5rem) var(--gutter);
+  font-family: var(--font-sans);
+  color: var(--c-paper-ink);
+
+  /* ---- lush hills, meadow & trail scenery (matching reference) ---- */
+  background-color: #c9d8cb;
+  background-image: url("https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=2000&q=85");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+
+  --blog-card-w: clamp(13rem, 25vw, 23rem);
+  --blog-gap: clamp(0.75rem, 1.1vw, 1.125rem);
+  --blog-radius: 16px;
+}
+
+/* ---------- the panel ---------- */
+.blog__panel {
+  max-width: 82rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 3.5vw, 3.25rem);
+  border-radius: clamp(20px, 2.2vw, 32px);
+  background-color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 32px 64px -16px rgba(10, 25, 20, 0.22),
+    0 12px 28px -10px rgba(10, 25, 20, 0.12);
+}
+
+/* ==========================================================================
+   Head
+   ========================================================================== */
+.blog__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+/* an outlined chip, not a filled one — it has to sit quietly above a large
+   headline rather than compete with it */
+.blog__badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--c-paper-line);
+  border-radius: 8px;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  color: var(--c-paper-ink-soft);
+}
+
+/* Light weight at a large size, the way the reference sets it: the size
+   carries the emphasis, so the weight does not have to. */
+.blog__title {
+  margin: clamp(0.875rem, 1.6vw, 1.375rem) 0 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.875rem);
+  font-weight: var(--fw-regular);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--c-paper-ink);
+}
+
+/* the accent phrase every headline on the page carries. Deep teal, not
+   --c-accent: that one is the light-section-on-dark tone the testimonials use,
+   and it washes out on a pale ground. Same value as the doctors headline. */
+.blog__title-em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-teal-deep);
+}
+
+.blog__intro {
+  margin: clamp(0.5rem, 1vw, 0.75rem) 0 0;
+  max-width: 38ch;
+  font-size: clamp(0.8125rem, 0.92vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.62;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+/* ==========================================================================
+   Body
+   ========================================================================== */
+.blog__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 2fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: clamp(1.75rem, 3.5vw, 3.25rem);
+}
+
+.blog__meta {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- counter ----------
+   The live number is set full size and the total is small and muted beside
+   it, so the pair reads as one figure rather than as a fraction. Tabular
+   figures stop the layout twitching as the number changes. */
+.blog__counter {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.blog__counter-now {
+  font-size: clamp(2.25rem, 3.6vw, 3.25rem);
+  font-weight: var(--fw-regular);
+  letter-spacing: -0.03em;
+  color: var(--c-paper-ink);
+}
+
+.blog__counter-total {
+  font-size: clamp(0.875rem, 1.1vw, 1.0625rem);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.01em;
+  color: var(--c-paper-ink-soft);
+}
+
+/* swapped by main.js as the track moves — the fade is what stops the text
+   from snapping between two different sentences */
+.blog__step {
+  margin: clamp(0.625rem, 1.2vw, 1rem) 0 0;
+  max-width: 26ch;
+  font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  color: var(--c-paper-ink-soft);
+  transition: opacity 220ms var(--ease-out);
+}
+
+.blog__step.is-swapping {
+  opacity: 0;
+}
+
+/* ---------- buttons ----------
+   Pushed to the bottom of the meta column by margin-top:auto, so they sit on
+   the floor of the card row however tall it gets. Rounded squares, not
+   circles — the cards are rounded rectangles and these echo them.
+   The glyph is an undo/redo style hooked arrow, as in the reference. */
+.blog__nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.blog-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background-color 220ms var(--ease-out),
+    border-color 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+.blog-btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.blog-btn--ghost {
+  border-color: var(--c-paper-line);
+  background-color: var(--c-surface);
+  color: var(--c-paper-ink);
+}
+
+.blog-btn--ghost:hover:not(:disabled) {
+  border-color: rgba(20, 22, 26, 0.2);
+  background-color: var(--c-paper);
+  transform: translateY(-1px);
+}
+
+.blog-btn--solid {
+  background-color: var(--c-paper-ink);
+  color: var(--c-surface);
+  box-shadow: 0 10px 22px -12px rgba(16, 24, 34, 0.7);
+}
+
+.blog-btn--solid:hover:not(:disabled) {
+  background-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px -12px rgba(16, 24, 34, 0.75);
+}
+
+.blog-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+}
+
+.blog-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  box-shadow: none;
+}
+
+.blog-btn:focus-visible {
+  outline: 2px solid var(--c-mark);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Track
+   ========================================================================== */
+/* Native overflow scrolling with snap, so touch and trackpad work without
+   JS; main.js only adds the buttons, the counter and the disabled states.
+   The track is allowed to run past the panel's padding on the right so the
+   next card crops against the panel edge — that crop is what says it
+   scrolls. */
+.blog__slider {
+  min-width: 0;
+  margin-right: calc(clamp(1.5rem, 3vw, 3rem) * -1);
+}
+
+.blog__track {
+  display: flex;
+  gap: var(--blog-gap);
+  margin: 0;
+  padding: 0 clamp(1.5rem, 3vw, 3rem) 0 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.blog__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- card ---------- */
+.blog-card {
+  flex: 0 0 var(--blog-card-w);
+  scroll-snap-align: start;
+}
+
+.blog-card__link {
+  position: relative;
+  display: block;
+  aspect-ratio: 0.92;
+  overflow: hidden;
+  border-radius: var(--blog-radius);
+  background-color: var(--c-paper);
+  text-decoration: none;
+  transition:
+    transform 320ms var(--ease-out),
+    box-shadow 320ms var(--ease-out);
+}
+
+.blog-card__link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 40px -24px rgba(16, 24, 34, 0.55);
+}
+
+.blog-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out);
+}
+
+.blog-card__link:hover .blog-card__img {
+  transform: scale(1.05);
+}
+
+/* The scrim is a gradient on the card, NOT on the copy: text set over a
+   photograph with no scrim is unreadable on the light frames and fine on the
+   dark ones, which is exactly the bug you cannot see in one screenshot. */
+.blog-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to top,
+    rgba(8, 12, 18, 0.88) 0%,
+    rgba(8, 12, 18, 0.62) 26%,
+    rgba(8, 12, 18, 0.12) 56%,
+    rgba(8, 12, 18, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+/* the tag sits above the scrim — it is glass, so it needs the photo behind
+   it rather than the gradient */
+.blog-card__tag {
+  position: absolute;
+  z-index: 1;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  font-size: 0.625rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.blog-card__body {
+  position: absolute;
+  z-index: 1;
+  right: 0.875rem;
+  bottom: 0.875rem;
+  left: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.blog-card__title {
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.28;
+  letter-spacing: -0.018em;
+  color: #ffffff;
+  text-wrap: pretty;
+}
+
+.blog-card__desc {
+  font-size: clamp(0.6875rem, 0.78vw, 0.75rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.76);
+  text-wrap: pretty;
+}
+
+/* ==========================================================================
+   Blog — tablet
+   ========================================================================== */
+@media (max-width: 900px) {
+  .blog__head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .blog__intro {
+    max-width: 46ch;
+  }
+
+  /* the meta column moves above the track; the buttons no longer have a tall
+     neighbour to sit at the foot of, so the auto margin is dropped */
+  .blog__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .blog__meta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .blog__step {
+    margin: 0;
+    max-width: 34ch;
+  }
+
+  .blog__nav {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .blog {
+    --blog-card-w: clamp(13rem, 34vw, 19rem);
+  }
+}
+
+/* ==========================================================================
+   Blog — mobile
+   ========================================================================== */
+@media (max-width: 560px) {
+  .blog {
+    --blog-card-w: min(74vw, 17rem);
+  }
+
+  /* the active line has nowhere to sit between the counter and the buttons
+     at this width — it drops to its own row underneath */
+  .blog__meta {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.875rem;
+  }
+
+  .blog__step {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: none;
+  }
+
+  .blog__nav {
+    justify-self: end;
+  }
+
+  /* touch has no hover — pin the resting state so nothing sticks after a tap */
+  .blog-card__link:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .blog-card__link:hover .blog-card__img {
+    transform: none;
+  }
+}
