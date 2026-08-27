@@ -1,174 +1,142 @@
-  <!-- ================= Footer Section ================= -->
-  <footer class="site-footer" id="site-footer" aria-label="Site Footer">
+  <!-- ================= Footer ================= -->
+  <!--
+    CONTACT DETAILS below (email, phone, address) are placeholders. Replace
+    all three before this goes live — a wrong number on a hospital site gets
+    dialled. The four "Patient Care" links and the two legal links point at
+    "#" because those pages do not exist yet.
+  -->
+  <footer class="ftr" data-ftr>
 
-    <!-- Ambient glowing accents -->
-    <div class="site-footer__glow site-footer__glow--left" aria-hidden="true"></div>
-    <div class="site-footer__glow site-footer__glow--right" aria-hidden="true"></div>
+    <div class="ftr__inner">
 
-    <div class="site-footer__inner">
+      <!-- ---------- top band ---------- -->
+      <div class="ftr__top">
 
-      <!-- TOP BAND — 2-Column Split -->
-      <div class="footer-top" data-footer-top>
-        <div class="footer-top__brand">
-          <a class="footer-logo" href="index.php" aria-label="Durva Hospital — Home">
-            <img class="footer-logo__img" src="assets/images/logo.png" alt="Durva Hospital" width="858" height="250" loading="lazy">
-          </a>
-          <p class="footer-top__desc">
-            Durva Hospital is where precision meets compassion. We help patients move without limits through expert orthopaedic and specialist care.
+        <div class="ftr__brand" data-ftr-item>
+          <img class="ftr__logo" src="assets/images/logo.png" alt="Durva Hospital"
+               width="858" height="250" loading="lazy" decoding="async">
+          <p class="ftr__blurb">
+            Durva Hospital is where precision meets compassion. We help patients
+            move without limits through expert orthopaedic and specialist care.
           </p>
         </div>
 
-        <div class="footer-top__newsletter">
-          <p class="footer-newsletter__label">Stay Updated</p>
-          <form class="footer-newsletter__form" action="#" method="post" onsubmit="event.preventDefault();">
-            <div class="footer-newsletter__field">
-              <input class="footer-newsletter__input" type="email" name="email" placeholder="Enter your email address" required aria-label="Email address for newsletter">
-              <button class="footer-newsletter__btn" type="submit" aria-label="Subscribe to newsletter">
-                <span>Subscribe</span>
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.33 8h9.34M8.67 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          </form>
-          <p class="footer-newsletter__sub">
+        <form class="ftr__news" data-ftr-item action="#" method="post">
+          <p class="ftr__news-label" id="ftr-news-label">Stay Updated</p>
+
+          <div class="ftr__field">
+            <label class="u-visually-hidden" for="ftr-email">Email address</label>
+            <input class="ftr__input" id="ftr-email" name="email" type="email"
+                   placeholder="Enter your email address" autocomplete="email" required>
+            <button class="ftr__submit" type="submit">Subscribe</button>
+          </div>
+
+          <p class="ftr__news-note">
             Get health tips, appointment reminders, and updates from our specialists.
           </p>
-        </div>
+        </form>
+
       </div>
 
-      <!-- TABS & DATA ROW (3 Columns) -->
-      <div class="footer-grid">
+      <!-- ---------- link columns ---------- -->
+      <div class="ftr__cols">
 
-        <!-- Column 1: Quick Links -->
-        <div class="footer-col" data-footer-col>
-          <h3 class="footer-col__title">Quick Links</h3>
-          <ul class="footer-dash-list">
-            <li><a class="footer-dash-link" href="#acl-avulsion"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Avulsion</span></a></li>
-            <li><a class="footer-dash-link" href="#acl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Reconstruction</span></a></li>
-            <li><a class="footer-dash-link" href="#pcl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>PCL Reconstruction</span></a></li>
-            <li><a class="footer-dash-link" href="#frozen-shoulder"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Frozen Shoulder</span></a></li>
-            <li><a class="footer-dash-link" href="#synovitis"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Synovitis</span></a></li>
-            <li><a class="footer-dash-link" href="#about"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>About Us</span></a></li>
-            <li><a class="footer-dash-link" href="#contact"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Contact</span></a></li>
+        <nav class="ftr__col" data-ftr-item aria-labelledby="ftr-quick">
+          <h2 class="ftr__col-title" id="ftr-quick">Quick Links</h2>
+          <ul class="ftr__list">
+            <li><a class="ftr__link" href="index.php">Home</a></li>
+            <li><a class="ftr__link" href="about.php">About Us</a></li>
+            <li><a class="ftr__link" href="#doctors">Our Doctors</a></li>
+            <li><a class="ftr__link" href="#appointment">Book Appointment</a></li>
           </ul>
-        </div>
+        </nav>
 
-        <!-- Column 2: Recent Posts -->
-        <div class="footer-col" data-footer-col>
-          <h3 class="footer-col__title">Recent Posts</h3>
-          <div class="footer-posts">
+        <nav class="ftr__col" data-ftr-item aria-labelledby="ftr-dept">
+          <h2 class="ftr__col-title" id="ftr-dept">Departments</h2>
+          <ul class="ftr__list">
+            <li><a class="ftr__link" href="#knee-arthroscopy">Knee Arthroscopy</a></li>
+            <li><a class="ftr__link" href="#shoulder-arthroscopy">Shoulder Arthroscopy</a></li>
+            <li><a class="ftr__link" href="#joint-replacement">Joint Replacement</a></li>
+            <li><a class="ftr__link" href="#sports-medicine">Sports Medicine</a></li>
+          </ul>
+        </nav>
 
-            <article class="footer-post">
-              <a class="footer-post__thumb" href="#blog" aria-label="Advance Shoulder training Programme">
-                <img class="footer-post__img" src="assets/images/dr-1.png" alt="Advance Shoulder training Programme" width="60" height="60" loading="lazy">
+        <nav class="ftr__col" data-ftr-item aria-labelledby="ftr-care">
+          <h2 class="ftr__col-title" id="ftr-care">Patient Care</h2>
+          <ul class="ftr__list">
+            <li><a class="ftr__link" href="#">FAQs</a></li>
+            <li><a class="ftr__link" href="#">Insurance &amp; Billing</a></li>
+            <li><a class="ftr__link" href="#">Patient Resources</a></li>
+            <li><a class="ftr__link" href="#">Emergency Care</a></li>
+          </ul>
+        </nav>
+
+        <div class="ftr__col ftr__col--connect" data-ftr-item>
+          <h2 class="ftr__col-title">Connect With Us</h2>
+
+          <ul class="ftr__list ftr__list--contact">
+            <li><a class="ftr__link" href="mailto:care@durvahospital.com">care@durvahospital.com</a></li>
+            <li><a class="ftr__link" href="tel:+919876543210">+91 98765 43210</a></li>
+            <li><address class="ftr__address">Durva Hospital, Maharashtra, India</address></li>
+          </ul>
+
+          <ul class="ftr__social">
+            <li>
+              <a class="ftr-soc" href="#" aria-label="Durva Hospital on Instagram">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <rect x="2.75" y="2.75" width="14.5" height="14.5" rx="4.25" stroke="currentColor" stroke-width="1.4"/>
+                  <circle cx="10" cy="10" r="3.6" stroke="currentColor" stroke-width="1.4"/>
+                  <circle cx="14.4" cy="5.6" r="1" fill="currentColor"/>
+                </svg>
               </a>
-              <div class="footer-post__meta">
-                <h4 class="footer-post__title">
-                  <a class="footer-post__title-link" href="#blog">Advance Shoulder training Programme</a>
-                </h4>
-                <time class="footer-post__date" datetime="2025-11-17">
-                  <svg class="footer-post__date-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
-                    <path d="M5 1.5v2.5M11 1.5v2.5M2 6.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-                  </svg>
-                  November 17, 2025
-                </time>
-              </div>
-            </article>
-
-            <article class="footer-post">
-              <a class="footer-post__thumb" href="#blog" aria-label="DR Hitesh Mangal">
-                <img class="footer-post__img" src="assets/images/dr-2.png" alt="DR Hitesh Mangal" width="60" height="60" loading="lazy">
+            </li>
+            <li>
+              <a class="ftr-soc" href="#" aria-label="Durva Hospital on Facebook">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M12.4 6.6h1.9V3.9c-.33-.05-1.45-.15-2.75-.15-2.72 0-4.58 1.71-4.58 4.86V11H4.6v3.05h2.37V20h2.9v-5.95h2.28l.36-3.05h-2.64V8.9c0-.88.24-1.49 1.53-1.49Z"
+                        fill="currentColor"/>
+                </svg>
               </a>
-              <div class="footer-post__meta">
-                <h4 class="footer-post__title">
-                  <a class="footer-post__title-link" href="#blog">DR Hitesh Mangal</a>
-                </h4>
-                <time class="footer-post__date" datetime="2024-11-18">
-                  <svg class="footer-post__date-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
-                    <path d="M5 1.5v2.5M11 1.5v2.5M2 6.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-                  </svg>
-                  November 18, 2024
-                </time>
-              </div>
-            </article>
-
-          </div>
-        </div>
-
-        <!-- Column 3: Contact Us -->
-        <div class="footer-col footer-col--contact" data-footer-col>
-          <h3 class="footer-col__title">Contact Us</h3>
-          <ul class="footer-contact">
-            <li class="footer-contact__item">
-              <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M10 10.833a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10 18.333S16.667 13.333 16.667 8.333a6.667 6.667 0 1 0-13.334 0c0 5 6.667 10 6.667 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="footer-contact__text">Plot Number 3,4 Allied Ample city, 80 Feet Link Rd, Borkhera, Kota, Rajasthan 324001</span>
             </li>
-            <li class="footer-contact__item">
-              <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M2.5 5.833A2.5 2.5 0 0 1 5 3.333h10a2.5 2.5 0 0 1 2.5 2.5v8.334a2.5 2.5 0 0 1-2.5 2.5H5a2.5 2.5 0 0 1-2.5-2.5V5.833Z" stroke="currentColor" stroke-width="1.5"/>
-                <path d="m3.333 5 5.753 4.315a1.667 1.667 0 0 0 1.998 0L16.833 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              <a class="footer-link footer-link--contact" href="mailto:durvahospitalkota@gmail.com">durvahospitalkota@gmail.com</a>
-            </li>
-            <li class="footer-contact__item">
-              <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <rect x="5.833" y="2.5" width="8.334" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="10" cy="14.5" r="0.75" fill="currentColor"/>
-              </svg>
-              <a class="footer-link footer-link--contact" href="tel:917014584948">917014584948</a>
+            <li>
+              <a class="ftr-soc" href="#" aria-label="Durva Hospital on LinkedIn">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5.4 7.7H2.9V17h2.5V7.7ZM4.15 6.6a1.45 1.45 0 1 0 0-2.9 1.45 1.45 0 0 0 0 2.9ZM17.1 17h-2.5v-4.85c0-1.16-.42-1.95-1.45-1.95-.79 0-1.26.53-1.47 1.05-.08.18-.1.44-.1.7V17H9.08s.03-8.44 0-9.3h2.5v1.32c.33-.51.93-1.24 2.26-1.24 1.65 0 2.89 1.08 2.89 3.4V17Z"
+                        fill="currentColor"/>
+                </svg>
+              </a>
             </li>
           </ul>
-
-          <div class="footer-social">
-            <a class="footer-social__btn" href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <rect x="2.5" y="2.5" width="15" height="15" rx="4" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="14.5" cy="5.5" r="0.75" fill="currentColor"/>
-              </svg>
-            </a>
-            <a class="footer-social__btn" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M15 1.667h-2.5a4.167 4.167 0 0 0-4.167 4.166v2.5H5.833v3.334h2.5v6.666h3.334v-6.666h2.5L15 8.333h-3.333v-2.5a.833.833 0 0 1 .833-.833H15V1.667Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-            <a class="footer-social__btn" href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M13.333 6.667a4.167 4.167 0 0 1 4.167 4.166v6.667h-3.333v-6.667a1.667 1.667 0 0 0-3.334 0v6.667H7.5V10.833a4.167 4.167 0 0 1 4.167-4.166v0Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="2.5" y="7.5" width="3.333" height="10" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="4.167" cy="3.75" r="1.25" fill="currentColor"/>
-              </svg>
-            </a>
-          </div>
         </div>
 
       </div>
-
-      <!-- Bottom Bar (sitting cleanly above the skyline, matching reference) -->
-      <div class="footer-bottom" data-footer-bottom>
-        <div class="footer-bottom__inner">
-          <p class="footer-bottom__copy">&copy; 2026 Durva Hospital. All Rights Reserved.</p>
-          <ul class="footer-bottom__links">
-            <li><a class="footer-bottom__link" href="#privacy">Privacy Policy</a></li>
-            <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-            <li><a class="footer-bottom__link" href="#terms">Terms &amp; Conditions</a></li>
-            <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-            <li><a class="footer-bottom__link" href="#patient-rights">Patient Rights</a></li>
-          </ul>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Very Bottom Edge-to-Edge Hospital Skyline (matching reference) -->
-    <div class="footer-skyline" aria-hidden="true" data-footer-skyline>
-      <img class="footer-skyline__img" src="assets/images/footer-bg.png" alt="" loading="lazy" decoding="async">
+    <!-- ---------- motif ----------
+         Replaces the reference's city skyline. A single ECG trace over two
+         soft topographic echoes: abstract, medical, and calm enough to sit
+         under type. Inline SVG so it can take its colour from the section. -->
+    <div class="ftr__motif" aria-hidden="true">
+      <svg viewBox="0 0 1440 120" fill="none" preserveAspectRatio="xMidYMax meet">
+        <path class="ftr__motif-wave" d="M0 100C240 84 480 116 720 100s480-16 720 0"
+              stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+        <path class="ftr__motif-wave" d="M0 114C260 102 520 126 780 114s440 4 660-4"
+              stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+        <path class="ftr__motif-pulse"
+              d="M0 78h300c16 0 20-16 36-16s20 16 36 16h188l20 0 10 10 14-64 16 82 12-36 16 8h268c20 0 28-14 50-14s30 14 50 14h424"
+              stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- ---------- bottom bar ---------- -->
+    <div class="ftr__bottom">
+      <div class="ftr__bottom-inner">
+        <p class="ftr__copy">&copy; 2026 Durva Hospital. All Rights Reserved.</p>
+        <ul class="ftr__legal">
+          <li><a class="ftr__link" href="#">Privacy Policy</a></li>
+          <li><a class="ftr__link" href="#">Terms of Use</a></li>
+        </ul>
+      </div>
     </div>
 
   </footer>

@@ -390,6 +390,24 @@
       });
     }
 
+    /* ---------- footer ----------
+       One stagger across the whole block. The footer is the last thing on
+       the page, so it is usually already in view by the time it is reached —
+       the trigger sits low (top 92%) to keep the entrance from being missed
+       entirely on a short scroll. */
+    var ftrItems = gsap.utils.toArray('[data-ftr-item]');
+    if (ftrItems.length) {
+      gsap.from(ftrItems, {
+        opacity: 0,
+        y: 28,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.09,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '[data-ftr]', start: 'top 92%', once: true }
+      });
+    }
+
     /* ---------- blog ----------
        Head first, then the meta column and the card row together — the two
        are one horizontal band, so staggering them apart would break it. */
@@ -448,6 +466,16 @@
         .from('[data-why-header]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0.1)
         .from('[data-why-narrative]', { opacity: 0, y: 25, duration: 0.8, ease: 'power3.out' }, 0.2)
         .from('[data-why-card]', { opacity: 0, y: 35, duration: 0.85, ease: 'power3.out', stagger: 0.1 }, 0.25);
+    }
+
+    /* ---------- service page: intro split section ---------- */
+    var svcIntro = document.querySelector('.svc-intro');
+    if (svcIntro) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.svc-intro', start: 'top 78%', once: true }
+      })
+        .from('[data-svc-content]', { opacity: 0, x: -35, duration: 0.9, ease: 'power3.out' }, 0)
+        .from('[data-svc-media]', { opacity: 0, scale: 0.98, duration: 1.1, ease: 'power3.out' }, 0.15);
     }
 
     /* ---------- footer ---------- */

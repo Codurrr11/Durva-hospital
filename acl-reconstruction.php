@@ -43,6 +43,36 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Service Overview (50/50 Split) ================= -->
+    <section class="svc-intro" id="overview" aria-labelledby="svc-intro-title">
+      <!-- Left Column: Editorial Headline, Narrative & Dual Buttons -->
+      <div class="svc-intro__content" data-svc-content>
+        <h2 class="svc-intro__title" id="svc-intro-title">
+          <span>Strategy.</span>
+          <span>Precision.</span>
+          <span>Results that restore mobility.</span>
+        </h2>
+
+        <p class="svc-intro__desc">
+          We partner with patients to solve complex joint injuries, eliminate knee instability, and rebuild strong anatomical ligaments that are ready for active sports and long-term movement.
+        </p>
+
+        <div class="svc-intro__actions">
+          <a class="svc-btn svc-btn--solid" href="#appointment">
+            Schedule a Consultation
+          </a>
+          <a class="svc-btn svc-btn--outline" href="#procedures">
+            Our Approach
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Full-Bleed Edge-to-Edge Media -->
+      <div class="svc-intro__media" data-svc-media>
+        <img class="svc-intro__img" src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1600&q=80" alt="Modern orthopaedic consultation room and surgical precision" width="1600" height="1066" loading="lazy" decoding="async">
+      </div>
+    </section>
+
   </main>
 
 <?php include __DIR__ . '/include/footer.php'; ?>
