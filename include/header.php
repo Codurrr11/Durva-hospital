@@ -1,5 +1,8 @@
 <?php
   $current_page = basename($_SERVER['PHP_SELF'] ?? 'index.php');
+  $is_knee_page = in_array($current_page, ['acl-reconstruction.php', 'acl-avulsion.php', 'mcl-tear.php', 'pcl-reconstruction.php', 'meniscus-tears.php', 'synovitis.php', 'patella-dislocation.php']);
+  $is_shoulder_page = in_array($current_page, ['frozen-shoulder.php', 'rotator-cuff.php', 'ac-joint-dislocation.php']);
+  $is_joint_page = in_array($current_page, ['joint-replacement.php', 'knee-replacement.php']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +38,7 @@
         </li>
 
         <li class="nav__item" data-dropdown>
-          <a class="nav__link" href="#knee-arthroscopy" aria-expanded="false" aria-controls="menu-knee">
+          <a class="nav__link <?= $is_knee_page ? 'is-active' : '' ?>" href="#knee-arthroscopy" aria-expanded="false" aria-controls="menu-knee">
             Knee Arthroscopy
             <svg class="nav__caret" viewBox="0 0 10 6" fill="none" aria-hidden="true">
               <path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -43,7 +46,7 @@
           </a>
           <div class="menu" id="menu-knee">
             <ul class="menu__panel">
-              <li><a class="menu__link" href="#acl-reconstruction">ACL Reconstruction</a></li>
+              <li><a class="menu__link <?= ($current_page === 'acl-reconstruction.php') ? 'is-active' : '' ?>" href="acl-reconstruction.php">ACL Reconstruction</a></li>
               <li><a class="menu__link" href="#acl-avulsion">ACL Avulsion</a></li>
               <li><a class="menu__link" href="#mcl-tear">MCL Tear</a></li>
               <li><a class="menu__link" href="#pcl-reconstruction">PCL Reconstruction</a></li>
@@ -55,7 +58,7 @@
         </li>
 
         <li class="nav__item" data-dropdown>
-          <a class="nav__link" href="#shoulder-arthroscopy" aria-expanded="false" aria-controls="menu-shoulder">
+          <a class="nav__link <?= $is_shoulder_page ? 'is-active' : '' ?>" href="#shoulder-arthroscopy" aria-expanded="false" aria-controls="menu-shoulder">
             Shoulder Arthroscopy
             <svg class="nav__caret" viewBox="0 0 10 6" fill="none" aria-hidden="true">
               <path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -71,7 +74,7 @@
         </li>
 
         <li class="nav__item">
-          <a class="nav__link" href="#joint-replacement">Joint Replacement</a>
+          <a class="nav__link <?= $is_joint_page ? 'is-active' : '' ?>" href="#joint-replacement">Joint Replacement</a>
         </li>
 
       </ul>
