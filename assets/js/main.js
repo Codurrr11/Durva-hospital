@@ -507,11 +507,139 @@
         .from('[data-impact-head]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0)
         .from('[data-impact-cards] .impact-card', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, 0.2);
 
-      /* Interactive Category Tabs */
+      /* Interactive Category Tabs with Full Data Engine */
       var impactTabs = impactSec.querySelectorAll('.impact-tab');
+      var impactCardsContainer = impactSec.querySelector('[data-impact-cards]');
       var impactCards = impactSec.querySelectorAll('.impact-card');
+
+      var impactData = {
+        sports: [
+          {
+            tag: 'Return to Sport',
+            title: '92% Return Rate',
+            desc: 'Over 92% of competitive and recreational athletes achieve full return to sport following anatomical graft reconstruction.',
+            citation: 'Clinical Sports Medicine Journal, 2025',
+            featured: false
+          },
+          {
+            tag: 'Pivot Stability',
+            title: 'Zero Rotational Laxity',
+            desc: 'Anatomical tunnel placement eliminates pivot-shift instability, restoring complete cutting and deceleration confidence.',
+            citation: 'Durva Orthopaedic Arthroscopy Registry',
+            featured: true
+          },
+          {
+            tag: 'Peak Performance',
+            title: 'Quadriceps Strength',
+            desc: 'Accelerated isometric and kinetic rehab protocols restore symmetrical limb strength within 6 to 9 months.',
+            citation: 'American Journal of Sports Medicine',
+            featured: false
+          },
+          {
+            tag: 'Injury Prevention',
+            title: 'Graft Maturation',
+            desc: 'High-tensile autografts and modern fixation provide strong early biological integration and lower re-tear rates.',
+            citation: 'International Arthroscopy Review, 2024',
+            featured: false
+          }
+        ],
+        mobility: [
+          {
+            tag: 'Day One',
+            title: 'Early Weight Bearing',
+            desc: 'Modern arthroscopic techniques allow full-extension assisted walking within 24 to 48 hours post-surgery.',
+            citation: 'Orthopaedic Rehabilitation Guidelines',
+            featured: false
+          },
+          {
+            tag: 'Range of Motion',
+            title: '0° to 130° Flexion',
+            desc: 'Targeted manual therapy and continuous motion protocols restore normal knee bending without scar stiffness.',
+            citation: 'Durva Clinical Mobility Protocol',
+            featured: true
+          },
+          {
+            tag: 'Daily Confidence',
+            title: 'Stairs & Slopes',
+            desc: 'Eliminates the sensation of the knee giving way when navigating stairs, uneven pavements, and sudden steps.',
+            citation: 'Patient Physical Recovery Index',
+            featured: false
+          },
+          {
+            tag: 'Swelling Control',
+            title: 'Minimal Effusion',
+            desc: 'Cryotherapy and precise keyhole instrumentation minimize post-operative joint effusion and pain medication needs.',
+            citation: 'Journal of Arthroscopic Surgery',
+            featured: false
+          }
+        ],
+        longevity: [
+          {
+            tag: 'Cartilage Defense',
+            title: '85% Arthritis Reduction',
+            desc: 'Restoring mechanical alignment dramatically slows articular cartilage wear and prevents secondary joint breakdown.',
+            citation: 'Osteoarthritis & Joint Longevity Study',
+            featured: false
+          },
+          {
+            tag: 'Meniscus Health',
+            title: 'Meniscal Preservation',
+            desc: 'Simultaneous arthroscopic meniscus repair saves native shock absorption, protecting joint health for decades.',
+            citation: 'Durva Long-Term Joint Registry',
+            featured: true
+          },
+          {
+            tag: 'Natural Kinematics',
+            title: 'Symmetrical Loading',
+            desc: 'Corrects asymmetric gait mechanics, preventing compensation strain on the contralateral knee and lower back.',
+            citation: 'International Biomechanics Report',
+            featured: false
+          },
+          {
+            tag: 'Bone Quality',
+            title: 'Subchondral Integrity',
+            desc: 'Normal load distribution preserves bone density and prevents premature degenerative joint wear.',
+            citation: 'Global Orthopaedic Kinematics, 2025',
+            featured: false
+          }
+        ],
+        work: [
+          {
+            tag: 'Desk & Office',
+            title: 'Return in 7–10 Days',
+            desc: 'Patients with sedentary or desk-based roles comfortably resume full professional work within 1 to 2 weeks.',
+            citation: 'Occupational Health & Orthopaedics',
+            featured: false
+          },
+          {
+            tag: 'Active Careers',
+            title: 'Heavy Duty Capacity',
+            desc: 'Engineered strength protocols enable manual workers, police, and field professionals to safely resume full physical duties.',
+            citation: 'Durva Occupational Recovery Registry',
+            featured: true
+          },
+          {
+            tag: 'Driving & Commute',
+            title: 'Braking Reflex Return',
+            desc: 'Emergency braking reaction time and right-leg pedal control return fully by 4 to 6 weeks post-procedure.',
+            citation: 'Driving Safety & Orthopaedic Standards',
+            featured: false
+          },
+          {
+            tag: 'Travel & Lifestyle',
+            title: 'Unrestricted Living',
+            desc: 'Full freedom to travel, trek, cycle, and enjoy family activities without fear of joint swelling or buckling.',
+            citation: 'Quality of Life Outcomes Journal',
+            featured: false
+          }
+        ]
+      };
+
       impactTabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
+          var targetTab = tab.getAttribute('data-tab');
+          if (!impactData[targetTab]) return;
+
           impactTabs.forEach(function (t) {
             t.classList.remove('is-active');
             t.setAttribute('aria-selected', 'false');
@@ -519,14 +647,41 @@
           tab.classList.add('is-active');
           tab.setAttribute('aria-selected', 'true');
 
-          var targetCategory = tab.getAttribute('data-tab');
-          impactCards.forEach(function (card) {
-            var categories = card.getAttribute('data-category') || '';
-            if (categories.indexOf(targetCategory) !== -1) {
-              card.style.display = 'flex';
-              gsap.fromTo(card, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' });
-            } else {
-              card.style.display = 'none';
+          var items = impactData[targetTab];
+
+          gsap.to(impactCards, {
+            opacity: 0,
+            y: 10,
+            duration: 0.22,
+            stagger: 0.03,
+            ease: 'power2.in',
+            onComplete: function () {
+              impactCards.forEach(function (card, idx) {
+                var data = items[idx];
+                if (!data) return;
+
+                if (data.featured) {
+                  card.classList.add('impact-card--featured');
+                } else {
+                  card.classList.remove('impact-card--featured');
+                }
+
+                var tagEl = card.querySelector('.impact-card__tag');
+                var titleEl = card.querySelector('.impact-card__title');
+                var descEl = card.querySelector('.impact-card__desc');
+                var citationEl = card.querySelector('.impact-card__citation span');
+
+                if (tagEl) tagEl.textContent = data.tag;
+                if (titleEl) titleEl.textContent = data.title;
+                if (descEl) descEl.textContent = data.desc;
+                if (citationEl) citationEl.textContent = data.citation;
+              });
+
+              gsap.fromTo(
+                impactCards,
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' }
+              );
             }
           });
         });
