@@ -87,11 +87,15 @@ include __DIR__ . '/include/header.php';
             </div>
           </div>
 
-          <!-- Right Column: Full-Bleed Architectural Portrait Portal -->
+          <!-- Right Column: Modern Sculptural Portrait Frame with Layered Offset -->
           <div class="founding__portrait-wrap" data-founding-portrait>
-            <div class="founding__portrait-backdrop" aria-hidden="true"></div>
+            <div class="founding__portrait-layer" aria-hidden="true"></div>
             <div class="founding__portrait-frame">
-              <img class="founding__portrait-img" src="assets/images/hitesh-mangal.png" alt="Dr. Hitesh Mangal — Lead Orthopaedic Surgeon" width="680" height="920" loading="lazy" decoding="async">
+              <img class="founding__portrait-img" src="assets/images/hitesh-mangal.png" alt="Dr. Hitesh Mangal — Lead Orthopaedic &amp; Arthroscopy Surgeon" width="680" height="920" loading="lazy" decoding="async">
+              <div class="founding__badge">
+                <span class="founding__badge-dot" aria-hidden="true"></span>
+                <span class="founding__badge-text">Lead Arthroscopy Specialist</span>
+              </div>
             </div>
           </div>
 
