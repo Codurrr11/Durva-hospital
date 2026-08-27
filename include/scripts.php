@@ -1,1 +1,3 @@
-<?php // include/scripts.php ?>
+<?php // include/scripts.php
+?>
+

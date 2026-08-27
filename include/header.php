@@ -27,6 +27,10 @@
           <a class="nav__link is-active" href="index.php">Home</a>
         </li>
 
+        <li class="nav__item">
+          <a class="nav__link" href="#about">About Us</a>
+        </li>
+
         <li class="nav__item" data-dropdown>
           <a class="nav__link" href="#knee-arthroscopy" aria-expanded="false" aria-controls="menu-knee">
             Knee Arthroscopy
