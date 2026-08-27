@@ -428,6 +428,16 @@
         .from('[data-founding-portrait]', { opacity: 0, y: 45, scale: 0.96, duration: 1.1, ease: 'power3.out' }, 0.15);
     }
 
+    /* ---------- about page: highlights section ---------- */
+    var highlights = document.querySelector('.highlights');
+    if (highlights) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.highlights', start: 'top 80%', once: true }
+      })
+        .from('[data-highlights-head]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0)
+        .from('[data-highlights-cards] .highlights__item', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.15 }, 0.2);
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {

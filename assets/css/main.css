@@ -3999,3 +3999,211 @@ body {
     font-size: clamp(2.25rem, 6vw, 3.25rem);
   }
 }
+
+/* ==========================================================================
+   ===== HIGHLIGHTS SECTION =====
+   Editorial 2-column highlight grid with dual-index markers and captions.
+   ========================================================================== */
+.highlights {
+  position: relative;
+  z-index: 1;
+  padding: clamp(5rem, 8vw, 8rem) var(--gutter);
+  background-color: #ffffff;
+  color: #0c1219;
+  font-family: var(--font-sans);
+  border-top: 1px solid rgba(20, 24, 30, 0.08);
+}
+
+.highlights__inner {
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+/* ---------- Top Headline ---------- */
+.highlights__header {
+  margin-bottom: clamp(2.5rem, 4.5vw, 4rem);
+  max-width: 58rem;
+}
+
+.highlights__title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #0a0d12;
+  text-wrap: pretty;
+}
+
+/* ---------- Grid ---------- */
+.highlights__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 3.5vw, 3rem);
+  align-items: start;
+}
+
+.highlights__item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Meta Row (Hairline border + Dual-Numbering) ---------- */
+.highlights__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid #14181f;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.02em;
+  color: #14181f;
+}
+
+.highlights__meta-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.highlights__marker {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background-color: #14181f;
+  border-radius: 1px;
+}
+
+.highlights__index {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.highlights__index--right {
+  margin-left: auto;
+}
+
+/* ---------- Card Visuals ---------- */
+.highlights__card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* Card 1: Media with New Badge */
+.highlights__card--media {
+  background-color: #e5edf0;
+}
+
+.highlights__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 400ms var(--ease-out);
+}
+
+.highlights__card--media:hover .highlights__img {
+  transform: scale(1.025);
+}
+
+.highlights__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.2rem 0.55rem;
+  background-color: #f5c400;
+  color: #0c1219;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.02em;
+  border-radius: 2px;
+  line-height: 1.2;
+}
+
+/* Card 2: Solid Dark Navy with Minimal Wordmark */
+.highlights__card--solid {
+  background-color: #0c1724;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 400ms var(--ease-out),
+    box-shadow 400ms var(--ease-out);
+}
+
+.highlights__card--solid:hover {
+  background-color: #112032;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.highlights__wordmark {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1;
+  user-select: none;
+  transition: transform 400ms var(--ease-out);
+}
+
+.highlights__card--solid:hover .highlights__wordmark {
+  transform: scale(1.03);
+}
+
+.highlights__wordmark-dot {
+  color: var(--c-accent, #7fd1c1);
+}
+
+/* ---------- Caption Row ---------- */
+.highlights__caption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #14181f;
+}
+
+.highlights__arrow {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #14181f;
+  flex-shrink: 0;
+}
+
+.highlights__text {
+  margin: 0;
+  color: #4a5568;
+}
+
+.highlights__label {
+  font-weight: 700;
+  color: #0a0d12;
+}
+
+.highlights__dot {
+  display: inline-block;
+  margin-inline: 0.25rem;
+  color: #14181f;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 840px) {
+  .highlights__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.75rem;
+  }
+}

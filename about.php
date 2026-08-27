@@ -98,6 +98,79 @@ include __DIR__ . '/include/header.php';
 
       </div>
     </section>
+
+    <!-- ================= Highlights / Case Studies ================= -->
+    <section class="highlights" id="highlights" aria-labelledby="highlights-title">
+      <div class="highlights__inner">
+
+        <!-- Top Large Headline -->
+        <div class="highlights__header" data-highlights-head>
+          <h2 class="highlights__title" id="highlights-title">
+            Your trusted partner for recovery and long-term mobility.
+          </h2>
+        </div>
+
+        <!-- 2-Column Card Grid -->
+        <div class="highlights__grid" data-highlights-cards>
+
+          <!-- Item 00-1 -->
+          <article class="highlights__item">
+            <!-- Header Meta Bar (Square marker & Dual numbering) -->
+            <div class="highlights__meta">
+              <div class="highlights__meta-left">
+                <span class="highlights__marker" aria-hidden="true"></span>
+                <span class="highlights__index">00—1</span>
+              </div>
+              <span class="highlights__index highlights__index--right">00—1</span>
+            </div>
+
+            <!-- Card Visual -->
+            <div class="highlights__card highlights__card--media">
+              <span class="highlights__badge">New</span>
+              <img class="highlights__img" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80" alt="Advanced physical recovery and knee arthroscopy rehabilitation" width="800" height="500" loading="lazy" decoding="async">
+            </div>
+
+            <!-- Caption Row -->
+            <div class="highlights__caption">
+              <span class="highlights__arrow" aria-hidden="true">&rarr;</span>
+              <p class="highlights__text">
+                <strong class="highlights__label">Recovery Program</strong>
+                <span class="highlights__dot" aria-hidden="true">&bull;</span>
+                <span>A personalized rehabilitation strategy that restores mobility after joint surgery.</span>
+              </p>
+            </div>
+          </article>
+
+          <!-- Item 00-2 -->
+          <article class="highlights__item">
+            <!-- Header Meta Bar (Square marker & Dual numbering) -->
+            <div class="highlights__meta">
+              <div class="highlights__meta-left">
+                <span class="highlights__marker" aria-hidden="true"></span>
+                <span class="highlights__index">00—2</span>
+              </div>
+              <span class="highlights__index highlights__index--right">00—2</span>
+            </div>
+
+            <!-- Card Visual -->
+            <div class="highlights__card highlights__card--solid">
+              <div class="highlights__wordmark">
+                <span class="highlights__wordmark-dot">.</span>durvacare<span class="highlights__wordmark-dot">.</span>
+              </div>
+            </div>
+
+            <!-- Caption Row -->
+            <div class="highlights__caption">
+              <p class="highlights__text">
+                <strong class="highlights__label">Durva Specialist Care</strong>
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
   </main>
 
 <?php include __DIR__ . '/include/footer.php'; ?>
