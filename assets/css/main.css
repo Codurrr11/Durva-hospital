@@ -3571,15 +3571,15 @@ body {
 }
 
 /* ==========================================================================
-   ===== ABOUT PAGE HERO (Compact 2-Column Split) =====
+   ===== ABOUT PAGE HERO =====
    ========================================================================== */
 .about-hero {
   position: relative;
-  min-height: clamp(260px, 32vh, 340px);
+  min-height: clamp(380px, 46vh, 480px);
   display: flex;
   align-items: flex-end;
-  padding-top: clamp(6rem, 8.5vw, 7.5rem);
-  padding-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  padding-top: clamp(8rem, 12vw, 10.5rem);
+  padding-bottom: clamp(2.5rem, 4.5vw, 3.75rem);
   padding-inline: var(--gutter);
   overflow: hidden;
   color: #ffffff;
@@ -3598,16 +3598,26 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
-  filter: brightness(0.75) saturate(1.1);
+  object-position: center 40%;
+  filter: brightness(0.62) saturate(1.15);
 }
 
 .about-hero__veil {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 900px 500px at 80% 80%, rgba(127, 209, 193, 0.14) 0%, transparent 70%),
-    linear-gradient(180deg, rgba(8, 12, 20, 0.6) 0%, rgba(8, 12, 20, 0.4) 40%, rgba(8, 12, 20, 0.94) 100%);
+  background-image:
+    linear-gradient(
+      to top,
+      rgba(var(--c-veil), 0.94) 0%,
+      rgba(var(--c-veil), 0.65) 30%,
+      rgba(var(--c-veil), 0.25) 60%,
+      rgba(var(--c-veil), 0.6) 100%
+    ),
+    radial-gradient(
+      140% 100% at 50% 50%,
+      transparent 35%,
+      rgba(var(--c-veil), 0.65) 100%
+    );
 }
 
 .about-hero__inner {
@@ -3619,7 +3629,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: clamp(1.75rem, 4vw, 4rem);
   flex-wrap: wrap;
 }
 
@@ -3634,21 +3644,22 @@ body {
   align-items: center;
   gap: 0.5rem;
   list-style: none;
-  padding: 0.4rem 0.95rem;
+  padding: 0.45rem 1rem;
   margin: 0;
-  border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  border-radius: var(--r-pill);
+  background-color: var(--c-glass);
+  border: 1px solid var(--c-glass-line);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  box-shadow: var(--sh-glass);
   font-size: 0.8125rem;
   font-weight: var(--fw-medium);
 }
 
 .about-breadcrumbs__link {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: color 180ms var(--ease-out);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .about-breadcrumbs__link:hover {
@@ -3656,7 +3667,7 @@ body {
 }
 
 .about-breadcrumbs__sep {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 0.75rem;
 }
 
@@ -3672,27 +3683,29 @@ body {
 }
 
 .about-hero__title {
-  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  font-family: var(--font-headline, 'Plus Jakarta Sans', sans-serif);
+  margin: 0 0 0.65rem;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.5rem;
+  letter-spacing: -0.035em;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .about-hero__desc {
-  font-size: clamp(0.875rem, 1vw, 0.95rem);
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.55;
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
   margin: 0;
+  font-weight: var(--fw-normal);
 }
 
 @media (max-width: 768px) {
   .about-hero__inner {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
 
   .about-hero__right {
