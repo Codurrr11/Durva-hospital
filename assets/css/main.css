@@ -4740,6 +4740,173 @@ body {
 }
 
 /* ==========================================================================
+   ===== OUR VALUES SECTION (2x2 GRID WITH ACCENT HERO CARD) =====
+   Matching reference layout: left stacked huge typography + 2x2 right card grid
+   with top-left card in rich brand teal accent.
+   ========================================================================== */
+.values-sec {
+  position: relative;
+  z-index: 1;
+  padding: clamp(5.5rem, 8.5vw, 9rem) var(--gutter);
+  background-color: #ffffff;
+  color: #0c1219;
+  font-family: var(--font-sans);
+  border-top: 1px solid rgba(20, 24, 30, 0.06);
+}
+
+.values-sec__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(2.5rem, 5.5vw, 6.5rem);
+  align-items: center;
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+/* Left Column */
+.values-sec__left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 32rem;
+}
+
+.values-sec__tag {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.02em;
+  color: #64748b;
+  margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.values-sec__title {
+  margin: 0 0 clamp(1.5rem, 2.5vw, 2rem);
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(3rem, 5.5vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.038em;
+  color: #0a0e14;
+}
+
+.values-sec__desc {
+  margin: 0;
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  line-height: 1.68;
+  color: #5d6b7e;
+  text-wrap: pretty;
+}
+
+/* Right Column: 2x2 Grid */
+.values-sec__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 1.8vw, 1.75rem);
+  align-items: stretch;
+}
+
+.value-card {
+  background-color: #f6f7f9;
+  border-radius: 16px;
+  padding: clamp(1.75rem, 2.2vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+  transition:
+    transform 350ms var(--ease-out),
+    box-shadow 350ms var(--ease-out);
+}
+
+.value-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px -8px rgba(16, 24, 40, 0.08);
+}
+
+/* Top-Left Accent Card (Theme Brand Emerald Teal) */
+.value-card--accent {
+  background: linear-gradient(135deg, #1f8a78 0%, #115d51 100%);
+  color: #ffffff;
+  box-shadow: 0 10px 28px -6px rgba(26, 117, 102, 0.35);
+}
+
+.value-card--accent:hover {
+  box-shadow: 0 16px 36px -6px rgba(26, 117, 102, 0.45);
+}
+
+/* Card Elements */
+.value-card__icon-wrap {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1.25rem;
+  color: #0a0e14;
+  display: flex;
+  align-items: center;
+}
+
+.value-card--accent .value-card__icon-wrap {
+  color: #ffffff;
+}
+
+.value-card__icon-wrap svg {
+  width: 32px;
+  height: 32px;
+}
+
+.value-card__text {
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #5d6b7e;
+  text-wrap: pretty;
+}
+
+.value-card--accent .value-card__text {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.value-card__footer {
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(26, 117, 102, 0.35);
+}
+
+.value-card--accent .value-card__footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.value-card__title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0a0e14;
+}
+
+.value-card--accent .value-card__title {
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .values-sec__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+  }
+
+  .values-sec__left {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .values-sec__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* ==========================================================================
    ===== FOOTER SECTION =====
    ========================================================================== */
 .site-footer {

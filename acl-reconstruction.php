@@ -137,6 +137,99 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Our Values Section (2x2 Grid with Accent Hero Card) ================= -->
+    <section class="values-sec" id="values" aria-labelledby="values-title">
+      <div class="values-sec__inner">
+
+        <!-- Left Column: Key Value Tag, Stacked Headline, Narrative -->
+        <div class="values-sec__left" data-values-head>
+          <span class="values-sec__tag">Key Values</span>
+
+          <h2 class="values-sec__title" id="values-title">
+            Our<br>Values
+          </h2>
+
+          <p class="values-sec__desc">
+            At Durva Hospital, our values guide every surgical decision and rehabilitation step. They shape our specialist consultations, patient recovery protocols, and long-term joint outcomes.
+          </p>
+        </div>
+
+        <!-- Right Column: 2x2 Grid of Cards -->
+        <div class="values-sec__grid" data-values-cards>
+
+          <!-- Card 1: Patient First (Hero Brand Accent Card) -->
+          <article class="value-card value-card--accent">
+            <div class="value-card__icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>
+                <path d="M19 11a3 3 0 0 1 0 6"/>
+                <path d="M5 11a3 3 0 0 0 0 6"/>
+              </svg>
+            </div>
+            <p class="value-card__text">
+              Putting our patients&rsquo; joint health, comfort, and active return above all else.
+            </p>
+            <div class="value-card__footer">
+              <h3 class="value-card__title">Patient First</h3>
+            </div>
+          </article>
+
+          <!-- Card 2: Precision Care (Light Card) -->
+          <article class="value-card">
+            <div class="value-card__icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 16v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1"/>
+                <rect x="8" y="3" width="12" height="12" rx="2"/>
+                <path d="m11 9 2 2 4-4"/>
+              </svg>
+            </div>
+            <p class="value-card__text">
+              Minimally invasive keyhole accuracy tailored to each patient&rsquo;s anatomical knee profile.
+            </p>
+            <div class="value-card__footer">
+              <h3 class="value-card__title">Precision Care</h3>
+            </div>
+          </article>
+
+          <!-- Card 3: Integrated Rehab (Light Card) -->
+          <article class="value-card">
+            <div class="value-card__icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.6-4.6a2 2 0 0 0 0-2.8l-1.4-1.4a2 2 0 0 0-2.8 0L13 12"/>
+                <path d="m13 7-2-2a1 1 0 0 0-1.4 0L5 9.6a2 2 0 0 0 0 2.8l1.4 1.4a2 2 0 0 0 2.8 0L11 12"/>
+              </svg>
+            </div>
+            <p class="value-card__text">
+              Surgeons and physiotherapists working together for predictable recovery milestones.
+            </p>
+            <div class="value-card__footer">
+              <h3 class="value-card__title">Integrated Rehab</h3>
+            </div>
+          </article>
+
+          <!-- Card 4: Clinical Excellence (Light Card) -->
+          <article class="value-card">
+            <div class="value-card__icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                <path d="M12 11h.01"/>
+              </svg>
+            </div>
+            <p class="value-card__text">
+              Continuously advancing orthopaedic methods with proven anatomical graft fixation.
+            </p>
+            <div class="value-card__footer">
+              <h3 class="value-card__title">Clinical Excellence</h3>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
 <?php include __DIR__ . '/include/footer.php'; ?>

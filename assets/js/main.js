@@ -488,6 +488,16 @@
         .from('[data-principles-cards] .principle-card', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.2);
     }
 
+    /* ---------- service page: values section ---------- */
+    var valuesSec = document.querySelector('.values-sec');
+    if (valuesSec) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.values-sec', start: 'top 80%', once: true }
+      })
+        .from('[data-values-head]', { opacity: 0, x: -30, duration: 0.85, ease: 'power3.out' }, 0)
+        .from('[data-values-cards] .value-card', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out', stagger: 0.1 }, 0.15);
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {
