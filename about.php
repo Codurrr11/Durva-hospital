@@ -39,33 +39,63 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
-    <!-- Main About Content Section -->
-    <section class="about-overview" id="about-overview" style="padding: clamp(4rem, 6vw, 6.5rem) var(--gutter); background: #ffffff; color: var(--c-paper-ink);">
-      <div class="u-container" style="max-width: 76rem; margin-inline: auto;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: clamp(2rem, 4vw, 3.5rem); align-items: center;">
-          <div>
-            <h2 style="font-size: clamp(1.75rem, 2.8vw, 2.25rem); font-weight: 700; line-height: 1.2; margin: 0 0 1.25rem; color: #0a0c0f;">
-              Where Surgical Precision Meets Patient-First Healing
+    <!-- ================= Our Story ================= -->
+    <section class="story" id="our-story" aria-labelledby="story-title">
+      <div class="story__container">
+
+        <div class="story__grid">
+
+          <!-- Left Column: Copy & Actions -->
+          <div class="story__content" data-story-content>
+            <div class="story__eyebrow">
+              <span class="story__eyebrow-mark" aria-hidden="true"></span>
+              <span class="story__eyebrow-text">Our Founding Story</span>
+            </div>
+
+            <h2 class="story__title" id="story-title">
+              Where Surgical Precision Meets <em class="story__serif">Patient-First</em> Healing
             </h2>
-            <p style="font-size: 0.95rem; line-height: 1.7; color: #4a5568; margin-bottom: 1.25rem;">
-              At Durva Hospital, we believe movement is fundamental to quality of life. Founded with a vision to deliver world-class orthopaedic care in Kota and Rajasthan, our center brings together super-specialist surgeons, advanced modular surgical suites, and dedicated rehabilitation therapists.
-            </p>
-            <p style="font-size: 0.95rem; line-height: 1.7; color: #4a5568; margin-bottom: 2rem;">
-              Whether treating complex sports injuries, performing minimally invasive arthroscopic ligament repairs, or conducting precision joint replacements, our mission remains focused on fast recovery, minimal pain, and lasting mobility.
-            </p>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-              <a class="btn btn--primary" href="#appointment" style="padding: 0.75rem 1.5rem; background: var(--c-mark, #1a7566); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 600; font-size: 0.875rem;">
-                Book Consultation
+
+            <div class="story__body">
+              <p class="story__lead">
+                Movement is fundamental to the human experience. Founded with the conviction that advanced orthopaedic care should be uncompromising, compassionate, and accessible, Durva Hospital was established in Kota by Dr. Hitesh Mangal to deliver world-class arthroscopy and joint reconstruction under one dedicated roof.
+              </p>
+              <p class="story__text">
+                From pioneering minimally invasive keyhole surgeries to personalized post-operative rehabilitation protocols, our clinical practice combines international surgical benchmarks with deep patient empathy. Every diagnosis, procedure, and recovery milestone is guided by one singular objective: helping you regain strength, confidence, and pain-free mobility without limits.
+              </p>
+            </div>
+
+            <div class="story__actions">
+              <a class="story-btn story-btn--primary" href="#appointment">
+                <span>Book Consultation</span>
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3.33 8h9.34M8.67 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </a>
-              <a class="btn btn--outline" href="#contact" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e0; color: #1a202c; border-radius: 9999px; text-decoration: none; font-weight: 600; font-size: 0.875rem;">
-                Contact Us
+              <a class="story-btn story-btn--ghost" href="#contact">
+                <span>Contact Us</span>
               </a>
             </div>
           </div>
-          <div style="border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.12);">
-            <img src="assets/images/both-doc.png" alt="Durva Hospital Specialists" style="width: 100%; height: auto; display: block;" loading="lazy">
+
+          <!-- Right Column: Dominant Vertical Portrait Card with Tonal Glow -->
+          <div class="story__media-col" data-story-card>
+            <div class="story__card-glow" aria-hidden="true"></div>
+            <div class="story__card-frame">
+              <figure class="story__figure">
+                <img class="story__portrait" src="assets/images/hitesh-mangal.png" alt="Dr. Hitesh Mangal — Lead Orthopaedic &amp; Arthroscopy Surgeon" width="600" height="780" loading="lazy" decoding="async">
+                <figcaption class="story__caption">
+                  <div class="story__doctor-meta">
+                    <span class="story__doctor-name">Dr. Hitesh Mangal</span>
+                    <span class="story__doctor-role">M.B.B.S., M.S. (Ortho) &bull; Lead Arthroscopy &amp; Joint Surgeon</span>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
           </div>
+
         </div>
+
       </div>
     </section>
   </main>

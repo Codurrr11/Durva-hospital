@@ -417,6 +417,16 @@
       }
     }
 
+    /* ---------- about page: story section ---------- */
+    var story = document.querySelector('.story');
+    if (story) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.story', start: 'top 80%', once: true }
+      })
+        .from('[data-story-card]', { opacity: 0, y: 40, scale: 0.96, duration: 1, ease: 'power3.out' }, 0)
+        .from('[data-story-content] > *', { opacity: 0, y: 28, duration: 0.85, ease: 'power3.out', stagger: 0.12 }, 0.15);
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {

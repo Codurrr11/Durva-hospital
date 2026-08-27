@@ -3718,3 +3718,293 @@ body {
     max-width: 100%;
   }
 }
+
+/* ==========================================================================
+   ===== ABOUT PAGE: OUR STORY SECTION =====
+   An art-directed editorial split showcasing Dr. Hitesh Mangal.
+   Features:
+     - Ambient theme gradient wash (navy/teal/white blend)
+     - Typographic confidence: statement sans + serif italic mix
+     - Dominant vertical photo card with soft tonal glow & white frame
+     - Frosted dark-glass doctor meta tag
+     - Solid accent & ghost glass-pill CTAs
+   ========================================================================== */
+.story {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(5rem, 8vw, 8.5rem) var(--gutter);
+  font-family: var(--font-sans);
+  color: var(--c-paper-ink);
+  background:
+    radial-gradient(ellipse 1000px 700px at 10% 25%, rgba(127, 209, 193, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 600px at 90% 75%, rgba(26, 117, 102, 0.1) 0%, transparent 65%),
+    linear-gradient(180deg, #f8fbf9 0%, #edf6f3 50%, #f7faf9 100%);
+  border-bottom: 1px solid rgba(26, 117, 102, 0.08);
+}
+
+.story__container {
+  max-width: 82rem;
+  margin-inline: auto;
+}
+
+.story__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+/* ---------- Content Column ---------- */
+.story__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.story__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.story__eyebrow-mark {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background-color: var(--c-mark, #1a7566);
+}
+
+.story__eyebrow-text {
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-mark, #1a7566);
+}
+
+.story__title {
+  margin: 0 0 1.75rem;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2.25rem, 4.2vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: #0c1219;
+  text-wrap: pretty;
+}
+
+.story__serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--c-mark, #1a7566);
+  letter-spacing: -0.01em;
+}
+
+.story__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
+}
+
+.story__lead {
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.68;
+  color: #1e2633;
+  font-weight: 500;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.story__text {
+  font-size: clamp(0.9375rem, 1vw, 1rem);
+  line-height: 1.72;
+  color: #505c6e;
+  font-weight: 400;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ---------- Buttons ---------- */
+.story__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.story-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8125rem 1.625rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: var(--fs-btn);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-nav);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.story-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.story-btn:hover svg {
+  transform: translateX(3px);
+}
+
+.story-btn:active {
+  transform: translateY(0);
+}
+
+.story-btn--primary {
+  background: linear-gradient(135deg, #1a7566 0%, #105549 100%);
+  color: #ffffff;
+  border: 1px solid rgba(26, 117, 102, 0.4);
+  box-shadow: 0 10px 26px -6px rgba(26, 117, 102, 0.42);
+}
+
+.story-btn--primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #1e8776 0%, #156255 100%);
+  box-shadow: 0 14px 32px -6px rgba(26, 117, 102, 0.52);
+  color: #ffffff;
+}
+
+.story-btn--ghost {
+  background-color: rgba(26, 117, 102, 0.06);
+  color: #12574c;
+  border: 1px solid rgba(26, 117, 102, 0.22);
+}
+
+.story-btn--ghost:hover {
+  transform: translateY(-2px);
+  background-color: rgba(26, 117, 102, 0.12);
+  border-color: rgba(26, 117, 102, 0.4);
+  color: #0c3e36;
+}
+
+/* ---------- Media / Portrait Card Column ---------- */
+.story__media-col {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+/* Tonal navy/teal ambient glow */
+.story__card-glow {
+  position: absolute;
+  inset: -15px -15px -25px -15px;
+  border-radius: clamp(34px, 4vw, 48px);
+  background: radial-gradient(circle at 60% 35%, rgba(127, 209, 193, 0.45) 0%, rgba(22, 40, 60, 0.3) 48%, transparent 70%);
+  filter: blur(40px);
+  opacity: 0.85;
+  z-index: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+/* Elegant white card frame */
+.story__card-frame {
+  position: relative;
+  z-index: 1;
+  border-radius: clamp(24px, 2.8vw, 32px);
+  background: #ffffff;
+  padding: clamp(0.75rem, 1.2vw, 1.125rem);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 32px 70px -20px rgba(16, 32, 45, 0.16),
+    0 12px 30px -10px rgba(16, 32, 45, 0.08);
+}
+
+.story__figure {
+  position: relative;
+  border-radius: clamp(18px, 2.2vw, 24px);
+  overflow: hidden;
+  margin: 0;
+  background: linear-gradient(180deg, #e4eee8 0%, #d0e3dc 100%);
+  aspect-ratio: 4 / 5.2;
+}
+
+.story__portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 600ms var(--ease-out);
+}
+
+.story__card-frame:hover .story__portrait {
+  transform: scale(1.02);
+}
+
+/* Frosted glass doctor meta tag */
+.story__caption {
+  position: absolute;
+  left: clamp(0.875rem, 1.5vw, 1.25rem);
+  right: clamp(0.875rem, 1.5vw, 1.25rem);
+  bottom: clamp(0.875rem, 1.5vw, 1.25rem);
+  padding: clamp(0.75rem, 1.2vw, 0.95rem) clamp(0.95rem, 1.5vw, 1.25rem);
+  border-radius: 16px;
+  background: rgba(8, 14, 22, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+}
+
+.story__doctor-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.story__doctor-name {
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.story__doctor-role {
+  font-size: clamp(0.75rem, 0.85vw, 0.8125rem);
+  color: var(--c-accent, #7fd1c1);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .story__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+
+  .story__media-col {
+    order: -1;
+    max-width: 26rem;
+  }
+
+  .story__title {
+    font-size: clamp(2rem, 5.5vw, 2.75rem);
+  }
+}
