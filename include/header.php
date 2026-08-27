@@ -1,3 +1,6 @@
+<?php
+  $current_page = basename($_SERVER['PHP_SELF'] ?? 'index.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,11 +27,11 @@
       <ul class="nav__list capsule u-rise u-d1">
 
         <li class="nav__item">
-          <a class="nav__link is-active" href="index.php">Home</a>
+          <a class="nav__link <?= ($current_page === 'index.php' || $current_page === '') ? 'is-active' : '' ?>" href="index.php">Home</a>
         </li>
 
         <li class="nav__item">
-          <a class="nav__link" href="#about">About Us</a>
+          <a class="nav__link <?= ($current_page === 'about.php') ? 'is-active' : '' ?>" href="about.php">About Us</a>
         </li>
 
         <li class="nav__item" data-dropdown>
