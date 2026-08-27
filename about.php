@@ -64,23 +64,12 @@ include __DIR__ . '/include/header.php';
               Trained across leading surgical institutes in South Korea, Bangkok, and India, Dr. Mangal built Durva Hospital to redefine recovery timelines. Every diagnostic evaluation, arthroscopic keyhole reconstruction, and rehabilitation protocol is engineered to protect healthy tissue and restore natural joint mechanics without limits.
             </p>
 
-            <!-- Integrated Typographic Credential Lockup (No floating boxes) -->
+            <!-- Integrated Typographic Credential Lockup -->
             <div class="founding__creds">
               <div class="founding__doctor">
                 <span class="founding__doctor-name">Dr. Hitesh Mangal</span>
                 <span class="founding__doctor-degree">M.B.B.S., M.S. (Ortho) &bull; Lead Arthroscopy &amp; Joint Surgeon</span>
                 <span class="founding__doctor-fellowship">Knee &amp; Shoulder Fellowship Trained &bull; South Korea &amp; Bangkok</span>
-              </div>
-
-              <div class="founding__metrics">
-                <div class="founding__metric">
-                  <span class="founding__metric-num">5,000+</span>
-                  <span class="founding__metric-lbl">Arthroscopic Surgeries</span>
-                </div>
-                <div class="founding__metric">
-                  <span class="founding__metric-num">15+</span>
-                  <span class="founding__metric-lbl">Years Surgical Mastery</span>
-                </div>
               </div>
             </div>
 
