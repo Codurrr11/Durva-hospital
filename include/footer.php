@@ -37,65 +37,91 @@
         </div>
       </div>
 
-      <!-- LINK COLUMNS ROW (4 Columns) -->
+      <!-- TABS & DATA ROW (3 Columns) -->
       <div class="footer-grid">
 
         <!-- Column 1: Quick Links -->
         <div class="footer-col" data-footer-col>
           <h3 class="footer-col__title">Quick Links</h3>
-          <ul class="footer-col__list">
-            <li><a class="footer-link" href="index.php">Home</a></li>
-            <li><a class="footer-link" href="#about">About Us</a></li>
-            <li><a class="footer-link" href="#about-durva">Our Doctors</a></li>
-            <li><a class="footer-link" href="#appointment">Book Appointment</a></li>
+          <ul class="footer-dash-list">
+            <li><a class="footer-dash-link" href="#acl-avulsion"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Avulsion</span></a></li>
+            <li><a class="footer-dash-link" href="#acl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Reconstruction</span></a></li>
+            <li><a class="footer-dash-link" href="#pcl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>PCL Reconstruction</span></a></li>
+            <li><a class="footer-dash-link" href="#frozen-shoulder"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Frozen Shoulder</span></a></li>
+            <li><a class="footer-dash-link" href="#synovitis"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Synovitis</span></a></li>
+            <li><a class="footer-dash-link" href="#about"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>About Us</span></a></li>
+            <li><a class="footer-dash-link" href="#contact"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Contact</span></a></li>
           </ul>
         </div>
 
-        <!-- Column 2: Departments -->
+        <!-- Column 2: Recent Posts -->
         <div class="footer-col" data-footer-col>
-          <h3 class="footer-col__title">Departments</h3>
-          <ul class="footer-col__list">
-            <li><a class="footer-link" href="#knee-arthroscopy">Knee Arthroscopy</a></li>
-            <li><a class="footer-link" href="#shoulder-arthroscopy">Shoulder Arthroscopy</a></li>
-            <li><a class="footer-link" href="#joint-replacement">Joint Replacement</a></li>
-            <li><a class="footer-link" href="#sports-medicine">Sports Medicine</a></li>
-          </ul>
+          <h3 class="footer-col__title">Recent Posts</h3>
+          <div class="footer-posts">
+
+            <article class="footer-post">
+              <a class="footer-post__thumb" href="#blog" aria-label="Advance Shoulder training Programme">
+                <img class="footer-post__img" src="assets/images/dr-1.png" alt="Advance Shoulder training Programme" width="60" height="60" loading="lazy">
+              </a>
+              <div class="footer-post__meta">
+                <h4 class="footer-post__title">
+                  <a class="footer-post__title-link" href="#blog">Advance Shoulder training Programme</a>
+                </h4>
+                <time class="footer-post__date" datetime="2025-11-17">
+                  <svg class="footer-post__date-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
+                    <path d="M5 1.5v2.5M11 1.5v2.5M2 6.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                  </svg>
+                  November 17, 2025
+                </time>
+              </div>
+            </article>
+
+            <article class="footer-post">
+              <a class="footer-post__thumb" href="#blog" aria-label="DR Hitesh Mangal">
+                <img class="footer-post__img" src="assets/images/dr-2.png" alt="DR Hitesh Mangal" width="60" height="60" loading="lazy">
+              </a>
+              <div class="footer-post__meta">
+                <h4 class="footer-post__title">
+                  <a class="footer-post__title-link" href="#blog">DR Hitesh Mangal</a>
+                </h4>
+                <time class="footer-post__date" datetime="2024-11-18">
+                  <svg class="footer-post__date-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/>
+                    <path d="M5 1.5v2.5M11 1.5v2.5M2 6.5h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                  </svg>
+                  November 18, 2024
+                </time>
+              </div>
+            </article>
+
+          </div>
         </div>
 
-        <!-- Column 3: Patient Care -->
-        <div class="footer-col" data-footer-col>
-          <h3 class="footer-col__title">Patient Care</h3>
-          <ul class="footer-col__list">
-            <li><a class="footer-link" href="#faqs">FAQs</a></li>
-            <li><a class="footer-link" href="#insurance">Insurance &amp; Billing</a></li>
-            <li><a class="footer-link" href="#resources">Patient Resources</a></li>
-            <li><a class="footer-link" href="#emergency">Emergency Care</a></li>
-          </ul>
-        </div>
-
-        <!-- Column 4: Connect With Us -->
-        <div class="footer-col footer-col--connect" data-footer-col>
-          <h3 class="footer-col__title">Connect With Us</h3>
+        <!-- Column 3: Contact Us -->
+        <div class="footer-col footer-col--contact" data-footer-col>
+          <h3 class="footer-col__title">Contact Us</h3>
           <ul class="footer-contact">
             <li class="footer-contact__item">
               <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M2.5 5.833A2.5 2.5 0 0 1 5 3.333h10a2.5 2.5 0 0 1 2.5 2.5v8.334a2.5 2.5 0 0 1-2.5 2.5H5a2.5 2.5 0 0 1-2.5-2.5V5.833Z" stroke="currentColor" stroke-width="1.4"/>
-                <path d="m3.333 5 5.753 4.315a1.667 1.667 0 0 0 1.998 0L16.833 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M10 10.833a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 18.333S16.667 13.333 16.667 8.333a6.667 6.667 0 1 0-13.334 0c0 5 6.667 10 6.667 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <a class="footer-link footer-link--contact" href="mailto:care@durvahospital.com">care@durvahospital.com</a>
+              <span class="footer-contact__text">Plot Number 3,4 Allied Ample city, 80 Feet Link Rd, Borkhera, Kota, Rajasthan 324001</span>
             </li>
             <li class="footer-contact__item">
               <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M18.333 14.1v2.5a1.667 1.667 0 0 1-1.816 1.667c-8.084-.875-14.442-7.233-15.317-15.317A1.667 1.667 0 0 1 2.867 1.133h2.5a1.667 1.667 0 0 1 1.666 1.434c.109.825.317 1.633.617 2.408.183.458.075.983-.275 1.333l-1.058 1.059a13.334 13.334 0 0 0 5.891 5.891l1.059-1.058a1.667 1.667 0 0 1 1.333-.275c.775.3 1.583.508 2.408.617a1.667 1.667 0 0 1 1.434 1.666v-.108Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2.5 5.833A2.5 2.5 0 0 1 5 3.333h10a2.5 2.5 0 0 1 2.5 2.5v8.334a2.5 2.5 0 0 1-2.5 2.5H5a2.5 2.5 0 0 1-2.5-2.5V5.833Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="m3.333 5 5.753 4.315a1.667 1.667 0 0 0 1.998 0L16.833 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
-              <a class="footer-link footer-link--contact" href="tel:+919876543210">+91 98765 43210</a>
+              <a class="footer-link footer-link--contact" href="mailto:durvahospitalkota@gmail.com">durvahospitalkota@gmail.com</a>
             </li>
             <li class="footer-contact__item">
               <svg class="footer-contact__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M10 10.833a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="1.4"/>
-                <path d="M10 18.333S16.667 13.333 16.667 8.333a6.667 6.667 0 1 0-13.334 0c0 5 6.667 10 6.667 10Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="5.833" y="2.5" width="8.334" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="10" cy="14.5" r="0.75" fill="currentColor"/>
               </svg>
-              <span class="footer-contact__text">Plot 12, Medical Square, Ring Road, Pune - 411038</span>
+              <a class="footer-link footer-link--contact" href="tel:917014584948">917014584948</a>
             </li>
           </ul>
 

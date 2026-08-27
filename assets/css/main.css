@@ -3216,12 +3216,12 @@ body {
   margin: 0.625rem 0 0 0.5rem;
 }
 
-/* ---------- LINK COLUMNS ROW ---------- */
+/* ---------- TABS & DATA ROW (3 Columns) ---------- */
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.75rem, 3.2vw, 3.5rem);
-  padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
+  grid-template-columns: 1fr 1.35fr 1.3fr;
+  gap: clamp(2rem, 3.5vw, 4rem);
+  padding-bottom: clamp(2rem, 3.5vw, 3rem);
 }
 
 .footer-col {
@@ -3231,11 +3231,11 @@ body {
 
 .footer-col__title {
   position: relative;
-  font-size: 0.9375rem;
-  font-weight: var(--fw-semibold);
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
   letter-spacing: -0.01em;
   color: #ffffff;
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.35rem;
   padding-bottom: 0.5rem;
 }
 
@@ -3244,13 +3244,14 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 1.5rem;
+  width: 1.75rem;
   height: 2px;
   border-radius: 1px;
   background: var(--c-accent);
 }
 
-.footer-col__list {
+/* Quick Links with minus dash */
+.footer-dash-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -3259,27 +3260,123 @@ body {
   list-style: none;
 }
 
-.footer-link {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.65);
+.footer-dash-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
   transition: color 180ms var(--ease-out), transform 180ms var(--ease-out);
-  display: inline-block;
-  width: fit-content;
 }
 
-.footer-link:hover {
+.footer-dash-mark {
+  color: var(--c-accent);
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1;
+  transition: transform 180ms var(--ease-out);
+}
+
+.footer-dash-link:hover {
   color: #ffffff;
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
-/* Contact block in Col 4 */
+.footer-dash-link:hover .footer-dash-mark {
+  color: var(--c-surface);
+  transform: scale(1.2);
+}
+
+/* Recent Posts with thumbnails & date */
+.footer-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.footer-post {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.footer-post__thumb {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 180ms var(--ease-out), border-color 180ms var(--ease-out);
+}
+
+.footer-post__thumb:hover {
+  transform: scale(1.05);
+  border-color: var(--c-accent);
+}
+
+.footer-post__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.footer-post__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.footer-post__title {
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.footer-post__title-link {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 180ms var(--ease-out);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer-post__title-link:hover {
+  color: var(--c-accent);
+}
+
+.footer-post__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--c-accent);
+  font-weight: 500;
+}
+
+.footer-post__date-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--c-accent);
+  flex-shrink: 0;
+}
+
+/* Contact block in Col 3 */
 .footer-contact {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
   padding: 0;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.35rem;
   list-style: none;
 }
 
@@ -3288,24 +3385,30 @@ body {
   align-items: flex-start;
   gap: 0.625rem;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.65);
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.55;
 }
 
 .footer-contact__icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  margin-top: 0.125rem;
+  margin-top: 0.15rem;
   color: var(--c-accent);
 }
 
 .footer-link--contact {
   color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 180ms var(--ease-out);
+}
+
+.footer-link--contact:hover {
+  color: #ffffff;
 }
 
 .footer-contact__text {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 /* Social icons matching glass-pill language */
@@ -3430,8 +3533,8 @@ body {
   }
 
   .footer-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.5rem 2rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
   }
 }
 
