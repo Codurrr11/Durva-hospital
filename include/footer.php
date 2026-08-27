@@ -122,22 +122,25 @@
           </div>
         </div>
 
+      <!-- Bottom Bar (sitting cleanly above the skyline, matching reference) -->
+      <div class="footer-bottom" data-footer-bottom>
+        <div class="footer-bottom__inner">
+          <p class="footer-bottom__copy">&copy; 2026 Durva Hospital. All Rights Reserved.</p>
+          <ul class="footer-bottom__links">
+            <li><a class="footer-bottom__link" href="#privacy">Privacy Policy</a></li>
+            <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
+            <li><a class="footer-bottom__link" href="#terms">Terms &amp; Conditions</a></li>
+            <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
+            <li><a class="footer-bottom__link" href="#patient-rights">Patient Rights</a></li>
+          </ul>
+        </div>
       </div>
 
     </div>
 
-    <!-- Bottom Bar -->
-    <div class="footer-bottom" data-footer-bottom>
-      <div class="footer-bottom__inner">
-        <p class="footer-bottom__copy">&copy; 2026 Durva Hospital. All Rights Reserved.</p>
-        <ul class="footer-bottom__links">
-          <li><a class="footer-bottom__link" href="#privacy">Privacy Policy</a></li>
-          <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-          <li><a class="footer-bottom__link" href="#terms">Terms &amp; Conditions</a></li>
-          <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-          <li><a class="footer-bottom__link" href="#patient-rights">Patient Rights</a></li>
-        </ul>
-      </div>
+    <!-- Very Bottom Edge-to-Edge Hospital Skyline (matching reference) -->
+    <div class="footer-skyline" aria-hidden="true" data-footer-skyline>
+      <img class="footer-skyline__img" src="assets/images/footer-bg.png" alt="" loading="lazy" decoding="async">
     </div>
 
   </footer>
