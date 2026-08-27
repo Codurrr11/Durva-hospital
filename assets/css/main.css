@@ -4619,6 +4619,127 @@ body {
 }
 
 /* ==========================================================================
+   ===== PRINCIPLES SECTION =====
+   Minimal soft-canvas 3-column principles layout with dark squircle icons.
+   ========================================================================== */
+.principles {
+  position: relative;
+  z-index: 1;
+  padding: clamp(5rem, 8vw, 8.5rem) var(--gutter);
+  background-color: #f6f7f9;
+  color: #0c1219;
+  font-family: var(--font-sans);
+}
+
+.principles__inner {
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+/* Header */
+.principles__header {
+  max-width: 54rem;
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+
+.principles__badge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  background-color: #e8ebf0;
+  color: #64748b;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  margin-bottom: 1.5rem;
+  line-height: 1.3;
+}
+
+.principles__title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  color: #0a0e14;
+  text-wrap: pretty;
+}
+
+.principles__title-muted {
+  color: #788596;
+  font-weight: 600;
+}
+
+/* 3-Column Grid */
+.principles__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  align-items: stretch;
+}
+
+.principle-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: clamp(2.25rem, 3.2vw, 3.25rem) clamp(1.75rem, 2.5vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px -6px rgba(16, 24, 40, 0.04);
+  transition:
+    transform 350ms var(--ease-out),
+    box-shadow 350ms var(--ease-out);
+}
+
+.principle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -8px rgba(16, 24, 40, 0.08);
+}
+
+/* Dark Squircle Icon */
+.principle-card__icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #0a0e14;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+}
+
+.principle-card__icon-badge svg {
+  width: 22px;
+  height: 22px;
+}
+
+.principle-card__title {
+  margin: 0 0 0.85rem;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0a0e14;
+}
+
+.principle-card__desc {
+  margin: 0;
+  font-size: clamp(0.875rem, 1vw, 0.9375rem);
+  line-height: 1.65;
+  color: #5d6b7e;
+  text-wrap: pretty;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .principles__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* ==========================================================================
    ===== FOOTER SECTION =====
    The closing statement: the one dark band under a light page.
 

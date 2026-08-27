@@ -73,6 +73,70 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Clinical Principles / Protocol ================= -->
+    <section class="principles" id="principles" aria-labelledby="principles-title">
+      <div class="principles__inner">
+
+        <!-- Top Eyebrow Badge & Two-Tone Headline -->
+        <div class="principles__header" data-principles-head>
+          <div class="principles__badge">Principles</div>
+
+          <h2 class="principles__title" id="principles-title">
+            Durva is built on a simple standard: <span class="principles__title-muted">recovery should feel clear, not overwhelming.</span> We focus on how real mobility returns.
+          </h2>
+        </div>
+
+        <!-- 3-Card Grid -->
+        <div class="principles__grid" data-principles-cards>
+
+          <!-- Card 1: Clarity -->
+          <article class="principle-card">
+            <div class="principle-card__icon-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
+            <h3 class="principle-card__title">Clarity</h3>
+            <p class="principle-card__desc">
+              Treatment pathways and surgical milestones are structured clearly so you always know what matters for your recovery today.
+            </p>
+          </article>
+
+          <!-- Card 2: Adaptability -->
+          <article class="principle-card">
+            <div class="principle-card__icon-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+            </div>
+            <h3 class="principle-card__title">Adaptability</h3>
+            <p class="principle-card__desc">
+              Your healing rate is personal &mdash; your physiotherapy protocol adapts dynamically to your joint response, not an arbitrary schedule.
+            </p>
+          </article>
+
+          <!-- Card 3: Focus -->
+          <article class="principle-card">
+            <div class="principle-card__icon-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+            </div>
+            <h3 class="principle-card__title">Focus</h3>
+            <p class="principle-card__desc">
+              Surgical precision, graft strength, and muscle rehabilitation align seamlessly so you regain full athletic movement without friction.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
 <?php include __DIR__ . '/include/footer.php'; ?>

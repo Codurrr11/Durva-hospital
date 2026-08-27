@@ -478,6 +478,16 @@
         .from('[data-svc-media]', { opacity: 0, scale: 0.98, duration: 1.1, ease: 'power3.out' }, 0.15);
     }
 
+    /* ---------- service page: principles section ---------- */
+    var principles = document.querySelector('.principles');
+    if (principles) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.principles', start: 'top 80%', once: true }
+      })
+        .from('[data-principles-head]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0)
+        .from('[data-principles-cards] .principle-card', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.2);
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {
