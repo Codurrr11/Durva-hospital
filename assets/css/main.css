@@ -3693,6 +3693,11 @@ body {
   text-wrap: balance;
 }
 
+.about-hero__accent {
+  color: var(--c-accent, #7fd1c1);
+  font-style: normal;
+}
+
 .about-hero__desc {
   font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
   color: rgba(255, 255, 255, 0.82);

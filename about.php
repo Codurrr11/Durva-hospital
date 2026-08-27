@@ -29,7 +29,9 @@ include __DIR__ . '/include/header.php';
 
         <!-- Right Bottom: Title and Paragraph -->
         <div class="about-hero__right">
-          <h1 class="about-hero__title">About Durva Hospital</h1>
+          <h1 class="about-hero__title">
+            About <span class="about-hero__accent">Durva Hospital</span>
+          </h1>
           <p class="about-hero__desc">
             Pioneering advanced orthopaedics, arthroscopy, and compassionate patient care in Kota.
           </p>
