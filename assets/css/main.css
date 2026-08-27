@@ -3569,3 +3569,101 @@ body {
     gap: 0.875rem;
   }
 }
+
+/* ==========================================================================
+   ===== ABOUT PAGE HERO =====
+   ========================================================================== */
+.about-hero {
+  position: relative;
+  min-height: clamp(480px, 58vh, 640px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(8rem, 14vw, 11rem) var(--gutter) clamp(4rem, 6vw, 6rem);
+  overflow: hidden;
+  color: #ffffff;
+  font-family: var(--font-sans);
+}
+
+.about-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about-hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.85) saturate(1.1);
+  transform: scale(1.03);
+}
+
+.about-hero__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 900px 600px at 50% 30%, rgba(127, 209, 193, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(8, 12, 20, 0.75) 0%, rgba(8, 12, 20, 0.6) 40%, rgba(8, 12, 20, 0.96) 100%);
+}
+
+.about-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 58rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-hero__badge {
+  display: inline-block;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(127, 209, 193, 0.14);
+  border: 1px solid rgba(127, 209, 193, 0.35);
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin-bottom: 1.25rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.about-hero__title {
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+  font-family: var(--font-headline, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0 0 1.25rem;
+  color: #ffffff;
+}
+
+.about-hero__title-em {
+  font-style: normal;
+  color: var(--c-accent);
+}
+
+.about-hero__desc {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.65;
+  margin: 0 0 2rem;
+  max-width: 46ch;
+}
+
+.about-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}

@@ -5,17 +5,25 @@ include __DIR__ . '/include/header.php';
 
   <main>
     <!-- About Page Hero / Header Banner -->
-    <section class="about-hero" id="about-hero" style="padding: clamp(6rem, 10vw, 9rem) var(--gutter) clamp(3rem, 5vw, 4.5rem); background: linear-gradient(180deg, #090e17 0%, #06090e 100%); color: #ffffff; text-align: center;">
-      <div class="u-container" style="max-width: 54rem; margin-inline: auto;">
-        <span class="badge" style="display: inline-block; padding: 0.35rem 0.85rem; border: 1px solid rgba(127, 209, 193, 0.3); border-radius: 9999px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--c-accent); margin-bottom: 1.25rem;">
-          About Durva Hospital
-        </span>
-        <h1 style="font-size: clamp(2rem, 4vw, 3.25rem); font-family: var(--font-display, inherit); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 1.25rem;">
-          Pioneering Advanced Orthopaedics &amp; Compassionate Care
+    <section class="about-hero" id="about-hero">
+      <div class="about-hero__media" aria-hidden="true">
+        <img class="about-hero__bg-img" src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=2000&q=80" alt="" loading="eager" decoding="async">
+        <div class="about-hero__veil"></div>
+      </div>
+
+      <div class="about-hero__content">
+        <span class="about-hero__badge">About Durva Hospital</span>
+        <h1 class="about-hero__title">
+          Pioneering Advanced Orthopaedics<br>
+          <em class="about-hero__title-em">&amp; Compassionate Care</em>
         </h1>
-        <p style="font-size: clamp(1rem, 1.2vw, 1.125rem); color: rgba(255, 255, 255, 0.75); line-height: 1.6; margin: 0 auto; max-width: 42ch;">
-          Dedicated to restoring mobility and enhancing lives through cutting-edge arthroscopy, precision joint replacement, and evidence-based rehabilitation.
+        <p class="about-hero__desc">
+          Restoring pain-free movement through world-class arthroscopy, precision joint replacement, and dedicated patient-first rehabilitation in Kota.
         </p>
+        <div class="about-hero__actions">
+          <a class="btn btn--light" href="#appointment">Book Consultation</a>
+          <a class="btn btn--ghost" href="#about-overview">Explore Our Story</a>
+        </div>
       </div>
     </section>
 
