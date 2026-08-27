@@ -3348,7 +3348,7 @@ body {
   transform: translateY(0);
 }
 
-/* ---------- Hospital Architectural Skyline Panorama ---------- */
+/* ---------- Hospital Architectural Skyline Panorama (Edge to Edge) ---------- */
 .footer-skyline {
   position: relative;
   width: 100%;
@@ -3360,15 +3360,14 @@ body {
 
 .footer-skyline__img {
   width: 100%;
-  max-width: 82rem;
-  margin-inline: auto;
-  height: clamp(100px, 14vw, 210px);
-  object-fit: contain;
+  max-width: 100%;
+  height: clamp(130px, 18vw, 300px);
+  object-fit: cover;
   object-position: center bottom;
   display: block;
   opacity: 0.94;
   mix-blend-mode: lighten;
-  filter: drop-shadow(0 -8px 24px rgba(127, 209, 193, 0.12));
+  filter: drop-shadow(0 -8px 24px rgba(127, 209, 193, 0.14));
 }
 
 /* ---------- BOTTOM BAR ---------- */
