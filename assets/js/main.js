@@ -498,6 +498,41 @@
         .from('[data-values-cards] .value-card', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out', stagger: 0.1 }, 0.15);
     }
 
+    /* ---------- service page: recovery impact section ---------- */
+    var impactSec = document.querySelector('.impact-sec');
+    if (impactSec) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.impact-sec', start: 'top 80%', once: true }
+      })
+        .from('[data-impact-head]', { opacity: 0, y: 30, duration: 0.85, ease: 'power3.out' }, 0)
+        .from('[data-impact-cards] .impact-card', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, 0.2);
+
+      /* Interactive Category Tabs */
+      var impactTabs = impactSec.querySelectorAll('.impact-tab');
+      var impactCards = impactSec.querySelectorAll('.impact-card');
+      impactTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          impactTabs.forEach(function (t) {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('is-active');
+          tab.setAttribute('aria-selected', 'true');
+
+          var targetCategory = tab.getAttribute('data-tab');
+          impactCards.forEach(function (card) {
+            var categories = card.getAttribute('data-category') || '';
+            if (categories.indexOf(targetCategory) !== -1) {
+              card.style.display = 'flex';
+              gsap.fromTo(card, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' });
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    }
+
     /* ---------- footer ---------- */
     var footer = document.querySelector('.site-footer');
     if (footer) {

@@ -4907,6 +4907,241 @@ body {
 }
 
 /* ==========================================================================
+   ===== RECOVERY IMPACT SECTION =====
+   Minimal 4-card evidence row with category filter tabs and featured elevated card.
+   ========================================================================== */
+.impact-sec {
+  position: relative;
+  z-index: 1;
+  padding: clamp(5.5rem, 8.5vw, 9rem) var(--gutter);
+  background-color: #fafbfc;
+  color: #0c1219;
+  font-family: var(--font-sans);
+  border-top: 1px solid rgba(20, 24, 30, 0.06);
+}
+
+.impact-sec__inner {
+  max-width: 88rem;
+  margin-inline: auto;
+}
+
+/* Centered Header */
+.impact-sec__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 52rem;
+  margin-inline: auto;
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
+}
+
+.impact-sec__badge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--r-pill);
+  background-color: #e8ecf0;
+  color: #5d6b7e;
+  font-size: 0.75rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.impact-sec__title {
+  margin: 0 0 clamp(1.75rem, 3vw, 2.5rem);
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(2.25rem, 4.2vw, 3.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #0a0e14;
+  text-wrap: balance;
+}
+
+.impact-sec__title-muted {
+  color: #7b8a9b;
+  font-weight: 600;
+}
+
+/* Category Filter Tabs (Pill Capsule) */
+.impact-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border-radius: var(--r-pill);
+  background-color: #edf0f3;
+  border: 1px solid rgba(20, 24, 30, 0.05);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.impact-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.impact-tab {
+  padding: 0.5rem 1.15rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: #5d6b7e;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.impact-tab:hover {
+  color: #0a0e14;
+}
+
+.impact-tab.is-active {
+  color: #ffffff;
+  background-color: #0e1622;
+  font-weight: var(--fw-semibold);
+  box-shadow: 0 2px 8px rgba(14, 22, 34, 0.2);
+}
+
+/* 4-Card Grid Row */
+.impact-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 1.8vw, 1.75rem);
+  align-items: stretch;
+}
+
+.impact-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(20, 24, 30, 0.05);
+  padding: clamp(2rem, 2.5vw, 2.75rem) clamp(1.5rem, 2vw, 2rem);
+  min-height: clamp(380px, 44vh, 440px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px -6px rgba(16, 24, 40, 0.03);
+  transition:
+    transform 350ms var(--ease-out),
+    box-shadow 350ms var(--ease-out),
+    opacity 350ms var(--ease-out);
+}
+
+.impact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -8px rgba(16, 24, 40, 0.08);
+}
+
+/* Featured Card 2 (Elevated Gradient Palette) */
+.impact-card--featured {
+  background: linear-gradient(175deg, #182838 0%, #0d1622 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 36px -10px rgba(13, 23, 35, 0.35);
+}
+
+.impact-card--featured:hover {
+  box-shadow: 0 22px 48px -10px rgba(13, 23, 35, 0.45);
+}
+
+/* Card Top Tag */
+.impact-card__top {
+  margin-bottom: 2rem;
+}
+
+.impact-card__tag {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  color: #1a7566;
+}
+
+.impact-card--featured .impact-card__tag {
+  color: #7fd1c1;
+}
+
+/* Card Body */
+.impact-card__body {
+  margin-bottom: auto;
+}
+
+.impact-card__title {
+  margin: 0 0 1rem;
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: clamp(1.35rem, 1.8vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  color: #0a0e14;
+}
+
+.impact-card--featured .impact-card__title {
+  color: #ffffff;
+}
+
+.impact-card__desc {
+  margin: 0;
+  font-size: clamp(0.875rem, 1vw, 0.9375rem);
+  line-height: 1.65;
+  color: #5d6b7e;
+  text-wrap: pretty;
+}
+
+.impact-card--featured .impact-card__desc {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Card Bottom Citation */
+.impact-card__citation {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #8a96a4;
+}
+
+.impact-card--featured .impact-card__citation {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.impact-card__citation-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .impact-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .impact-cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .impact-tabs {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ==========================================================================
    ===== FOOTER SECTION =====
    ========================================================================== */
 .site-footer {

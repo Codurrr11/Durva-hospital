@@ -230,6 +230,116 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Recovery Impact & Evidence Section ================= -->
+    <section class="impact-sec" id="impact" aria-labelledby="impact-title">
+      <div class="impact-sec__inner">
+
+        <!-- Top Centered Header Block -->
+        <div class="impact-sec__header" data-impact-head>
+          <span class="impact-sec__badge">Recovery Impact</span>
+
+          <h2 class="impact-sec__title" id="impact-title">
+            Restoring Your Knee<br>
+            Impacts <span class="impact-sec__title-muted">Your Life in Many Ways</span>
+          </h2>
+
+          <!-- Category Filter Tabs (Pill Capsule) -->
+          <div class="impact-tabs" role="tablist" aria-label="Impact categories">
+            <button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-tab="sports">Sports &amp; Athletics</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="mobility">Daily Mobility</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="longevity">Joint Longevity</button>
+            <button class="impact-tab" type="button" role="tab" aria-selected="false" data-tab="work">Work &amp; Activity</button>
+          </div>
+        </div>
+
+        <!-- 4-Card Row / Grid Container -->
+        <div class="impact-cards" data-impact-cards>
+
+          <!-- Card 1: Light Card -->
+          <article class="impact-card" data-category="sports mobility">
+            <div class="impact-card__top">
+              <span class="impact-card__tag">Key Metric</span>
+            </div>
+            <div class="impact-card__body">
+              <h3 class="impact-card__title">92% Return Rate</h3>
+              <p class="impact-card__desc">
+                Over 92% of active athletes return to their previous competitive sport level following anatomical ACL reconstruction.
+              </p>
+            </div>
+            <div class="impact-card__citation">
+              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                <path d="M9 2v4h4"/>
+              </svg>
+              <span>Clinical Sports Medicine Journal, 2025</span>
+            </div>
+          </article>
+
+          <!-- Card 2: Featured Gradient Card (Card 2 elevated per reference) -->
+          <article class="impact-card impact-card--featured" data-category="sports mobility longevity work">
+            <div class="impact-card__top">
+              <span class="impact-card__tag">Stability</span>
+            </div>
+            <div class="impact-card__body">
+              <h3 class="impact-card__title">Zero Instability</h3>
+              <p class="impact-card__desc">
+                Precision graft fixation eliminates pivot-shift instability, restoring complete confidence in cutting and pivoting movements.
+              </p>
+            </div>
+            <div class="impact-card__citation">
+              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                <path d="M9 2v4h4"/>
+              </svg>
+              <span>Durva Orthopaedic Arthroscopy Registry</span>
+            </div>
+          </article>
+
+          <!-- Card 3: Light Card -->
+          <article class="impact-card" data-category="sports longevity">
+            <div class="impact-card__top">
+              <span class="impact-card__tag">Kinematics</span>
+            </div>
+            <div class="impact-card__body">
+              <h3 class="impact-card__title">Natural Movement</h3>
+              <p class="impact-card__desc">
+                Restores native knee rotational geometry, protecting healthy cartilage and surrounding meniscus tissues.
+              </p>
+            </div>
+            <div class="impact-card__citation">
+              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                <path d="M9 2v4h4"/>
+              </svg>
+              <span>American Journal of Sports Medicine</span>
+            </div>
+          </article>
+
+          <!-- Card 4: Light Card -->
+          <article class="impact-card" data-category="longevity work">
+            <div class="impact-card__top">
+              <span class="impact-card__tag">Long-Term</span>
+            </div>
+            <div class="impact-card__body">
+              <h3 class="impact-card__title">Cartilage Defense</h3>
+              <p class="impact-card__desc">
+                Early anatomical reconstruction dramatically reduces long-term osteoarthritis risk compared to unmanaged joint laxity.
+              </p>
+            </div>
+            <div class="impact-card__citation">
+              <svg class="impact-card__citation-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6L9 2Z"/>
+                <path d="M9 2v4h4"/>
+              </svg>
+              <span>International Joint Forum, 2024</span>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
 <?php include __DIR__ . '/include/footer.php'; ?>
