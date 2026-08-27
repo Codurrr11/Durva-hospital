@@ -193,109 +193,116 @@ include __DIR__ . '/include/header.php';
         <!-- Asymmetrical Editorial Grid -->
         <div class="why-choose__grid">
 
-          <!-- Left Column Top: Eyebrow + Narrative & Bold Statement -->
-          <div class="why-choose__intro" data-why-intro>
-            <div class="why-choose__eyebrow">
-              <span class="why-choose__marker" aria-hidden="true"></span>
-              <span class="why-choose__label">Why Choose Us</span>
-            </div>
-
-            <div class="why-choose__narrative">
-              <p class="why-choose__lead">
-                Are you dealing with persistent joint pain or recovering from an injury? With our specialist-led approach to orthopaedic care, you get personalized treatment plans built around your recovery &mdash; not a generic protocol.
-              </p>
-              <p class="why-choose__statement">
-                It&rsquo;s not just treatment, it&rsquo;s a complete path back to movement.
-              </p>
-            </div>
+          <!-- Row 1, Col 1: Eyebrow Label -->
+          <div class="why-choose__eyebrow" data-why-eyebrow>
+            <span class="why-choose__marker" aria-hidden="true"></span>
+            <span class="why-choose__label">Why Choose Us</span>
           </div>
 
-          <!-- Top Right / Columns 2-3: Main Headline -->
+          <!-- Row 1, Col 2 & 3: Main Headline -->
           <div class="why-choose__header" data-why-header>
             <h2 class="why-choose__title" id="why-title">
               Precise, compassionate, dedicated: we help you move without limits!
             </h2>
           </div>
 
-          <!-- Card 1: Specialist-Led Care (Col 2, Row 1) -->
+          <!-- Row 2, Col 1: Narrative & Bold Statement -->
+          <div class="why-choose__narrative" data-why-narrative>
+            <p class="why-choose__lead">
+              Are you dealing with persistent joint pain or recovering from an injury? With our specialist-led approach to orthopaedic care, you get personalized treatment plans built around your recovery &mdash; not a generic protocol.
+            </p>
+            <p class="why-choose__statement">
+              It&rsquo;s not just treatment, it&rsquo;s a complete path back to movement.
+            </p>
+          </div>
+
+          <!-- Row 2, Col 2: Card 1 (Specialist-Led Care) -->
           <article class="why-card why-card--1" data-why-card>
             <div class="why-card__icon-wrap" aria-hidden="true">
-              <svg class="why-card__icon" viewBox="0 0 64 64" fill="none">
-                <rect x="18" y="18" width="28" height="28" rx="4" transform="rotate(45 32 32)" stroke="var(--c-mark, #1a7566)" stroke-width="1.6"/>
-                <path d="M26 32h12M33 27l5 5-5 5" stroke="var(--c-mark, #1a7566)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="36" y="18" width="20" height="20" rx="3" transform="rotate(45 46 28)" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="3 3"/>
+              <svg class="why-card__icon" viewBox="0 0 80 60" fill="none">
+                <rect x="22" y="10" width="28" height="28" rx="2" transform="rotate(45 22 10)" stroke="#e54d38" stroke-width="1.5"/>
+                <path d="M16 30h12M24 25l5 5-5 5" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="42" y="10" width="28" height="28" rx="2" transform="rotate(45 42 10)" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="3 3"/>
               </svg>
             </div>
             <h3 class="why-card__title">Specialist-Led Care</h3>
-            <p class="why-card__tagline">Not general practice &mdash; true specialists.</p>
-            <p class="why-card__desc">
-              Every case is handled by fellowship-trained orthopaedic surgeons who focus exclusively on joints, sports injuries, and mobility &mdash; not general medicine spread thin.
-            </p>
+            <div class="why-card__body">
+              <p class="why-card__tagline">Not general practice &mdash; true specialists.</p>
+              <p class="why-card__desc">
+                Every case is handled by fellowship-trained orthopaedic surgeons who focus exclusively on joints, sports injuries, and mobility &mdash; not general medicine spread thin.
+              </p>
+            </div>
           </article>
 
-          <!-- Card 2: Advanced Techniques (Col 3, Row 1) -->
+          <!-- Row 2, Col 3: Card 2 (Advanced Techniques) -->
           <article class="why-card why-card--2" data-why-card>
             <div class="why-card__icon-wrap" aria-hidden="true">
-              <svg class="why-card__icon" viewBox="0 0 64 64" fill="none">
-                <line x1="8" y1="20" x2="8" y2="28" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="16" y1="18" x2="16" y2="30" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="24" y1="20" x2="24" y2="28" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="40" y1="18" x2="40" y2="30" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="48" y1="20" x2="48" y2="28" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="8" y1="44" x2="8" y2="36" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="16" y1="46" x2="16" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="24" y1="44" x2="24" y2="36" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="40" y1="46" x2="40" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="48" y1="44" x2="48" y2="36" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="6" y1="32" x2="56" y2="32" stroke="var(--c-mark, #1a7566)" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M48 24l8 8-8 8" stroke="var(--c-mark, #1a7566)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg class="why-card__icon" viewBox="0 0 80 60" fill="none">
+                <line x1="8" y1="18" x2="8" y2="26" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="16" y1="18" x2="16" y2="26" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="24" y1="18" x2="24" y2="26" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="42" y1="18" x2="42" y2="26" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="58" y1="18" x2="58" y2="26" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="8" y1="42" x2="8" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="16" y1="42" x2="16" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="24" y1="42" x2="24" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="42" y1="42" x2="42" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="58" y1="42" x2="58" y2="34" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="4" y1="30" x2="72" y2="30" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M64 22l8 8-8 8" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
             <h3 class="why-card__title">Advanced Techniques</h3>
-            <p class="why-card__tagline">Minimally invasive, maximum recovery.</p>
-            <p class="why-card__desc">
-              From keyhole arthroscopy to precision joint replacement, we use techniques that reduce pain, scarring, and recovery time significantly.
-            </p>
+            <div class="why-card__body">
+              <p class="why-card__tagline">Minimally invasive, maximum recovery.</p>
+              <p class="why-card__desc">
+                From keyhole arthroscopy to precision joint replacement, we use techniques that reduce pain, scarring, and recovery time significantly.
+              </p>
+            </div>
           </article>
 
-          <!-- Card 3: Personalized Recovery (Col 1, Row 2) -->
+          <!-- Row 3, Col 1: Card 3 (Personalized Recovery) -->
           <article class="why-card why-card--3" data-why-card>
             <div class="why-card__icon-wrap" aria-hidden="true">
-              <svg class="why-card__icon" viewBox="0 0 64 64" fill="none">
-                <line x1="8" y1="24" x2="8" y2="40" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="8" y1="32" x2="24" y2="32" stroke="var(--c-mark, #1a7566)" stroke-width="1.5" stroke-linecap="round"/>
-                <circle cx="32" cy="24" r="5" stroke="var(--c-mark, #1a7566)" stroke-width="1.5"/>
-                <circle cx="26" cy="36" r="5" stroke="var(--c-mark, #1a7566)" stroke-width="1.5"/>
-                <circle cx="38" cy="36" r="5" stroke="var(--c-mark, #1a7566)" stroke-width="1.5"/>
-                <circle cx="32" cy="40" r="5" stroke="var(--c-mark, #1a7566)" stroke-width="1.5"/>
-                <line x1="40" y1="32" x2="56" y2="32" stroke="var(--c-mark, #1a7566)" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M50 26l6 6-6 6" stroke="var(--c-mark, #1a7566)" stroke-width="1.5" stroke-linecap="round"/>
+              <svg class="why-card__icon" viewBox="0 0 80 60" fill="none">
+                <line x1="8" y1="20" x2="8" y2="40" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="8" y1="30" x2="28" y2="30" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="38" cy="22" r="5" stroke="#e54d38" stroke-width="1.5"/>
+                <circle cx="32" cy="34" r="5" stroke="#e54d38" stroke-width="1.5"/>
+                <circle cx="44" cy="34" r="5" stroke="#e54d38" stroke-width="1.5"/>
+                <circle cx="38" cy="40" r="5" stroke="#e54d38" stroke-width="1.5"/>
+                <line x1="48" y1="30" x2="70" y2="30" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M62 22l8 8-8 8" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
             <h3 class="why-card__title">Personalized Recovery</h3>
-            <p class="why-card__tagline">No two recovery plans are the same.</p>
-            <p class="why-card__desc">
-              We build individualized rehabilitation protocols based on your body, your injury, and your goals &mdash; not a one-size-fits-all checklist.
-            </p>
+            <div class="why-card__body">
+              <p class="why-card__tagline">No two recovery plans are the same.</p>
+              <p class="why-card__desc">
+                We build individualized rehabilitation protocols based on your body, your injury, and your goals &mdash; not a one-size-fits-all checklist.
+              </p>
+            </div>
           </article>
 
-          <!-- Card 4: End-to-End Support (Col 2, Row 2) -->
+          <!-- Row 3, Col 2: Card 4 (End-to-End Support) -->
           <article class="why-card why-card--4" data-why-card>
             <div class="why-card__icon-wrap" aria-hidden="true">
-              <svg class="why-card__icon" viewBox="0 0 64 64" fill="none">
-                <path d="M8 32h40" stroke="var(--c-mark, #1a7566)" stroke-width="1.6" stroke-linecap="round"/>
-                <path d="M12 22h12c6 0 10 10 16 10h8" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M12 42h12c6 0 10-10 16-10h8" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M22 18l4 4-4 4" stroke="#cbd5e1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M22 38l4 4-4 4" stroke="#cbd5e1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M50 24l8 8-8 8" stroke="var(--c-mark, #1a7566)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg class="why-card__icon" viewBox="0 0 80 60" fill="none">
+                <path d="M6 30h64" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 20h14c6 0 10 10 16 10h16" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 40h14c6 0 10-10 16-10h16" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M22 16l4 4-4 4" stroke="#cbd5e1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 36l4 4-4 4" stroke="#cbd5e1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M62 22l8 8-8 8" stroke="#e54d38" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
             <h3 class="why-card__title">End-to-End Support</h3>
-            <p class="why-card__tagline">From diagnosis to full mobility.</p>
-            <p class="why-card__desc">
-              Our care doesn&rsquo;t end at surgery. Physiotherapy, follow-ups, and recovery coaching are all part of one continuous journey with us.
-            </p>
+            <div class="why-card__body">
+              <p class="why-card__tagline">From diagnosis to full mobility.</p>
+              <p class="why-card__desc">
+                Our care doesn&rsquo;t end at surgery. Physiotherapy, follow-ups, and recovery coaching are all part of one continuous journey with us.
+              </p>
+            </div>
           </article>
 
         </div>
