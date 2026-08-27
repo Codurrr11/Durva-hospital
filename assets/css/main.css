@@ -3722,7 +3722,7 @@ body {
 /* ==========================================================================
    ===== ABOUT PAGE: FOUNDING LEADERSHIP SECTION =====
    Full-width layout with a top-to-down centered half-spherical light
-   ice-navy gradient softly diffusing into pure white.
+   blush & ice-slate gradient softly diffusing into pure white.
    ========================================================================== */
 .founding {
   position: relative;
@@ -3731,7 +3731,7 @@ body {
   overflow: hidden;
   background-color: #ffffff;
   background-image:
-    radial-gradient(ellipse 110% 75% at 50% 0%, #e8f0f8 0%, #f4f8fb 45%, #ffffff 85%);
+    radial-gradient(ellipse 110% 75% at 50% 0%, #fbeff3 0%, #f3f6fb 45%, #ffffff 85%);
   color: #0c1219;
   padding: clamp(5.5rem, 8.5vw, 8.5rem) var(--gutter);
   border-bottom: 1px solid rgba(22, 40, 60, 0.08);
@@ -3754,7 +3754,7 @@ body {
   font-weight: var(--fw-semibold);
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #1e3a5f;
+  color: #a83858;
   margin: 0 0 1.25rem;
 }
 
@@ -3769,12 +3769,18 @@ body {
   text-wrap: pretty;
 }
 
+/* Fancy Light Pink / Rose-Berry Gradient Effect */
 .founding__serif {
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  color: #16283c;
   letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #e46884 0%, #b8325a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  padding-right: 0.06em;
 }
 
 /* ---------- Lower Layout Grid ---------- */
