@@ -6,11 +6,15 @@
   var header = document.querySelector('[data-header]');
   var toggle = document.querySelector('[data-nav-toggle]');
   var dropdowns = Array.prototype.slice.call(document.querySelectorAll('[data-dropdown]'));
-  var collapsed = window.matchMedia('(max-width: 1024px)');
+  /* Must match the nav's own breakpoint in main.css (--bp-nav). The CSS
+     decides whether the nav is a bar or a sheet; this decides whether tapping
+     a parent item opens an accordion or follows its link. If the two drift,
+     one width ends up with a sheet whose groups will not open. */
+  var collapsed = window.matchMedia('(max-width: 1259px)');
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- submenus ----------
-     Above 1024px the CSS opens them on hover and focus-within. Below it the
+     Above that width the CSS opens them on hover and focus-within. Below it the
      nav is a full-screen sheet, so the parent link toggles an accordion
      instead of navigating.                                                */
   function closeDropdowns(except) {
@@ -54,8 +58,15 @@
       var open = header.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';
+      if (open) header.classList.remove('is-hidden');
     });
   }
+
+  // the in-sheet close button, which is the only visible way out once the
+  // opaque sheet covers the burger
+  document.querySelectorAll('[data-nav-close]').forEach(function (el) {
+    el.addEventListener('click', closeMenu);
+  });
 
   // any link that actually navigates should shut the sheet
   document.querySelectorAll('.menu__link').forEach(function (link) {
@@ -76,6 +87,118 @@
       if (document.activeElement) document.activeElement.blur();
     }
   });
+
+  /* ---------- sticky reveal ----------
+     Down hides the bar, up brings it back, and the top of the page is left
+     exactly as it was — the hero's own transparent bar, no white, no shadow.
+
+     TOP_ZONE is why the reveal never fights the hero. Inside it neither class
+     is set at all, so scrolling the first few dozen pixels cannot flicker the
+     white bar on and off; past it the two classes take over.
+
+     DELTA exists because a trackpad emits a stream of one- and two-pixel
+     deltas, some of them against the direction of travel. Reacting to every
+     one of those would flip the bar on and off on a single flick. A move
+     smaller than DELTA is not a direction change, and — importantly — does
+     not update lastY either, so a slow drag still accumulates until it is
+     unambiguous rather than being swallowed a pixel at a time.            */
+  var TOP_ZONE = 72;
+  var DELTA = 6;
+  var lastY = window.scrollY || window.pageYOffset || 0;
+  var queued = false;
+
+  function syncHeader() {
+    queued = false;
+    if (!header) return;
+
+    var y = window.scrollY || window.pageYOffset || 0;
+
+    /* the sheet is open: the bar is the thing holding it, so it stays put and
+       the scroll position is only remembered for when the sheet closes */
+    if (header.classList.contains('is-open')) {
+      lastY = y;
+      return;
+    }
+
+    if (y <= TOP_ZONE) {
+      header.classList.remove('is-stuck', 'is-hidden');
+      lastY = y;
+      return;
+    }
+
+    var diff = y - lastY;
+    if (diff > -DELTA && diff < DELTA) return; // too small to be a direction
+
+    if (diff > 0) {
+      /* Going down. `is-stuck` is deliberately NOT removed here: if the bar
+         is already wearing the white skin it leaves in it, rather than
+         fading back to glass on its way off the screen. */
+      header.classList.add('is-hidden');
+    } else {
+      header.classList.add('is-stuck');
+      header.classList.remove('is-hidden');
+    }
+
+    lastY = y;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(syncHeader);
+  }, { passive: true });
+
+  /* a reload part-way down a page starts scrolled, and the bar should not be
+     mid-state when it does */
+  syncHeader();
+
+  /* ---------- policy pages: contents rail ----------
+     Marks the section you are currently reading in the left-hand rail.
+
+     IntersectionObserver, not a scroll handler doing getBoundingClientRect on
+     every section: the browser does the geometry off the main thread and only
+     calls back when a section actually crosses the line.
+
+     The rootMargin is what makes it read correctly. '-30% 0px -60% 0px'
+     shrinks the observed area to a band a third of the way down the screen,
+     so the active item is the section under the reader's eye rather than
+     whichever one happens to be touching the bottom edge.               */
+  function initLegalToc() {
+    var toc = document.querySelector('[data-lg-toc]');
+    if (!toc || !('IntersectionObserver' in window)) return;
+
+    var links = Array.prototype.slice.call(toc.querySelectorAll('[data-lg-toc-link]'));
+    var sections = Array.prototype.slice.call(document.querySelectorAll('[data-lg-sec]'));
+    if (!links.length || !sections.length) return;
+
+    function mark(id) {
+      links.forEach(function (a) {
+        a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+      });
+    }
+
+    var seen = {};
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        seen[e.target.id] = e.isIntersecting;
+      });
+
+      /* first section still in the band wins — going back up the page, the
+         one nearer the top is the one being read */
+      for (var i = 0; i < sections.length; i++) {
+        if (seen[sections[i].id]) {
+          mark(sections[i].id);
+          return;
+        }
+      }
+    }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(function (s) { io.observe(s); });
+    mark(sections[0].id);
+  }
+
+  initLegalToc();
 
   /* ---------- services slider ----------
      Scrolling itself is native (overflow-x + scroll-snap) so touch and
@@ -202,6 +325,296 @@
   }
 
   document.querySelectorAll('.blog').forEach(initBlog);
+
+  /* ---------- appointment dropdown ----------
+     A listbox replacing the native <select>, because the native popup cannot
+     be styled and was inheriting the closed control's muted colour into every
+     option. The value posts through a hidden input.
+
+     Keyboard is the whole reason this is more than a click handler: a custom
+     listbox that only responds to the mouse is a downgrade on the native
+     control it replaced, not an upgrade.                                    */
+  function initDropdown(root) {
+    var btn = root.querySelector('[data-dd-btn]');
+    var list = root.querySelector('[data-dd-list]');
+    var text = root.querySelector('[data-dd-text]');
+    var value = root.querySelector('[data-dd-value]');
+    if (!btn || !list || !text || !value) return;
+
+    // group headings are role="presentation" and must never be landed on
+    var options = Array.prototype.slice.call(list.querySelectorAll('[role="option"]'));
+    if (!options.length) return;
+
+    var activeIndex = -1;
+    var typeahead = '';
+    var typeaheadTimer = null;
+
+    function isOpen() {
+      return !list.hidden;
+    }
+
+    function setActive(i, scroll) {
+      if (i < 0 || i >= options.length) return;
+      options.forEach(function (o) { o.classList.remove('is-active'); });
+      activeIndex = i;
+      var opt = options[i];
+      opt.classList.add('is-active');
+      btn.setAttribute('aria-activedescendant', opt.id);
+      if (scroll !== false) opt.scrollIntoView({ block: 'nearest' });
+    }
+
+    function open() {
+      if (isOpen()) return;
+      list.hidden = false;
+      root.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      // land on the current choice if there is one, otherwise the first row
+      var selected = options.findIndex(function (o) {
+        return o.getAttribute('aria-selected') === 'true';
+      });
+      setActive(selected > -1 ? selected : 0);
+    }
+
+    function close(focusBtn) {
+      if (!isOpen()) return;
+      list.hidden = true;
+      root.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.removeAttribute('aria-activedescendant');
+      options.forEach(function (o) { o.classList.remove('is-active'); });
+      activeIndex = -1;
+      if (focusBtn !== false) btn.focus();
+    }
+
+    function choose(i) {
+      var opt = options[i];
+      if (!opt) return;
+      options.forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
+      opt.setAttribute('aria-selected', 'true');
+      value.value = opt.getAttribute('data-value') || '';
+      text.textContent = opt.textContent.trim();
+      root.classList.add('is-filled');
+      close();
+    }
+
+    btn.addEventListener('click', function () {
+      if (isOpen()) close(); else open();
+    });
+
+    // pointerdown, not click: the list closes on blur, and a click would have
+    // already lost the row by the time it fired
+    list.addEventListener('click', function (event) {
+      var opt = event.target.closest('[role="option"]');
+      if (!opt) return;
+      choose(options.indexOf(opt));
+    });
+
+    btn.addEventListener('keydown', function (event) {
+      var key = event.key;
+
+      if (!isOpen()) {
+        if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {
+          event.preventDefault();
+          open();
+        }
+        return;
+      }
+
+      if (key === 'ArrowDown') {
+        event.preventDefault();
+        setActive(Math.min(activeIndex + 1, options.length - 1));
+      } else if (key === 'ArrowUp') {
+        event.preventDefault();
+        setActive(Math.max(activeIndex - 1, 0));
+      } else if (key === 'Home') {
+        event.preventDefault();
+        setActive(0);
+      } else if (key === 'End') {
+        event.preventDefault();
+        setActive(options.length - 1);
+      } else if (key === 'Enter' || key === ' ') {
+        event.preventDefault();
+        choose(activeIndex);
+      } else if (key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (key === 'Tab') {
+        close(false);
+      } else if (key.length === 1 && /\S/.test(key)) {
+        // type-ahead, the one affordance people miss most from a real select
+        window.clearTimeout(typeaheadTimer);
+        typeahead += key.toLowerCase();
+        typeaheadTimer = window.setTimeout(function () { typeahead = ''; }, 600);
+        var hit = options.findIndex(function (o) {
+          return o.textContent.trim().toLowerCase().indexOf(typeahead) === 0;
+        });
+        if (hit > -1) setActive(hit);
+      }
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!root.contains(event.target)) close(false);
+    });
+  }
+
+  document.querySelectorAll('[data-dd]').forEach(initDropdown);
+
+  /* ---------- gallery lightbox ----------
+     One viewer for both media types. The <video> element is BUILT ON OPEN and
+     destroyed on close — the clip is tens of megabytes, and a <video> sitting
+     in the markup would start fetching on page load for something most
+     visitors never click.
+
+     Focus is moved into the dialog and returned to the card that opened it,
+     and Tab is kept inside while it is open: a modal you can Tab out of
+     leaves a keyboard user stranded behind the backdrop.               */
+  function initGallery(grid) {
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('[data-gal-item]'));
+    var box = document.querySelector('[data-lbx]');
+    if (!cards.length || !box) return;
+
+    var stage = box.querySelector('[data-lbx-stage]');
+    var capOut = box.querySelector('[data-lbx-cap]');
+    var nowOut = box.querySelector('[data-lbx-now]');
+    var prevBtn = box.querySelector('[data-lbx-prev]');
+    var nextBtn = box.querySelector('[data-lbx-next]');
+    var closers = Array.prototype.slice.call(box.querySelectorAll('[data-lbx-close]'));
+    var panel = box.querySelector('.lbx__panel');
+
+    var index = 0;
+    var opener = null;
+
+    function render(i) {
+      index = (i + cards.length) % cards.length;
+      var card = cards[index];
+      var type = card.getAttribute('data-type');
+      var full = card.getAttribute('data-full');
+      var cap = card.getAttribute('data-caption') || '';
+
+      // dropping the old node is what stops a video carrying on in the
+      // background when you page past it
+      stage.innerHTML = '';
+
+      if (type === 'video') {
+        var video = document.createElement('video');
+        video.src = full;
+        video.poster = card.getAttribute('data-poster') || '';
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        stage.appendChild(video);
+      } else {
+        var img = document.createElement('img');
+        img.src = full;
+        img.alt = cap;
+        stage.appendChild(img);
+      }
+
+      capOut.textContent = cap;
+      if (nowOut) nowOut.textContent = String(index + 1);
+    }
+
+    function open(i, from) {
+      opener = from || null;
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      render(i);
+      (nextBtn || panel).focus();
+    }
+
+    function close() {
+      // clear the stage BEFORE hiding, or a playing video keeps its audio
+      stage.innerHTML = '';
+      box.hidden = true;
+      document.body.style.removeProperty('overflow');
+      if (opener) opener.focus();
+      opener = null;
+    }
+
+    cards.forEach(function (card, i) {
+      card.addEventListener('click', function () { open(i, card); });
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { render(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { render(index + 1); });
+    closers.forEach(function (el) { el.addEventListener('click', close); });
+
+    document.addEventListener('keydown', function (event) {
+      if (box.hidden) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        render(index + 1);
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        render(index - 1);
+      } else if (event.key === 'Tab') {
+        // keep Tab inside the dialog
+        var focusable = panel.querySelectorAll('button, video, [href]');
+        if (!focusable.length) return;
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    /* swipe, so the viewer is not button-only on a phone */
+    var touchX = null;
+    box.addEventListener('touchstart', function (e) {
+      touchX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    box.addEventListener('touchend', function (e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 45) render(index + (dx < 0 ? 1 : -1));
+      touchX = null;
+    }, { passive: true });
+  }
+
+  document.querySelectorAll('[data-gal]').forEach(initGallery);
+
+  /* ---------- FAQ accordion ----------
+     One open at a time, matching the reference. The panel height is animated
+     in CSS (grid 0fr -> 1fr), so this only owns state: the is-open class and
+     aria-expanded. Keyboard comes free — the triggers are real buttons.   */
+  function initFaq(root) {
+    var triggers = Array.prototype.slice.call(root.querySelectorAll('[data-faq-trigger]'));
+    if (!triggers.length) return;
+
+    function setOpen(item, trigger, open) {
+      item.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var item = trigger.closest('.faq__item');
+        if (!item) return;
+        var willOpen = !item.classList.contains('is-open');
+
+        // close the rest first, so two panels are never mid-animation
+        triggers.forEach(function (other) {
+          var otherItem = other.closest('.faq__item');
+          if (otherItem && otherItem !== item) setOpen(otherItem, other, false);
+        });
+
+        setOpen(item, trigger, willOpen);
+      });
+    });
+  }
+
+  document.querySelectorAll('[data-faq]').forEach(initFaq);
 
   /* ---------- scroll reveals ----------
      gsap.from() is deliberate here: the markup renders visible, so if the
@@ -390,6 +803,92 @@
       });
     }
 
+    /* ---------- scope / let's talk (ACL page) ----------
+       The two panels arrive together on a short stagger — pulling them
+       further apart would break the pair. */
+    var duoItems = gsap.utils.toArray('[data-duo-item]');
+    if (duoItems.length) {
+      gsap.from(duoItems, {
+        opacity: 0,
+        y: 30,
+        duration: 0.85,
+        ease: 'power3.out',
+        stagger: 0.1,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '.duo', start: 'top 82%', once: true }
+      });
+    }
+
+    /* ---------- blog detail ----------
+       Banner first as one ordered run, then the featured image, then the
+       prose — the image is given its own tween because it scales as well as
+       fades, and lumping it into the stagger would have applied that scale
+       to the headline too. */
+    var bdItems = gsap.utils.toArray('[data-bd-item]');
+    if (bdItems.length) {
+      gsap.from(bdItems, {
+        opacity: 0,
+        y: 22,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.08,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '.bd-hero', start: 'top 88%', once: true }
+      });
+    }
+
+    var bdFig = document.querySelector('[data-bd-fig]');
+    if (bdFig) {
+      gsap.from(bdFig, {
+        opacity: 0,
+        y: 30,
+        scale: 0.985,
+        duration: 0.95,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: bdFig, start: 'top 90%', once: true }
+      });
+
+      gsap.from(gsap.utils.toArray('[data-bd-body]'), {
+        opacity: 0,
+        y: 20,
+        duration: 0.75,
+        ease: 'power3.out',
+        stagger: 0.1,
+        delay: 0.12,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '.bd__main', start: 'top 78%', once: true }
+      });
+    }
+
+    /* ---------- appointment form ---------- */
+    var apptItems = gsap.utils.toArray('[data-appt-item]');
+    if (apptItems.length) {
+      gsap.from(apptItems, {
+        opacity: 0,
+        y: 26,
+        duration: 0.75,
+        ease: 'power3.out',
+        stagger: 0.08,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '.appt', start: 'top 84%', once: true }
+      });
+    }
+
+    /* ---------- FAQ (treatment + booking pages) ---------- */
+    var faqItems = gsap.utils.toArray('[data-faq-item]');
+    if (faqItems.length) {
+      gsap.from(faqItems, {
+        opacity: 0,
+        y: 24,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.07,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '.faq', start: 'top 84%', once: true }
+      });
+    }
+
     /* ---------- doctor CTA (ACL page) ----------
        Only present on the service pages; the guard means the home page skips
        it rather than throwing on a null trigger. */
@@ -504,6 +1003,26 @@
         .from('[data-principles-cards] .principle-card', { opacity: 0, y: 35, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.2);
     }
 
+    /* ---------- service page: picture strip ----------
+       clearProps because the figures have a hover transform of their own, and
+       a tween that finishes leaves its inline transform behind — which would
+       win over the CSS :hover and kill the lift on every card it touched. */
+    var txGal = document.querySelector('.tx-gal');
+    if (txGal) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '.tx-gal', start: 'top 82%', once: true }
+      })
+        .from('[data-tx-gal-head]', { opacity: 0, y: 26, duration: 0.8, ease: 'power3.out' }, 0)
+        .from('[data-tx-gal-item]', {
+          opacity: 0,
+          y: 34,
+          duration: 0.85,
+          ease: 'power3.out',
+          stagger: 0.11,
+          clearProps: 'transform,opacity'
+        }, 0.15);
+    }
+
     /* ---------- service page: values section ---------- */
     var valuesSec = document.querySelector('.values-sec');
     if (valuesSec) {
@@ -570,9 +1089,33 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initReveals);
-  } else {
+  /* ==========================================================================
+     Floating Contact Button Entrance
+     ========================================================================== */
+  function initFloatingContact() {
+    var widget = document.getElementById('floating-contact');
+    if (!widget) return;
+
+    if (window.gsap && typeof gsap.from === 'function') {
+      gsap.from(widget, {
+        opacity: 0,
+        y: 16,
+        duration: 0.6,
+        delay: 0.4,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity'
+      });
+    }
+  }
+
+  function initApp() {
     initReveals();
+    initFloatingContact();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
   }
 })();

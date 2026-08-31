@@ -38,7 +38,7 @@ if (!function_exists('cc_src')) {
         </h1>
 
         <div class="hero__actions">
-          <a href="#appointment" class="hero-btn hero-btn--primary">Book Appointment</a>
+          <a href="book-appointment.php" class="hero-btn hero-btn--primary">Book Appointment</a>
           <a href="#services" class="hero-btn hero-btn--secondary">Explore Treatments</a>
         </div>
 
@@ -109,45 +109,31 @@ if (!function_exists('cc_src')) {
       <div class="services__slider">
         <ul class="services__track" data-track>
           <li class="svc-card">
-            <a class="svc-card__figure" href="#orthopaedic-surgery">
+            <a class="svc-card__figure" href="treatment.php?slug=acl-reconstruction">
               <img class="svc-card__img" src="<?= cc_src($svc_img, 6129197) ?>"
-                   alt="A surgical team reviewing imaging before a procedure" loading="lazy" decoding="async" draggable="false">
-              <p class="svc-card__label">Orthopaedic Surgery</p>
+                   alt="Knee Arthroscopy at Durva Hospital" loading="lazy" decoding="async" draggable="false">
+              <p class="svc-card__label">Knee Arthroscopy</p>
             </a>
           </li>
           <li class="svc-card">
-            <a class="svc-card__figure" href="#physical-therapy">
+            <a class="svc-card__figure" href="treatment.php?slug=frozen-shoulder">
               <img class="svc-card__img" src="<?= cc_src($svc_img, 5793695) ?>"
-                   alt="A physiotherapist guiding a patient through treatment" loading="lazy" decoding="async" draggable="false">
-              <p class="svc-card__label">Physical Therapy</p>
+                   alt="Shoulder Arthroscopy at Durva Hospital" loading="lazy" decoding="async" draggable="false">
+              <p class="svc-card__label">Shoulder Arthroscopy</p>
             </a>
           </li>
           <li class="svc-card">
-            <a class="svc-card__figure" href="#sports-medicine">
+            <a class="svc-card__figure" href="treatment.php?slug=knee-hto">
               <img class="svc-card__img" src="<?= cc_src($svc_img, 6111589) ?>"
-                   alt="A trainer assisting a patient with a rehabilitation exercise" loading="lazy" decoding="async" draggable="false">
-              <p class="svc-card__label">Sports Medicine</p>
+                   alt="Joint Preservation at Durva Hospital" loading="lazy" decoding="async" draggable="false">
+              <p class="svc-card__label">Joint Preservation</p>
             </a>
           </li>
           <li class="svc-card">
-            <a class="svc-card__figure" href="#joint-replacement">
+            <a class="svc-card__figure" href="treatment.php?slug=joint-replacement">
               <img class="svc-card__img" src="<?= cc_src($svc_img, 6129444) ?>"
-                   alt="A surgeon discussing joint replacement with a patient" loading="lazy" decoding="async" draggable="false">
+                   alt="Joint Replacement at Durva Hospital" loading="lazy" decoding="async" draggable="false">
               <p class="svc-card__label">Joint Replacement</p>
-            </a>
-          </li>
-          <li class="svc-card">
-            <a class="svc-card__figure" href="#pain-management">
-              <img class="svc-card__img" src="<?= cc_src($svc_img, 5473223) ?>"
-                   alt="A clinician treating a patient’s injured hand" loading="lazy" decoding="async" draggable="false">
-              <p class="svc-card__label">Pain Management</p>
-            </a>
-          </li>
-          <li class="svc-card">
-            <a class="svc-card__figure" href="#post-op-rehab">
-              <img class="svc-card__img" src="<?= cc_src($svc_img, 5793792) ?>"
-                   alt="A therapist supporting a patient through post-operative stretching" loading="lazy" decoding="async" draggable="false">
-              <p class="svc-card__label">Post-Op Rehab</p>
             </a>
           </li>
         </ul>
@@ -251,7 +237,7 @@ if (!function_exists('cc_src')) {
         </p>
 
         <div class="community__cta" data-cc-reveal>
-          <a class="pill pill--solid" href="#appointment">
+          <a class="pill pill--solid" href="book-appointment.php">
             <span class="pill__badge pill__badge--dark" aria-hidden="true">
               <svg viewBox="0 0 14 14" fill="none">
                 <path d="M2.5 7.5 5.5 10.5 11.5 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -447,40 +433,21 @@ if (!function_exists('cc_src')) {
              line in the left column. `step` is written for that left slot —
              it is deliberately not the same sentence as `desc`, which sits on
              the card itself. */
-          $blog_posts = [
-            [
-              'tag'   => 'Knee Care',
-              'title' => 'When Knee Pain Means More Than Wear and Tear',
-              'desc'  => 'The signs that separate everyday stiffness from a ligament injury worth scanning.',
-              'step'  => 'Telling ordinary stiffness apart from something that needs imaging.',
-              'img'   => 6129444,
-              'alt'   => 'A surgeon discussing knee imaging with a patient',
-            ],
-            [
-              'tag'   => 'Recovery',
-              'title' => 'What the First Six Weeks After Surgery Look Like',
-              'desc'  => 'A week-by-week picture of what to expect, and what should worry you.',
-              'step'  => 'What recovery actually looks like, week by week.',
-              'img'   => 5793792,
-              'alt'   => 'A therapist supporting a patient through post-operative stretching',
-            ],
-            [
-              'tag'   => 'Shoulder',
-              'title' => 'Arthroscopy, Explained Without the Jargon',
-              'desc'  => 'Why a keyhole procedure often beats open surgery on the shoulder.',
-              'step'  => 'Keyhole shoulder surgery, in plain language.',
-              'img'   => 6129197,
-              'alt'   => 'A surgical team reviewing imaging before a procedure',
-            ],
-            [
-              'tag'   => 'Sports',
-              'title' => 'Returning to Sport After an ACL Repair',
-              'desc'  => 'How we decide when an athlete is genuinely ready to play again.',
-              'step'  => 'How we decide an athlete is ready to return.',
-              'img'   => 6111589,
-              'alt'   => 'A trainer guiding a patient through a rehabilitation exercise',
-            ],
-          ];
+          /* one source for the slider and blog-detail.php — see
+             include/blog-data.php */
+          require_once __DIR__ . '/include/blog-data.php';
+          $blog_posts = [];
+          foreach (blog_all() as $bSlug => $bPost) {
+              $blog_posts[] = [
+                  'slug'  => $bSlug,
+                  'tag'   => $bPost['category'],
+                  'title' => $bPost['title'],
+                  'desc'  => $bPost['excerpt'],
+                  'step'  => $bPost['excerpt'],
+                  'img'   => $bPost['image'],
+                  'alt'   => $bPost['image_alt'],
+              ];
+          }
           $blog_total = count($blog_posts);
         ?>
 
@@ -513,7 +480,7 @@ if (!function_exists('cc_src')) {
             <ul class="blog__track" data-blog-track>
               <?php foreach ($blog_posts as $i => $post): ?>
                 <li class="blog-card" data-blog-step-text="<?= htmlspecialchars($post['step'], ENT_QUOTES) ?>">
-                  <a class="blog-card__link" href="#">
+                  <a class="blog-card__link" href="blog-detail.php?slug=<?= rawurlencode($post['slug']) ?>">
                     <img class="blog-card__img" src="<?= cc_src($cc_img, $post['img']) ?>"
                          alt="<?= htmlspecialchars($post['alt'], ENT_QUOTES) ?>"
                          loading="lazy" decoding="async" draggable="false">
@@ -529,6 +496,118 @@ if (!function_exists('cc_src')) {
           </div>
 
         </div>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <?php
+      /*  The home page's questions are the ones asked BEFORE choosing a
+          hospital — timings, cost, what actually happens at a first visit.
+          The booking page answers a different set (what to bring, how soon)
+          and the treatment pages a third, so the three do not repeat each
+          other. Same markup and the same .faq styles; only the copy differs.  */
+      $home_faqs = [
+        [
+          'q' => 'What does Durva Hospital specialise in?',
+          'a' => [
+            'Orthopaedics — knee and shoulder arthroscopy, joint replacement, joint preservation, and the rehabilitation that goes with all of them.',
+            'We are a specialist unit rather than a general hospital, which means the surgeon you see does this work every week rather than occasionally.',
+          ],
+        ],
+        [
+          'q' => 'Do I need a referral, or can I come directly?',
+          'a' => [
+            'You can come directly, and most of our patients do.',
+            'If another doctor has already seen you, bring their letter and any films or reports — repeating investigations that have been done wastes your time and your money.',
+          ],
+        ],
+        [
+          'q' => 'What happens at a first appointment?',
+          'a' => [
+            'An examination and a conversation. We test the joint, look at how you load it, and review any imaging you bring with you.',
+            'It is an assessment, not a booking for an operation. If the answer is rest, rehabilitation and a review in six weeks, that is what you will be told.',
+          ],
+        ],
+        [
+          'q' => 'Will I definitely need surgery?',
+          'a' => [
+            'Often not. A large part of what comes through the clinic is managed with physiotherapy, bracing, load management or an injection.',
+            'Where surgery is the right answer, you will be told why, what the realistic alternatives are, and what happens if you choose not to have it.',
+          ],
+        ],
+        [
+          'q' => 'How long does recovery actually take?',
+          'a' => [
+            'It depends on the procedure, but the honest answer is longer than the operation suggests: keyhole surgery changes how quickly you feel better, not how quickly the repair is strong.',
+            'A ligament reconstruction is usually nine to twelve months before pivoting sport. Your own timeline is set at each follow-up rather than in advance.',
+          ],
+        ],
+        [
+          'q' => 'Do you accept insurance and cashless claims?',
+          'a' => [
+            'Yes. Bring your policy details and photo ID and our front desk will start the paperwork.',
+            'Approval timelines are set by the insurer, not by us, so it is worth beginning the process as early as you can.',
+          ],
+        ],
+      ];
+    ?>
+
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="faq__inner">
+
+        <p class="faq__badge" data-faq-item>
+          <span class="faq__badge-num"><?= str_pad((string) count($home_faqs), 3, '0', STR_PAD_LEFT) ?></span>
+          <span class="faq__badge-dot" aria-hidden="true"></span>
+          FAQs
+        </p>
+
+        <h2 class="faq__title" id="faq-title" data-faq-item>
+          Questions we&rsquo;re <em class="faq__title-em">asked most</em>
+        </h2>
+
+        <ul class="faq__list" data-faq>
+          <?php foreach ($home_faqs as $i => $faq): $n = $i + 1; ?>
+            <li class="faq__item" data-faq-item>
+              <h3 class="faq__heading">
+                <button class="faq__trigger" type="button"
+                        id="faq-btn-<?= $n ?>" aria-controls="faq-panel-<?= $n ?>"
+                        aria-expanded="false" data-faq-trigger>
+                  <span class="faq__num" aria-hidden="true"><?= $n ?></span>
+                  <span class="faq__label"><?= htmlspecialchars($faq['q'], ENT_QUOTES) ?></span>
+                  <span class="faq__icon" aria-hidden="true">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path d="M7 1.75v10.5M1.75 7h10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </h3>
+
+              <div class="faq__panel" id="faq-panel-<?= $n ?>" role="region"
+                   aria-labelledby="faq-btn-<?= $n ?>" data-faq-panel>
+                <div class="faq__panel-inner">
+                  <div class="faq__answer">
+                    <?php foreach ($faq['a'] as $para): ?>
+                      <p><?= htmlspecialchars($para, ENT_QUOTES) ?></p>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+
+        <div class="faq__foot" data-faq-item>
+          <span class="faq__foot-text">Rather just speak to someone?</span>
+          <a class="faq__contact" href="tel:+917014584948">
+            Call the clinic
+            <span class="faq__contact-arrow" aria-hidden="true">
+              <svg viewBox="0 0 12 12" fill="none">
+                <path d="M3.25 8.75 8.75 3.25M4.5 3.25h4.25V7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+
       </div>
     </section>
 

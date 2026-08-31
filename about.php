@@ -75,13 +75,13 @@ include __DIR__ . '/include/header.php';
 
             <!-- Action CTAs -->
             <div class="founding__actions">
-              <a class="founding-btn founding-btn--primary" href="#appointment">
+              <a class="founding-btn founding-btn--primary" href="book-appointment.php">
                 <span>Book Consultation</span>
                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3.33 8h9.34M8.67 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
-              <a class="founding-btn founding-btn--ghost" href="#contact">
+              <a class="founding-btn founding-btn--ghost" href="book-appointment.php">
                 <span>Contact Clinic</span>
               </a>
             </div>
@@ -166,9 +166,7 @@ include __DIR__ . '/include/header.php';
 
             <!-- Card Visual -->
             <div class="highlights__card highlights__card--solid">
-              <div class="highlights__wordmark">
-                <span class="highlights__wordmark-dot">.</span>durvacare<span class="highlights__wordmark-dot">.</span>
-              </div>
+              <img class="highlights__bg" src="https://images.pexels.com/photos/2324837/pexels-photo-2324837.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1400" alt="The surgical team at work in theatre" width="1400" height="875" loading="lazy" decoding="async">
             </div>
 
             <!-- Caption Row -->

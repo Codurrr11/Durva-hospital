@@ -93,6 +93,10 @@
   --tint-sage: 56, 130, 116;
   --tint-navy: 70, 98, 148;
   --tint-clay: 168, 116, 100;
+  /* a muted blue-violet — the only cool-but-not-teal tone in the set, added
+     for the appointment ground so it does not repeat the sand/sage pairing
+     used everywhere else */
+  --tint-iris: 108, 112, 168;
   --c-teal-deep: #0f5a4c; /* headline accent — deeper than --c-mark */
   --c-paper-rgb: 247, 246, 244; /* same colour, for rgba() — keep in sync */
   --c-paper-ink: #14161a;
@@ -144,6 +148,7 @@
   --bp-sm: 480px;
   --bp-md: 768px;
   --bp-lg: 1024px;
+  --bp-nav: 1259px; /* the width below which the nav becomes a sheet */
 }
 
 /* ==========================================================================
@@ -288,13 +293,21 @@ body {
    2. SITE HEADER / NAV
    ========================================================================== */
 
-/* `absolute`, not `fixed`: the bar belongs to the hero and scrolls away with
-   it. As `fixed` it rode over every section below — no z-index or overflow
-   setting can prevent that, since a fixed bar is by definition always on top.
-   To make it sticky again, change this one line back to `fixed` and give
-   `.community` (and every later section) top padding to clear it. */
+/*  `fixed`, and always fixed.
+
+    It used to be `absolute` so the bar would scroll away with the hero, the
+    objection to `fixed` being that it then rides over every section below.
+    The scroll-reveal makes that objection moot: below the top zone the bar is
+    translated off-screen unless the reader is scrolling UP, so it is never
+    sitting over content uninvited.
+
+    Always-fixed is also what keeps the reveal seamless. `absolute` and
+    `fixed` paint at exactly the same place while the page is at scrollTop 0
+    and diverge by the scroll offset everywhere else, so switching between
+    them mid-scroll would jump the bar by however far the page had travelled.
+    One position value, and only `transform` and colour ever change. */
 .site-header {
-  position: absolute;
+  position: fixed;
   top: var(--header-inset);
   right: var(--header-inset);
   left: var(--header-inset);
@@ -305,11 +318,192 @@ body {
   gap: 1rem;
   /* the bar is three floating islands — clicks pass through the gaps */
   pointer-events: none;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    top var(--dur-base) var(--ease-out),
+    padding var(--dur-base) var(--ease-out);
 }
 
 .site-header > * {
   pointer-events: auto;
 }
+
+/* ==========================================================================
+   Scroll reveal
+   --------------------------------------------------------------------------
+   Three states, driven by two classes from main.js:
+
+     (none)                top zone — the hero's own bar, exactly as before
+     .is-hidden            scrolling down — translated out of the way
+     .is-stuck             scrolling up — the white bar
+
+   .is-stuck is NOT removed when the reader turns back downwards. The bar
+   leaves in the same skin it arrived in; the skin is only dropped once the
+   page is back in the top zone, where the hero bar belongs.
+   ========================================================================== */
+.site-header.is-hidden {
+  /* past its own height plus the inset, so the shadow clears too */
+  transform: translateY(calc(-100% - var(--header-inset) - 1.5rem));
+}
+
+/* the sheet is `position: fixed` INSIDE this element, and a transformed
+   ancestor becomes the containing block for its fixed descendants — the
+   full-screen menu would ride up with the bar. It cannot hide while open. */
+.site-header.is-open {
+  transform: none;
+}
+
+/*  THE WHITE BAR IS A PSEUDO-ELEMENT, not a background on the header.
+
+    The header is inset from three edges and the surface has to be full bleed,
+    so painting it on the header itself would mean the surface stopping short
+    of the screen edges. A pseudo-element bled back out past the insets sits
+    edge to edge, and the whole skin change is one opacity crossfade. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--header-inset) * -1);
+  right: calc(var(--header-inset) * -1);
+  bottom: calc(var(--header-inset) * -1);
+  left: calc(var(--header-inset) * -1);
+  opacity: 0;
+  border-bottom: 1px solid rgba(18, 24, 32, 0.07);
+  background-color: rgba(252, 253, 253, 0.88);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+  backdrop-filter: blur(26px) saturate(185%);
+  box-shadow: 0 14px 38px -26px rgba(12, 16, 22, 0.55);
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+/*  HEIGHT. The hero bar is a floating island: it is inset from the top of the
+    screen and its two pills carry their own padding, which is right when it is
+    hovering over a photograph and wrong when it is a bar clamped to the top
+    edge — that reading came out at 92px tall, most of it air.
+
+    Docking it costs nothing to animate, because the bar is off-screen at the
+    moment the class flips. The inset goes to zero, the header takes over the
+    vertical padding from the pills, and the pills give theirs up. ~64px. */
+.site-header.is-stuck {
+  top: 0;
+  padding-block: clamp(0.5rem, 0.75vw, 0.6875rem);
+}
+
+.site-header.is-stuck::before {
+  opacity: 1;
+  top: 0;
+  bottom: 0;
+}
+
+/* ---------- the light skin ----------
+   The pills are glass built for a dark ground. On white they have to give up
+   their fill, their line, their blur AND their padding, or the bar reads as
+   two panels of frosted grey sitting on a white one. */
+.site-header.is-stuck .actions {
+  padding: 0;
+  border-color: transparent;
+  background-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+@media (min-width: 1260px) {
+  .site-header.is-stuck .nav__list {
+    padding: 0;
+    border-color: transparent;
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  /*  TYPE. 13px is a size for a translucent pill floating over a photograph,
+      where the label is half graphic. On an opaque white bar it is just small.
+
+      The room to grow it is bought, not found: this header measured 17px of
+      horizontal slack at 1280 and none at all at 1025. Dropping the pill's
+      own padding and 0.15rem a side off each of six links frees ~50px, which
+      is what pays for the larger glyphs — see the 1141px rule below. */
+  .site-header.is-stuck .nav__link {
+    position: relative;
+    font-weight: var(--fw-medium);
+  }
+
+  /*  The active item was a grey capsule — the one shape on the bar that had
+      to be a solid, and it read as a smudge. A rule under the word says the
+      same thing in the site's own accent, and it is the same object the
+      hover state animates in, so hover and active are one idea rather than
+      two unrelated treatments. */
+  .site-header.is-stuck .nav__link::after {
+    content: "";
+    position: absolute;
+    right: var(--nav-pad, 0.9rem);
+    bottom: 0.125rem;
+    left: var(--nav-pad, 0.9rem);
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--c-mark);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .site-header.is-stuck .nav__link:hover::after,
+  .site-header.is-stuck .nav__item:focus-within > .nav__link::after,
+  .site-header.is-stuck .nav__link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .site-header.is-stuck .nav__link {
+    color: var(--c-paper-ink-soft);
+  }
+
+  /* no capsule behind any of them now — the rule is the whole signal */
+  .site-header.is-stuck .nav__link:hover,
+  .site-header.is-stuck .nav__item:focus-within > .nav__link,
+  .site-header.is-stuck .nav__link.is-active {
+    color: var(--c-paper-ink);
+    background-color: transparent;
+  }
+
+  .site-header.is-stuck .nav__caret {
+    opacity: 0.5;
+  }
+}
+
+
+
+@media (min-width: 1300px) {
+  .site-header.is-stuck .nav__link {
+    font-size: 0.875rem;
+  }
+}
+
+/* the CTA was near-white on a dark bar; on a white one it inverts, or it
+   disappears into the surface it is meant to sit on */
+/* The button is near-black in both skins, so the light bar only has to trade
+   the shadow: a black glow reads as dirt on white, where on the hero it is
+   what lifts the button off the video. */
+.site-header.is-stuck .btn--book {
+  font-size: 0.875rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 26px -18px rgba(12, 16, 22, 0.6);
+}
+
+.site-header.is-stuck .nav-toggle {
+  color: var(--c-paper-ink);
+}
+
+.site-header.is-stuck .nav-toggle:hover {
+  background-color: rgba(18, 24, 32, 0.055);
+}
+
+/* The dropdown panels stay dark on purpose. They are floating panels rather
+   than part of the bar, they are the same panels the whole site uses, and a
+   dark one under a white bar reads as deliberate — a second white surface
+   over the first would not. */
 
 /* ---------- brand (outside the pill, per reference) ---------- */
 .brand {
@@ -362,10 +556,48 @@ body {
   justify-self: center;
 }
 
+/* the in-sheet close button and CTAs exist only when the nav is a sheet */
+.nav__close,
+.nav__foot {
+  display: none;
+}
+
 .nav__list {
   display: flex;
   align-items: center;
   gap: 0.125rem;
+}
+
+/* The glass pill, applied only where the nav is a horizontal bar.
+   It used to come from the shared .capsule class in the markup, which meant
+   the mobile sheet had to undo six properties one by one — and the one that
+   got missed, border-radius, clipped the scrolling list into an oval because
+   .nav__list also has overflow-y:auto. Styling that only exists at the width
+   it is wanted cannot be forgotten at any other width.
+   .actions keeps .capsule: that group stays a pill on every screen. */
+/* Above this the burger is hidden, so .actions wraps the CTA and nothing
+   else — and a pill capsule drawn around a 14px-radius rectangle shows as a
+   mismatched ring down both sides. Below it the capsule still holds two
+   controls and still earns its keep. */
+@media (min-width: 1260px) {
+  .actions {
+    padding: 0;
+    border-color: transparent;
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .nav__list {
+    padding: 0.3rem;
+    border: 1px solid var(--c-glass-line);
+    border-radius: var(--r-pill);
+    background-color: var(--c-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    backdrop-filter: var(--blur-glass);
+    box-shadow: var(--sh-glass);
+  }
 }
 
 .nav__item {
@@ -376,7 +608,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.55rem 0.9rem;
+  padding: 0.55rem var(--nav-pad, 0.9rem);
   border-radius: var(--r-pill);
   font-size: var(--fs-nav);
   font-weight: var(--fw-medium);
@@ -497,28 +729,138 @@ body {
     opacity var(--dur-fast) var(--ease-out);
 }
 
-.btn--ghost {
-  padding: 0.55rem 0.95rem;
-  color: var(--c-fg-soft);
+
+/* ==========================================================================
+   Book Appointment
+   --------------------------------------------------------------------------
+   Two blocks inside one rounded rectangle: a filled tile and a label. It is
+   not a pill — the tile is a rounded square, and a square set inside a pill
+   leaves two different curves fighting each other down the left edge.
+
+   The tile carries the site's accent, which makes it the one saturated
+   object in the header and lets the button itself stay near-black on both
+   the hero and the white scrolled bar. One button, one appearance, rather
+   than a light version and a dark version that have to be kept in step.
+   ========================================================================== */
+.btn--book {
+  gap: 0.625rem;
+  padding: 0.3125rem 1.125rem 0.3125rem 0.3125rem;
+  border-radius: 14px;
+  color: #ffffff;
+  background-color: #171b22;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.075),
+    0 16px 32px -20px rgba(0, 0, 0, 0.85);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.btn--ghost:hover {
-  color: var(--c-fg);
-  background-color: var(--c-glass-hi);
+.btn__tile {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  /* 10 against the button's 14, both minus the 5px inset — concentric, so
+     the tile sits in the corner rather than beside it */
+  border-radius: 10px;
+  background-color: var(--c-accent);
+  color: #0a1f1a;
+  transition: background-color var(--dur-base) var(--ease-out);
 }
 
-.btn--light {
-  padding: 0.6rem 1.05rem;
-  color: var(--c-dark);
-  background-color: var(--c-light);
-  box-shadow: var(--sh-light);
+.btn__wave {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.btn--light:hover {
+/*  THE WAVE. Three columns, each delayed a step behind the last, so the pulse
+    travels along the arrow instead of flashing the whole glyph at once.
+
+    The dip is written INTO the keyframes and the resting state is full
+    opacity, not the other way round, so an arrow that is not animating is a
+    clean opaque arrow rather than a permanently half-faded one. The reduced
+    motion rule below then only has to cancel the animation. */
+@keyframes bk-wave {
+  0%, 55%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+.btn__wave-col {
+  opacity: 1;
+  /* SVG children scale about the user-space origin by default, which throws
+     a circle across the tile instead of growing it in place */
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bk-wave 2s var(--ease-out) infinite;
+  animation-delay: calc(var(--w, 0) * 0.13s);
+}
+
+.btn--book:hover {
+  background-color: #0f1319;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 20px 38px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* the wave runs a little harder under the pointer — the same motion, not a
+   different one, so hover reads as encouragement rather than as a new trick */
+.btn--book:hover .btn__wave-col,
+.btn--book:focus-visible .btn__wave-col {
+  animation-duration: 1.15s;
+}
+
+.btn--book:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+}
+
+/* already on the page it points at */
+.btn--book[aria-current] .btn__tile {
   background-color: #ffffff;
 }
 
+/*  The global reset at the top of this file does not switch animations off —
+    it sets them to 0.01ms and one iteration, which relies on fill-mode
+    reverting each element to its declared style once that iteration ends.
+    That does land on opacity 1 here, but it is a subtlety to be depending on
+    for whether a button looks broken. Cancel the animation outright: the
+    arrow is then simply drawn, which is what it should be for someone who
+    has asked the system for less movement. */
+@media (prefers-reduced-motion: reduce) {
+  .btn__wave-col {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*  SEVEN items, four of them carrying a caret. Measured slack across the row
+    — viewport minus brand, nav, actions and the two grid gaps:
+
+        1440  +175      1280   +31
+        1366  +107      1180   -30      1025  -134
+
+    so the bar stops being a bar somewhere around 1230. It collapses to the
+    sheet at 1259 instead (see --bp-nav), and this trim buys the band just
+    above that some air: 0.2rem a side off seven links is ~45px, which turns
+    a slack of ~19 at 1260 into ~64. */
+@media (max-width: 1340px) {
+  .nav__link {
+    --nav-pad: 0.7rem;
+  }
+}
+
 /* ---------- hamburger ---------- */
+
 .nav-toggle {
   display: none;
   align-items: center;
@@ -573,9 +915,15 @@ body {
 }
 
 /* ==========================================================================
-   Tablet + mobile — up to 1024px
+   Tablet + mobile — up to 1259px
+   --------------------------------------------------------------------------
+   This was 1024 when the bar held six items and a phone number. It holds
+   seven now, and seven does not fit under ~1230 — see the slack table above.
+   Keep this in step with the matchMedia query in main.js: the CSS decides
+   what the nav LOOKS like and the JS decides whether tapping a parent opens
+   an accordion or follows the link, and they have to agree.
    ========================================================================== */
-@media (max-width: 1024px) {
+@media (max-width: 1259px) {
   .site-header {
     grid-template-columns: 1fr auto;
   }
@@ -584,22 +932,33 @@ body {
     display: inline-flex;
   }
 
-  .actions .btn--ghost {
-    display: none;
-  }
 
-  /* nav leaves the bar and becomes a full-screen sheet */
+  /* ---------- the sheet ----------
+     WHY justify-self MATTERS HERE. The desktop rule is `.nav { justify-self:
+     center }` to sit the bar in the middle of the header grid. Chrome honours
+     self-alignment on an absolutely-positioned child of a grid container, and
+     the effect is that the box switches to SHRINK-TO-FIT instead of filling
+     its inset box — so `position: fixed; inset: 0` was resolving to a 261px
+     column centred in a 420px screen, with the page showing either side.
+     Stretching it back is what makes the sheet full width. */
   .nav {
     position: fixed;
     inset: 0;
+    justify-self: stretch;
+    align-self: stretch;
     z-index: var(--z-menu);
-    display: grid;
-    align-content: center;
-    justify-items: center;
-    padding: var(--gutter);
-    background-color: rgba(var(--c-veil), 0.94);
-    -webkit-backdrop-filter: var(--blur-glass);
-    backdrop-filter: var(--blur-glass);
+    display: flex;
+    flex-direction: column;
+    /* no inline padding: the rows carry it themselves, so dividers and any
+       row highlight run the full width of the sheet instead of floating in
+       an inset column */
+    padding:
+      calc(var(--header-inset) + 4.25rem)
+      0
+      calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+    background-color: rgba(9, 12, 17, 0.985);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
     opacity: 0;
     visibility: hidden;
     transition:
@@ -612,33 +971,62 @@ body {
     visibility: visible;
   }
 
+  /* the list takes the free height and scrolls; the CTAs below it never move */
   .nav__list {
+    flex: 1;
     flex-direction: column;
-    gap: 0.25rem;
-    width: min(24rem, 100%);
-    max-height: 76vh;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    max-height: none;
     overflow-y: auto;
-    padding: 0;
-    border: 0;
-    background: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: none;
+    overscroll-behavior: contain;
+    /* no un-styling needed here any more — the bar's glass pill is applied
+       in a min-width query, so it never reaches this width to be undone */
   }
 
+  /* left-aligned with a rule under each row: a list you read down, rather
+     than centred text that gives the eye no edge to follow */
   .nav__item {
     width: 100%;
-    text-align: center;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .nav__link {
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 0.7rem 1rem;
+    padding: 1.0625rem var(--gutter);
+    border-radius: 0;
     font-size: 1.0625rem;
+    font-weight: var(--fw-semibold);
+    letter-spacing: -0.015em;
+    color: var(--c-fg);
   }
 
-  /* submenu becomes an inline accordion */
+  /* The desktop bar marks hover, focus-within and the current page with a
+     rounded glass pill. In a full-width sheet that pill reads as a stray
+     rounded box — and because opening a group focuses its link, it sat there
+     permanently. Colour carries all three states here instead. */
+  .nav__link:hover,
+  .nav__link.is-active,
+  .nav__item:focus-within > .nav__link {
+    background: none;
+    border-radius: 0;
+  }
+
+  .nav__link.is-active {
+    color: var(--c-accent);
+  }
+
+  .nav__caret {
+    width: 0.75rem;
+    height: 0.5rem;
+    color: var(--c-fg-mute);
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  }
+
+  /* ---------- submenu accordion ---------- */
   .menu {
     position: static;
     width: auto;
@@ -657,6 +1045,7 @@ body {
     overflow: hidden;
     padding: 0;
     border: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 0;
     background: none;
     -webkit-backdrop-filter: none;
@@ -665,10 +1054,30 @@ body {
     transform: none;
   }
 
+  /* children hang off a rule, so an open group reads as one block instead of
+     as more top-level items */
+  /* the rule belongs to the panel, not each link — on the link it would sit
+     hard against the screen edge once the rows went full-bleed */
+  .menu__panel {
+    margin-left: var(--gutter);
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
   .menu__link {
-    padding: 0.5rem;
-    text-align: center;
-    color: var(--c-fg-mute);
+    padding: 0.6875rem var(--gutter) 0.6875rem 1rem;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.9375rem;
+    color: var(--c-fg-soft);
+  }
+
+  .menu__link:hover,
+  .menu__link.is-active {
+    background: none;
+  }
+
+  .menu__link.is-active {
+    color: var(--c-accent);
   }
 
   /* hover must not open it on touch — only the class does */
@@ -679,17 +1088,122 @@ body {
 
   .nav__item.is-open > .menu {
     grid-template-rows: 1fr;
-    padding-block: 0.25rem 0.5rem;
+  }
+
+  .nav__item.is-open > .nav__link {
+    color: var(--c-accent);
   }
 
   .nav__item.is-open > .nav__link .nav__caret {
     transform: rotate(180deg);
+    color: var(--c-accent);
+  }
+
+  /* ---------- close ---------- */
+  .nav__close {
+    position: absolute;
+    top: var(--header-inset);
+    right: var(--gutter);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--c-glass-line);
+    border-radius: 50%;
+    background-color: var(--c-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    backdrop-filter: var(--blur-glass);
+    color: var(--c-fg);
+    cursor: pointer;
+    transition: background-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+
+  .nav__close svg {
+    width: 1.0625rem;
+    height: 1.0625rem;
+  }
+
+  .nav__close:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .nav__close:active {
+    transform: scale(0.94);
+  }
+
+  .nav__close:focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 3px;
+  }
+
+  /* ---------- sheet footer ---------- */
+  .nav__foot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 1.25rem var(--gutter) 0;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav__call {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--c-glass-line);
+    border-radius: var(--r-pill);
+    background-color: var(--c-glass);
+    font-size: 0.9375rem;
+    font-weight: var(--fw-semibold);
+    color: var(--c-fg);
+    text-decoration: none;
+  }
+
+  .nav__call svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    flex: none;
+    color: var(--c-accent);
+  }
+
+  .nav__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9375rem 1.25rem;
+    border-radius: var(--r-pill);
+    background-color: #f5f5f7;
+    font-size: 0.9375rem;
+    font-weight: var(--fw-semibold);
+    color: #0a0b0e;
+    text-decoration: none;
   }
 }
 
+/* the label goes on the smallest screens and the icon becomes the button —
+   the burger is right beside it and two full-width controls will not fit */
+/* the label goes on the smallest screens and the tile becomes the button —
+   the burger is right beside it and two full-width controls will not fit */
 @media (max-width: 480px) {
-  .btn--light {
-    padding: 0.55rem 0.85rem;
+  .btn--book {
+    gap: 0;
+    padding: 0.25rem;
+    border-radius: 12px;
+  }
+
+  .btn__tile {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9px;
+  }
+
+  .btn__text {
+    display: none;
   }
 }
 
@@ -4129,39 +4643,25 @@ body {
   line-height: 1.2;
 }
 
-/* Card 2: Solid Dark Navy with Minimal Wordmark */
+/* Card 2: photograph only — no scrim, no wordmark, nothing over the top.
+   The pale ground is only what shows while the image is still loading. */
 .highlights__card--solid {
-  background-color: #0c1724;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background-color 400ms var(--ease-out),
-    box-shadow 400ms var(--ease-out);
+  background-color: #e5edf0;
 }
 
-.highlights__card--solid:hover {
-  background-color: #112032;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.highlights__wordmark {
-  font-family: var(--font-serif);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-  line-height: 1;
-  user-select: none;
+.highlights__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
   transition: transform 400ms var(--ease-out);
 }
 
-.highlights__card--solid:hover .highlights__wordmark {
-  transform: scale(1.03);
-}
-
-.highlights__wordmark-dot {
-  color: var(--c-accent, #7fd1c1);
+/* the same 1.025 lift the card beside it gives its own photograph */
+.highlights__card--solid:hover .highlights__bg {
+  transform: scale(1.025);
 }
 
 /* ---------- Caption Row ---------- */
@@ -4747,11 +5247,92 @@ body {
 .values-sec {
   position: relative;
   z-index: 1;
+  isolation: isolate;
+  overflow: hidden; /* the oversized, blurred image is clipped to the section */
   padding: clamp(5.5rem, 8.5vw, 9rem) var(--gutter);
   background-color: #ffffff;
   color: #0c1219;
   font-family: var(--font-sans);
   border-top: 1px solid rgba(20, 24, 30, 0.06);
+}
+
+/*  THE OVERSIZE IS NOT DECORATION. A blur samples pixels from OUTSIDE the
+    element it is applied to, and outside this element there is nothing — so
+    an image blurred at its own size fades to transparent for ~2x the blur
+    radius along every edge, leaving four soft white bands around the
+    section. Bleeding it 3rem past all four sides and letting the section's
+    overflow do the clipping puts those bands off-screen, which is the only
+    way to get a blurred backdrop with clean edges.
+
+    OPACITY AND BLUR ARE SET AGAINST MEASURED CONTRAST, not by eye — but the
+    thing being protected has changed, which is what lets the picture come up.
+
+    The cards below are frosted glass now, and a backdrop-filter blurs
+    whatever is behind it. The blur that used to have to live on the image
+    itself has moved into the cards, so the photograph only needs enough of
+    its own to stay a ground rather than a subject: 3px, where it was 16.
+
+    So the image runs at full opacity with 2px of blur — just enough to keep
+    it a ground rather than a subject. What still sits directly on it is the
+    left column, and that is now handled entirely by the scrim below rather
+    than by fading the picture out. */
+.values-sec__bg {
+  position: absolute;
+  z-index: -2;
+  top: -3rem;
+  right: -3rem;
+  bottom: -3rem;
+  left: -3rem;
+  width: calc(100% + 6rem);
+  height: calc(100% + 6rem);
+  /* the global `img { max-width: 100% }` reset caps this at the section's
+     own width and silently kills the right-hand bleed — measured 1425px
+     where the rule asks for 1521 — so the deliberately oversized one has to
+     opt out of it */
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  opacity: 1;
+  filter: blur(2px) saturate(0.98);
+  pointer-events: none;
+}
+
+/*  A scrim on top of it, weighted to the LEFT — and the stops are placed off
+    the measured layout, not guessed. The left column runs to 38.7% of the
+    section and the cards begin at 46.2%, so the scrim holds its strength to
+    40%, drops away through the empty gap between the two, and is at its
+    thinnest under the cards, which now do their own work with a
+    backdrop-filter.
+
+    THE 0.66 AT 40% IS A FLOOR, NOT A TASTE. The paragraph is #38424f, and
+    over the darkest thing a photograph can put behind it — pure black — the
+    scrim has to reach 0.62 before that clears 4.5:1. 0.66 leaves a little in
+    hand. Past the cards it drops to 0.05, which is effectively nothing: the
+    right-hand two thirds of the section show the picture as shot, because
+    the cards there do their own work with a backdrop-filter. */
+.values-sec__scrim {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.66) 40%,
+    rgba(255, 255, 255, 0.14) 54%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+/* on one column the type sits over the whole width, so the scrim evens out */
+@media (max-width: 900px) {
+  .values-sec__scrim {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.68) 100%
+    );
+  }
 }
 
 .values-sec__inner {
@@ -4775,7 +5356,9 @@ body {
   font-size: 0.8125rem;
   font-weight: var(--fw-semibold);
   letter-spacing: 0.02em;
-  color: #64748b;
+  /* same floor as the paragraph below it — at 13px this label is the smallest
+     type in the column and had the least contrast to give away */
+  color: #2f3844;
   margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
 }
 
@@ -4793,7 +5376,16 @@ body {
   margin: 0;
   font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
   line-height: 1.68;
-  color: #5d6b7e;
+  /*  Was #5d6b7e, a grey chosen for a flat white ground. The photograph now
+      runs at full opacity behind a scrim of only 0.66, which puts the floor
+      under this paragraph at luminance 169 — and the old grey reads 3.3:1
+      there, well under AA.
+
+      Darkening the TEXT is the right lever, not thickening the scrim: white
+      paint over the picture is the thing that was making the section look
+      washed out. This is the same hue held dark enough to clear 4.5:1 against
+      the worst a photograph can do, which leaves the scrim free to stay thin. */
+  color: #2f3844;
   text-wrap: pretty;
 }
 
@@ -4805,33 +5397,87 @@ body {
   align-items: stretch;
 }
 
+/*  GLASS, over the photograph.
+
+    The blur belongs here rather than on the image: a backdrop-filter blurs
+    only what is behind THIS box, so the picture can stay sharp in the open
+    and still be soft enough under the text to read against. That is the whole
+    trade — one blur, moved from the ground to the panels that need it.
+
+    The 1px inset highlight along the top is what stops a translucent panel
+    reading as a smudge: real glass catches light on its top edge, and without
+    it the card has no edge at all against a busy ground. */
 .value-card {
-  background-color: #f6f7f9;
+  /* 0.66, not 0.55. Over a dark passage of the photograph, 0.55 composites
+     to a mid grey and takes the body copy down to 1.6:1 — the panel looked
+     like glass and could not be read. 0.66 is still visibly translucent and
+     the picture still moves underneath it. */
+  background-color: rgba(255, 255, 255, 0.66);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
   border-radius: 16px;
   padding: clamp(1.75rem, 2.2vw, 2.25rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 240px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 18px 40px -26px rgba(16, 24, 40, 0.35);
   transition:
     transform 350ms var(--ease-out),
+    background-color 350ms var(--ease-out),
     box-shadow 350ms var(--ease-out);
 }
 
 .value-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 32px -8px rgba(16, 24, 40, 0.08);
+  background-color: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 24px 48px -24px rgba(16, 24, 40, 0.4);
 }
 
-/* Top-Left Accent Card (Theme Brand Emerald Teal) */
+/*  Browsers without backdrop-filter get an opaque panel instead. Without this
+    they get a 55%-transparent white box over a photograph, which is not a
+    degraded version of glass — it is unreadable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .value-card {
+    background-color: rgba(255, 255, 255, 0.93);
+  }
+
+  .value-card--accent {
+    background-color: #135c4f;
+  }
+}
+
+/*  Top-Left Accent Card (Theme Brand Emerald Teal), as tinted glass.
+
+    THE TEAL IS DEEPER THAN THE SOLID CARD'S WAS, and that is a consequence of
+    the transparency rather than a restyle. This card holds white text, so the
+    number that matters is the composite when the BRIGHTEST thing a photograph
+    can put behind it — a blown-out window — shows through. At the old
+    #1f8a78/#115d51 let down to 0.78 that lands on 3.8:1, under AA. Dropping
+    the base to a deeper teal buys the contrast back without having to close
+    the glass up to near-opaque, which would have defeated the point. */
 .value-card--accent {
-  background: linear-gradient(135deg, #1f8a78 0%, #115d51 100%);
+  background-color: rgba(15, 85, 73, 0.82);
+  background-image: linear-gradient(135deg, rgba(31, 138, 120, 0.38) 0%, rgba(13, 74, 65, 0.55) 100%);
   color: #ffffff;
-  box-shadow: 0 10px 28px -6px rgba(26, 117, 102, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 18px 40px -20px rgba(17, 93, 81, 0.55);
 }
 
 .value-card--accent:hover {
-  box-shadow: 0 16px 36px -6px rgba(26, 117, 102, 0.45);
+  background-color: rgba(15, 85, 73, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 24px 48px -20px rgba(17, 93, 81, 0.6);
 }
 
 /* Card Elements */
@@ -4857,7 +5503,10 @@ body {
   margin: 0 0 1.5rem;
   font-size: 0.9375rem;
   line-height: 1.55;
-  color: #5d6b7e;
+  /* the same darkening the left column needed, and for the same reason: this
+     used to sit on flat #f6f7f9 and now sits on glass with a photograph
+     behind it. The accent card overrides this to white below. */
+  color: #2f3844;
   text-wrap: pretty;
 }
 
@@ -5771,16 +6420,32 @@ body {
   overflow: hidden;
   padding: clamp(3.5rem, 7vw, 7rem) var(--gutter) 0;
   font-family: var(--font-sans);
-  color: #0c1219;
+  color: var(--c-fg);
 
-  --dcta-ground: #fbfbfa;
+  /* the ground is lifted straight from the home page testimonials band:
+     same base, same two blooms, same grain below */
+  --dcta-ground: #0a0b0e;
+  /* the arch fill. It MUST stay at the photo's own background value
+     (#fbfbfb, sampled from three corners of doctor.jpg) — that match is what
+     keeps the portrait from showing as a rectangle inside the arch. */
+  --dcta-panel: #fbfbfb;
 
   background-color: var(--dcta-ground);
-  /* tints are kept to the LEFT, away from the portrait — a wash behind the
-     photo would give away where its background ends */
   background-image:
-    radial-gradient(46% 52% at 2% 6%, rgba(var(--tint-sage), 0.16) 0%, rgba(var(--tint-sage), 0) 64%),
-    radial-gradient(40% 46% at 10% 98%, rgba(var(--tint-sand), 0.16) 0%, rgba(var(--tint-sand), 0) 62%);
+    radial-gradient(52% 44% at 14% 8%, rgba(var(--tint-sage), 0.16) 0%, rgba(var(--tint-sage), 0) 62%),
+    radial-gradient(48% 42% at 88% 84%, rgba(var(--tint-navy), 0.2) 0%, rgba(var(--tint-navy), 0) 64%);
+}
+
+/* Grain, as on the testimonials band: on a near-black ground a two-bloom
+   gradient bands badly without it. */
+.dcta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
 }
 
 .dcta__inner {
@@ -5809,14 +6474,14 @@ body {
   font-weight: var(--fw-semibold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--c-teal-deep);
+  color: var(--c-accent);
 }
 
 .dcta__eyebrow-rule {
   width: 1.75rem;
   height: 1px;
   flex: none;
-  background-image: linear-gradient(to right, rgba(15, 90, 76, 0), var(--c-teal-deep));
+  background-image: linear-gradient(to right, rgba(127, 209, 193, 0), var(--c-accent));
 }
 
 .dcta__title {
@@ -5831,7 +6496,7 @@ body {
 .dcta__title-em {
   font-style: normal;
   font-weight: inherit;
-  color: var(--c-teal-deep);
+  color: var(--c-accent);
 }
 
 .dcta__lead {
@@ -5840,7 +6505,7 @@ body {
   font-size: clamp(0.8125rem, 0.94vw, 0.9375rem);
   font-weight: var(--fw-medium);
   line-height: 1.72;
-  color: var(--c-paper-ink-soft);
+  color: var(--c-fg-soft);
   text-wrap: pretty;
 }
 
@@ -5856,11 +6521,11 @@ body {
 
 .dcta__item {
   padding: clamp(0.5rem, 0.9vw, 0.6875rem) 0;
-  border-top: 1px solid rgba(20, 24, 30, 0.09);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
   font-weight: var(--fw-medium);
   line-height: 1.55;
-  color: var(--c-paper-ink-soft);
+  color: var(--c-fg-soft);
 }
 
 .dcta__item:first-child {
@@ -5884,13 +6549,13 @@ body {
   gap: 0.5rem;
   padding: 0.8125rem 1.375rem;
   border-radius: var(--r-pill);
-  background-color: #0c1219;
+  background-color: #f5f5f7;
   font-size: 0.875rem;
   font-weight: var(--fw-semibold);
   letter-spacing: -0.008em;
-  color: #ffffff;
+  color: #0a0b0e;
   text-decoration: none;
-  box-shadow: 0 14px 30px -18px rgba(12, 18, 25, 0.9);
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.85);
   transition:
     background-color 240ms var(--ease-out),
     transform 240ms var(--ease-out),
@@ -5905,9 +6570,9 @@ body {
 }
 
 .dcta__cta:hover {
-  background-color: #000000;
+  background-color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 20px 36px -18px rgba(12, 18, 25, 0.95);
+  box-shadow: 0 20px 36px -16px rgba(0, 0, 0, 0.9);
 }
 
 .dcta__cta:hover svg {
@@ -5922,9 +6587,9 @@ body {
   font-size: 0.875rem;
   font-weight: var(--fw-semibold);
   letter-spacing: -0.008em;
-  color: #0c1219;
+  color: var(--c-fg);
   text-decoration: none;
-  border-bottom: 1px solid rgba(20, 24, 30, 0.22);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
   padding-bottom: 1px;
   transition: color 200ms var(--ease-out), border-color 200ms var(--ease-out);
 }
@@ -5933,17 +6598,17 @@ body {
   width: 0.875rem;
   height: 0.875rem;
   flex: none;
-  color: var(--c-teal-deep);
+  color: var(--c-accent);
 }
 
 .dcta__tel:hover {
-  color: var(--c-teal-deep);
-  border-color: var(--c-teal-deep);
+  color: var(--c-accent);
+  border-color: var(--c-accent);
 }
 
 .dcta__cta:focus-visible,
 .dcta__tel:focus-visible {
-  outline: 2px solid var(--c-teal-deep);
+  outline: 2px solid var(--c-accent);
   outline-offset: 3px;
 }
 
@@ -5955,7 +6620,8 @@ body {
   align-self: end;
   justify-self: center;
   margin: 0;
-  width: min(100%, 26rem);
+  width: min(100%, 24rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6.5rem);
 }
 
 /* The one ornament: an oversized hairline ring, sat behind the figure and
@@ -5965,37 +6631,57 @@ body {
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: 6%;
-  width: min(34rem, 128%);
+  bottom: 18%;
+  width: min(32rem, 126%);
   aspect-ratio: 1;
   transform: translateX(-50%);
-  border: 1px solid rgba(15, 90, 76, 0.16);
+  border: 1px solid rgba(127, 209, 193, 0.22);
   border-radius: 50%;
   pointer-events: none;
 }
 
-/* The mask is the whole trick: the lower third of the photo fades to nothing
-   so the figure stands on the page rather than in a frame. No border, no
-   radius, no shadow — any of those would draw the box back. */
+/* ---------- the arch ----------
+   On the light ground this photo needed no container at all — its white
+   seamless matched the page and the figure simply emerged from it. On a
+   near-black ground that same white background would read as a lit
+   rectangle, so the portrait gets a shape of its own.
+
+   An arch, not a card: the dome is a single radius, it crops only empty
+   background at the top corners (the head is centred and well clear), and it
+   is a portrait device rather than a UI box. The fill is --dcta-panel, which
+   is the photo's own background colour — so the seam between photo and arch
+   still does not exist, and the mask can fade the hem into the arch floor
+   exactly as it did into the page. */
+.dcta__arch {
+  position: relative;
+  z-index: 1;
+  display: block;
+  overflow: hidden;
+  border-radius: 999px 999px 22px 22px;
+  background-color: var(--dcta-panel);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 40px 80px -46px rgba(0, 0, 0, 0.9);
+}
+
 .dcta__img {
   position: relative;
   z-index: 1;
   display: block;
   width: 100%;
   height: auto;
-  -webkit-mask-image: linear-gradient(to bottom, #000 58%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 58%, rgba(0, 0, 0, 0.55) 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, rgba(0, 0, 0, 0.6) 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 72%, rgba(0, 0, 0, 0.6) 88%, transparent 100%);
 }
 
-/* sits over the faded hem of the photo, where there is nothing left to read */
+/* under the arch on the dark ground — over the photo it would have needed a
+   scrim, and a scrim is the box coming back */
 .dcta__caption {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  bottom: clamp(1.5rem, 3vw, 2.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0.1875rem;
+  margin-top: clamp(0.875rem, 1.6vw, 1.25rem);
+  text-align: center;
 }
 
 .dcta__caption-name {
@@ -6003,7 +6689,7 @@ body {
   font-weight: var(--fw-semibold);
   letter-spacing: -0.018em;
   line-height: 1.25;
-  color: #0c1219;
+  color: var(--c-fg);
 }
 
 .dcta__caption-role {
@@ -6011,7 +6697,7 @@ body {
   font-weight: var(--fw-medium);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--c-teal-deep);
+  color: var(--c-accent);
 }
 
 /* ==========================================================================
@@ -6049,3 +6735,2978 @@ body {
     justify-content: center;
   }
 }
+
+
+/* ==========================================================================
+   ===== FAQ (ACL PAGE) =====
+   Sits between the dark doctor CTA and the dark footer, and is deliberately
+   LIGHT. Three dark bands running together would have merged into one long
+   block, and long-form answers read better on a light ground. The page ends
+   dark -> light -> dark, which is the same rhythm the home page already uses
+   at testimonials -> blog -> footer.
+
+   THE OPEN/CLOSE ANIMATION uses the grid 0fr -> 1fr technique, not
+   max-height. max-height has to guess a value: guess low and long answers
+   clip, guess high and the easing goes slack because most of the transition
+   is spent on empty space. 0fr -> 1fr animates to the content's real height,
+   whatever it turns out to be.
+   ========================================================================== */
+.faq {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3.5rem, 7vw, 6.5rem) var(--gutter) clamp(3.5rem, 7vw, 6.5rem);
+  font-family: var(--font-sans);
+  color: #0c1219;
+
+  /* a wide overhead bloom, so the light falls where the headline is — a
+     different pattern again from the grounds further up this page */
+  background-color: #f4f5f7;
+  background-image:
+    radial-gradient(64% 42% at 50% -6%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(42% 34% at 88% 96%, rgba(var(--tint-sage), 0.18) 0%, rgba(var(--tint-sage), 0) 64%),
+    linear-gradient(180deg, #f7f8f9 0%, #f1f2f5 58%, #eceef1 100%);
+}
+
+.faq__inner {
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+/* ---------- head ---------- */
+.faq__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0.375rem 0.8125rem;
+  border: 1px solid rgba(20, 24, 30, 0.1);
+  border-radius: var(--r-pill);
+  background-color: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  color: #0c1219;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.faq__badge-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--c-paper-ink-soft);
+}
+
+.faq__badge-dot {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background-color: var(--c-teal-deep);
+}
+
+.faq__title {
+  margin: clamp(1rem, 1.8vw, 1.5rem) 0 clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.875rem, 4.4vw, 3.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.06;
+  letter-spacing: -0.036em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.faq__title-em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-teal-deep);
+}
+
+/* ==========================================================================
+   Accordion
+   ========================================================================== */
+.faq__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/* The row is the item, so the open state can restyle the whole thing —
+   surface, border and shadow — from one class rather than three. */
+.faq__item {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background-color: rgba(255, 255, 255, 0.55);
+  transition:
+    background-color 300ms var(--ease-out),
+    border-color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+.faq__item:hover:not(.is-open) {
+  background-color: rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+
+.faq__item.is-open {
+  background-color: #ffffff;
+  border-color: rgba(15, 90, 76, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(20, 24, 32, 0.03),
+    0 22px 44px -26px rgba(20, 32, 44, 0.28),
+    0 0 0 4px rgba(15, 90, 76, 0.05);
+}
+
+/* the accent edge — the one mark that says which row is live */
+.faq__item::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 2px;
+  background-image: linear-gradient(to bottom, var(--c-mark), rgba(26, 117, 102, 0));
+  transform: translateY(-50%);
+  transition: height 340ms var(--ease-out);
+  pointer-events: none;
+}
+
+.faq__item.is-open::before {
+  height: 42%;
+}
+
+.faq__heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.faq__trigger {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.125rem);
+  width: 100%;
+  padding: clamp(1rem, 1.8vw, 1.375rem) clamp(0.875rem, 1.6vw, 1.25rem);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq__trigger:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 2px;
+  border-radius: 18px;
+}
+
+.faq__num {
+  flex: none;
+  width: 1.125rem;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-paper-ink-soft);
+  transition: color 300ms var(--ease-out);
+}
+
+.faq__item.is-open .faq__num {
+  color: var(--c-teal-deep);
+}
+
+.faq__label {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(0.875rem, 1.05vw, 1rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.4;
+  letter-spacing: -0.014em;
+  color: #0c1219;
+  text-wrap: pretty;
+}
+
+/* ---------- the toggle ----------
+   One glyph, not two. The plus rotates 45 degrees into a cross, so open and
+   close are the same mark moving rather than an icon swap — an icon swap
+   cannot be tweened and always reads as a flicker. */
+.faq__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background-color: #0c1219;
+  color: #ffffff;
+  transition:
+    background-color 340ms var(--ease-out),
+    border-color 340ms var(--ease-out),
+    color 340ms var(--ease-out),
+    transform 340ms var(--ease-out);
+}
+
+.faq__icon svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.faq__item:hover:not(.is-open) .faq__icon {
+  transform: scale(1.06);
+}
+
+.faq__item.is-open .faq__icon {
+  transform: rotate(45deg);
+  border-color: rgba(20, 24, 30, 0.14);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #0c1219;
+}
+
+/* ---------- panel ----------
+   0fr -> 1fr. The inner element carries the overflow clip; without it the
+   text spills out of the collapsed track instead of being cut. */
+.faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 380ms var(--ease-out);
+}
+
+.faq__item.is-open .faq__panel {
+  grid-template-rows: 1fr;
+}
+
+.faq__panel-inner {
+  overflow: hidden;
+}
+
+/* the answer fades and lifts slightly behind the row opening, so the text
+   arrives after the space does rather than being dragged open with it */
+.faq__answer {
+  padding: 0 clamp(0.875rem, 1.6vw, 1.25rem) clamp(1rem, 1.8vw, 1.375rem);
+  padding-left: calc(clamp(0.875rem, 1.6vw, 1.25rem) + 1.125rem + clamp(0.75rem, 1.6vw, 1.125rem));
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+.faq__item.is-open .faq__answer {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 90ms;
+}
+
+.faq__answer p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(0.8125rem, 0.92vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.72;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+.faq__answer p + p {
+  margin-top: 0.75rem;
+}
+
+/* ==========================================================================
+   Foot
+   ========================================================================== */
+/* One glass capsule holding a label and a button, rather than a sentence with
+   an underlined link and a loose circle bolted to it. Same device as the
+   footer newsletter field: the capsule is the container, the action inside it
+   is solid. It sizes to its content and centres, so it reads as a single
+   object instead of a stray line of text under the list. */
+.faq__foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.625rem, 1.4vw, 1rem);
+  width: max-content;
+  max-width: 100%;
+  margin: clamp(2.25rem, 4.5vw, 3.25rem) auto 0;
+  padding: 0.4375rem 0.4375rem 0.4375rem clamp(0.875rem, 1.6vw, 1.25rem);
+  border: 1px solid rgba(20, 24, 30, 0.09);
+  border-radius: var(--r-pill);
+  background-color: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 12px 28px -20px rgba(20, 32, 44, 0.4);
+}
+
+.faq__foot-text {
+  font-size: clamp(0.8125rem, 0.92vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink-soft);
+  white-space: nowrap;
+}
+
+.faq__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0.625rem 1.125rem;
+  border-radius: var(--r-pill);
+  background-color: #0c1219;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.008em;
+  color: #ffffff;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 220ms var(--ease-out),
+    transform 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+.faq__contact-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  transition: transform 220ms var(--ease-out), background-color 220ms var(--ease-out);
+}
+
+.faq__contact-arrow svg {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.faq__contact:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px -14px rgba(12, 18, 25, 0.85);
+}
+
+.faq__contact:hover .faq__contact-arrow {
+  background-color: var(--c-accent);
+  color: #06231d;
+  transform: translate(1px, -1px);
+}
+
+.faq__contact:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   FAQ — mobile
+   ========================================================================== */
+@media (max-width: 560px) {
+  /* the number column costs more than it gives at this width — the answer
+     un-indents to match once it is gone */
+  .faq__num {
+    display: none;
+  }
+
+  .faq__answer {
+    padding-left: clamp(0.875rem, 1.6vw, 1.25rem);
+  }
+
+  .faq__icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* the capsule becomes a stacked card — a nowrap label plus a pill will
+     not fit on one line at this width */
+  .faq__foot {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    padding: clamp(1rem, 4vw, 1.25rem);
+    border-radius: 20px;
+  }
+
+  .faq__foot-text {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .faq__contact {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* ==========================================================================
+   ===== SCOPE / LET'S TALK (ACL PAGE) =====
+   Two panels, light and dark, sitting side by side on a light ground.
+
+   COLOUR: the reference does this in flat black. Ours is the site's deep
+   navy-teal instead — same gradient family as the doctor CTA above it, so
+   the two dark surfaces on this page belong to each other rather than being
+   one navy and one black.
+
+   The tag cascade is the point of the right panel: each tag carries its own
+   --duo-rot and --duo-tx set in the markup, and they overlap vertically. A
+   generated rotation reads as accidental; hand-set values read as arranged.
+   ========================================================================== */
+.duo {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3rem, 6vw, 5.5rem) var(--gutter);
+  font-family: var(--font-sans);
+
+  background-color: #eef0f2;
+  background-image:
+    radial-gradient(50% 44% at 6% 4%, rgba(var(--tint-sand), 0.2) 0%, rgba(var(--tint-sand), 0) 62%),
+    radial-gradient(46% 42% at 96% 92%, rgba(var(--tint-navy), 0.16) 0%, rgba(var(--tint-navy), 0) 64%),
+    linear-gradient(170deg, #f5f6f7 0%, #eef0f2 60%, #e8ebee 100%);
+}
+
+.duo__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  max-width: 76rem;
+  margin-inline: auto;
+}
+
+/* Both panels share a shape and a minimum height, so the pair reads as one
+   object split in two rather than as two cards that happen to be adjacent. */
+.duo__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: clamp(24rem, 42vw, 32rem);
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  border-radius: clamp(20px, 2.2vw, 30px);
+}
+
+/* ---------- light panel ---------- */
+.duo__panel--light {
+  background-color: #ffffff;
+  color: #0c1219;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 26px 56px -36px rgba(20, 32, 44, 0.4);
+}
+
+/* The line-art. Cropped hard by the panel on two sides — a decorative mark
+   that fits entirely inside its container just looks like a small drawing. */
+.duo__art {
+  position: absolute;
+  z-index: 0;
+  top: -12%;
+  right: -14%;
+  width: min(78%, 24rem);
+  height: auto;
+  color: rgba(20, 32, 44, 0.07);
+  pointer-events: none;
+}
+
+/* ---------- dark panel ---------- */
+.duo__panel--dark {
+  color: var(--c-fg);
+  background-color: #0c1a28;
+  background-image:
+    radial-gradient(62% 44% at 88% 6%, rgba(26, 117, 102, 0.26) 0%, rgba(26, 117, 102, 0) 64%),
+    radial-gradient(54% 46% at 4% 96%, rgba(var(--tint-navy), 0.34) 0%, rgba(var(--tint-navy), 0) 62%),
+    linear-gradient(152deg, #10263a 0%, #0c1a28 50%, #081420 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 26px 56px -36px rgba(8, 20, 32, 0.7);
+}
+
+/* ---------- type ---------- */
+.duo__title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.duo__star {
+  color: var(--c-teal-deep);
+}
+
+.duo__title--light {
+  color: var(--c-fg);
+}
+
+/* the gap between heading and body is the composition — the copy is pushed
+   to the floor of the panel rather than following the heading */
+.duo__copy {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+  max-width: 42ch;
+}
+
+.duo__copy p {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.92vw, 0.9375rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.72;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+.duo__copy p + p {
+  margin-top: 0.875rem;
+}
+
+/* ---------- dark panel: the mirrored art ----------
+   Same drawing as the light panel, flipped and moved to the opposite corner,
+   drawn in white instead of ink. Reusing the mark rather than inventing a
+   second one is what makes the two panels read as a pair. */
+.duo__art--dark {
+  top: auto;
+  right: auto;
+  bottom: -16%;
+  left: -16%;
+  width: min(70%, 22rem);
+  color: rgba(255, 255, 255, 0.06);
+  transform: scaleX(-1);
+}
+
+/* ---------- dark panel: copy ---------- */
+.duo__copy--light p {
+  color: var(--c-fg-soft);
+}
+
+/* the specialities line sits a step quieter than the invitation above it */
+.duo__copy--light .duo__copy-quiet {
+  margin-top: clamp(0.875rem, 1.6vw, 1.125rem);
+  font-size: clamp(0.75rem, 0.84vw, 0.8125rem);
+  line-height: 1.65;
+  color: var(--c-fg-mute);
+}
+
+/* solid light pill — the established primary action on our dark surfaces */
+.duo__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  padding: 0.8125rem 1.375rem;
+  border-radius: var(--r-pill);
+  background-color: #f5f5f7;
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.008em;
+  color: #0c1a28;
+  text-decoration: none;
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.85);
+  transition:
+    background-color 240ms var(--ease-out),
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out);
+}
+
+.duo__action svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
+}
+
+.duo__action:hover {
+  background-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 20px 36px -16px rgba(0, 0, 0, 0.9);
+}
+
+.duo__action:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.duo__action:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Scope — stacked
+   ========================================================================== */
+@media (max-width: 860px) {
+  .duo__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .duo__panel {
+    min-height: 0;
+  }
+
+  /* with the panel no longer tall, the copy has nothing to be pushed to the
+     floor of — the auto margin would leave a gap instead of closing one */
+  .duo__copy {
+    margin-top: 0;
+    padding-top: clamp(1.5rem, 4vw, 2rem);
+    max-width: none;
+  }
+}
+
+
+/* ==========================================================================
+   ===== APPOINTMENT FORM =====
+   Underline fields on an open page. No boxes, no filled inputs, no floating
+   labels, no dotted rules — the only line in the whole form is the one under
+   each field, and it is what moves on focus.
+
+   HOW THE FOCUS LINE WORKS. The field wrapper carries a static hairline; a
+   second, accent-coloured line sits on top of it scaled to zero and grows
+   from the left when the control inside is focused. Animating a border-color
+   instead would flash the whole width at once, and a glow or a box-shadow
+   ring would put the box back that this design is avoiding.
+   ========================================================================== */
+.appt {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3.5rem, 7vw, 6.5rem) var(--gutter);
+  font-family: var(--font-sans);
+  color: #0c1219;
+
+  /* COLOUR AT THE EDGES, CLEAN GROUND UNDER THE CONTENT.
+     Three cool blooms — iris, sage and the brand aqua — all centred OUTSIDE
+     the section, so only their falloff reaches in. A white bloom over the
+     middle lifts the area the fields sit on; it is listed first because it
+     has to paint on top of the colour.
+
+     There is deliberately no LINEAR pattern in here. A form already supplies
+     every thin line the screen needs, and rings or stripes crossing the field
+     underlines is what made the earlier version read as noise. The sparkle on
+     ::before is point-based for exactly that reason — dots have no direction
+     to fight with. */
+  background-color: #f3f5f8;
+  background-image:
+    radial-gradient(58% 46% at 52% 46%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0) 74%),
+    radial-gradient(46% 44% at 104% 58%, rgba(127, 209, 193, 0.26) 0%, rgba(127, 209, 193, 0) 60%),
+    radial-gradient(58% 52% at -8% 106%, rgba(var(--tint-iris), 0.34) 0%, rgba(var(--tint-iris), 0) 60%),
+    radial-gradient(52% 48% at 106% -6%, rgba(var(--tint-sage), 0.3) 0%, rgba(var(--tint-sage), 0) 58%),
+    linear-gradient(176deg, #fafbfd 0%, #f3f5f8 56%, #eaeef5 100%);
+}
+
+/* ---------- sparkle ----------
+   TINTED, NOT WHITE. On a light ground white sparkle is invisible: white at
+   95% over #f3f5f8 resolves to #fefeff, about ten levels of difference per
+   channel, which disappears entirely at 2px. Sparkle on a pale page has to be
+   DARKER than the page — these are the cool tints at 0.45-0.7, which land
+   around 80 levels off the ground and actually read.
+
+   Hand-placed, not a repeating tile: a tiled sparkle moirés against text at
+   small sizes and starts to look like dirt on the screen. Sizes and alphas
+   are varied so it scans as scattered rather than printed. */
+.appt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(3px 3px at 8% 14%, rgba(var(--tint-iris), 0.62), transparent 62%),
+    radial-gradient(2px 2px at 15% 31%, rgba(var(--tint-sage), 0.5), transparent 62%),
+    radial-gradient(3.5px 3.5px at 5% 52%, rgba(var(--tint-iris), 0.5), transparent 62%),
+    radial-gradient(2px 2px at 12% 71%, rgba(var(--tint-sage), 0.55), transparent 62%),
+    radial-gradient(3px 3px at 4% 87%, rgba(var(--tint-iris), 0.68), transparent 62%),
+    radial-gradient(2.5px 2.5px at 21% 93%, rgba(var(--tint-iris), 0.45), transparent 62%),
+    radial-gradient(2px 2px at 33% 8%, rgba(var(--tint-sage), 0.5), transparent 62%),
+    radial-gradient(3px 3px at 57% 5%, rgba(var(--tint-sage), 0.45), transparent 62%),
+    radial-gradient(2.5px 2.5px at 76% 10%, rgba(var(--tint-iris), 0.55), transparent 62%),
+    radial-gradient(2px 2px at 88% 25%, rgba(var(--tint-sage), 0.6), transparent 62%),
+    radial-gradient(3.5px 3.5px at 95% 43%, rgba(var(--tint-sage), 0.52), transparent 62%),
+    radial-gradient(2.5px 2.5px at 92% 65%, rgba(var(--tint-iris), 0.62), transparent 62%),
+    radial-gradient(2px 2px at 84% 84%, rgba(var(--tint-sage), 0.48), transparent 62%),
+    radial-gradient(3px 3px at 68% 94%, rgba(var(--tint-iris), 0.5), transparent 62%),
+    radial-gradient(2px 2px at 45% 96%, rgba(var(--tint-sage), 0.55), transparent 62%),
+    radial-gradient(2.5px 2.5px at 27% 21%, rgba(var(--tint-iris), 0.42), transparent 62%);
+  -webkit-mask-image: radial-gradient(58% 50% at 52% 48%, transparent 0%, transparent 52%, #000 88%);
+  mask-image: radial-gradient(58% 50% at 52% 48%, transparent 0%, transparent 52%, #000 88%);
+}
+
+.appt__inner {
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+/* ---------- head ---------- */
+.appt__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding-bottom: clamp(2rem, 4vw, 3.25rem);
+  border-bottom: 1px solid rgba(20, 24, 30, 0.09);
+}
+
+.appt__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-teal-deep);
+}
+
+.appt__eyebrow-rule {
+  width: 1.75rem;
+  height: 1px;
+  flex: none;
+  background-image: linear-gradient(to right, rgba(15, 90, 76, 0), var(--c-teal-deep));
+}
+
+.appt__title {
+  margin: clamp(0.75rem, 1.4vw, 1.125rem) 0 0;
+  font-size: clamp(1.875rem, 4vw, 3.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.06;
+  letter-spacing: -0.034em;
+}
+
+.appt__title-em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-teal-deep);
+}
+
+.appt__intro {
+  margin: 0;
+  max-width: 40ch;
+  font-size: clamp(0.8125rem, 0.92vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.7;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+/* ==========================================================================
+   Body
+   ========================================================================== */
+.appt__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.52fr) minmax(0, 1.48fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+/* ---------- aside ---------- */
+.appt__block + .appt__block {
+  margin-top: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+
+.appt__block-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.016em;
+}
+
+.appt__block-text {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.9vw, 0.875rem);
+  font-style: normal;
+  font-weight: var(--fw-medium);
+  line-height: 1.7;
+  color: var(--c-paper-ink-soft);
+}
+
+.appt__link {
+  color: var(--c-paper-ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(20, 24, 30, 0.18);
+  transition: color 200ms var(--ease-out), border-color 200ms var(--ease-out);
+}
+
+.appt__link:hover {
+  color: var(--c-teal-deep);
+  border-color: var(--c-teal-deep);
+}
+
+/* ==========================================================================
+   Fields
+   ========================================================================== */
+.appt__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+}
+
+/* the wrapper owns the resting hairline; ::after is the accent that grows */
+.appt__field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(20, 24, 30, 0.16);
+}
+
+.appt__field::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background-color: var(--c-teal-deep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 320ms var(--ease-out);
+}
+
+.appt__field:focus-within::after {
+  transform: scaleX(1);
+}
+
+.appt__label {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.004em;
+  color: var(--c-paper-ink-soft);
+  transition: color 220ms var(--ease-out);
+}
+
+.appt__field:focus-within .appt__label {
+  color: var(--c-teal-deep);
+}
+
+.appt__opt {
+  font-weight: var(--fw-regular);
+  color: rgba(20, 24, 30, 0.38);
+}
+
+/* Stripped to nothing: no border, no background, no radius, no shadow. The
+   only thing the control draws is its own text. */
+.appt__input {
+  width: 100%;
+  padding: 0.25rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: clamp(0.9375rem, 1.05vw, 1rem);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.012em;
+  color: #0c1219;
+  appearance: none;
+}
+
+.appt__input::placeholder {
+  color: rgba(20, 24, 30, 0.3);
+  font-weight: var(--fw-regular);
+}
+
+/* the focus treatment lives on the wrapper, so the control itself shows none */
+.appt__input:focus {
+  outline: none;
+}
+
+/* keyboard users still need a visible target if the wrapper trick ever fails */
+.appt__input:focus-visible {
+  outline: none;
+}
+
+.appt__textarea {
+  resize: vertical;
+  min-height: 3.5rem;
+  line-height: 1.6;
+}
+
+/* Chrome paints its own yellow fill on autofill, which would put a box back.
+   A long inset shadow in the page colour is the only way to override it. */
+.appt__input:-webkit-autofill,
+.appt__input:-webkit-autofill:hover,
+.appt__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0c1219;
+  -webkit-box-shadow: 0 0 0 40rem #f3f5f8 inset;
+  box-shadow: 0 0 0 40rem #f3f5f8 inset;
+}
+
+/* ---------- dropdown ----------
+   A listbox, not a native <select>. The native popup cannot be styled — and
+   worse, it inherited the muted :invalid colour from the closed control, so
+   every option in the list rendered at 30% opacity. This owns its own
+   surface, groups the options, and posts through a hidden input.
+
+   The field's shared focus underline is suppressed here: this control has a
+   panel of its own, and having both fire at once read as two states. */
+.appt__field--dd::after {
+  display: none;
+}
+
+.appt__dd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: clamp(0.9375rem, 1.05vw, 1rem);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.012em;
+  text-align: left;
+  color: #0c1219;
+  cursor: pointer;
+}
+
+.appt__dd-btn:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* the placeholder reads muted; a chosen value reads as an answer */
+.appt__dd-text {
+  color: rgba(20, 24, 30, 0.32);
+  transition: color 200ms var(--ease-out);
+}
+
+.appt__field--dd.is-filled .appt__dd-text {
+  color: #0c1219;
+}
+
+.appt__dd-caret {
+  width: 0.625rem;
+  height: 0.375rem;
+  flex: none;
+  color: var(--c-paper-ink-soft);
+  transition: transform 260ms var(--ease-out), color 260ms var(--ease-out);
+}
+
+.appt__field--dd.is-open .appt__dd-caret {
+  transform: rotate(180deg);
+  color: var(--c-teal-deep);
+}
+
+/* ---------- the panel ---------- */
+.appt__dd-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  max-height: 17rem;
+  margin: 0;
+  padding: 0.375rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  border: 1px solid rgba(20, 24, 30, 0.08);
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 24px 48px -24px rgba(20, 32, 44, 0.34);
+  scrollbar-width: thin;
+}
+
+.appt__dd-list[hidden] {
+  display: none;
+}
+
+/* group headings are labels, not choices — the keyboard walk skips them */
+.appt__dd-group {
+  padding: 0.625rem 0.6875rem 0.3125rem;
+  font-size: 0.625rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(20, 24, 30, 0.36);
+}
+
+.appt__dd-opt {
+  padding: 0.5rem 0.6875rem;
+  border-radius: 9px;
+  font-size: 0.875rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.008em;
+  color: #0c1219;
+  cursor: pointer;
+  transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
+}
+
+/* hover and keyboard highlight are the SAME state, so the two never disagree
+   about which row is live */
+.appt__dd-opt:hover,
+.appt__dd-opt.is-active {
+  background-color: rgba(15, 90, 76, 0.09);
+}
+
+.appt__dd-opt[aria-selected="true"] {
+  color: var(--c-teal-deep);
+  font-weight: var(--fw-semibold);
+}
+
+.appt__field--wide {
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+/* ---------- actions ---------- */
+.appt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1.5rem;
+}
+
+.appt__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9375rem 1.625rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  background-color: #0c1219;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.008em;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 14px 30px -18px rgba(12, 18, 25, 0.9);
+  transition:
+    background-color 240ms var(--ease-out),
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out);
+}
+
+.appt__submit svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
+  transition: transform 240ms var(--ease-out);
+}
+
+.appt__submit:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 20px 36px -18px rgba(12, 18, 25, 0.95);
+}
+
+.appt__submit:hover svg {
+  transform: translateX(2px);
+}
+
+.appt__submit:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.appt__submit:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 3px;
+}
+
+.appt__note {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ==========================================================================
+   Appointment — tablet
+   ========================================================================== */
+@media (max-width: 900px) {
+  .appt__head {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .appt__intro {
+    max-width: 48ch;
+  }
+
+  .appt__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* the details read better as a row above the form than as a stacked
+     column pushed to the top of it */
+  .appt__aside {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .appt__block + .appt__block {
+    margin-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Appointment — mobile
+   ========================================================================== */
+@media (max-width: 560px) {
+  .appt__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .appt__submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .appt__note {
+    max-width: none;
+    text-align: center;
+  }
+}
+
+
+/* ==========================================================================
+   ===== GALLERY =====
+   Banner, irregular grid, lightbox.
+   ========================================================================== */
+
+/* ---------- banner ----------
+   Type only. Every other banner on the site runs a photograph behind it, but
+   the gallery below this one is nothing BUT photographs — a picture here
+   competes with them instead of introducing them. */
+.gal-hero {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  /* the site header is absolutely positioned over the top of the page, so the
+     first thing in this banner has to start below it — the breadcrumb was
+     landing behind the logo */
+  padding:
+    calc(var(--header-inset) + clamp(4.5rem, 8vw, 6.5rem))
+    var(--gutter)
+    clamp(2rem, 4vw, 3.25rem);
+  font-family: var(--font-sans);
+  color: #0c1219;
+
+  background-color: #f7f7f5;
+  background-image:
+    radial-gradient(52% 60% at 88% -10%, rgba(var(--tint-sage), 0.22) 0%, rgba(var(--tint-sage), 0) 62%),
+    radial-gradient(44% 54% at 4% 104%, rgba(var(--tint-sand), 0.22) 0%, rgba(var(--tint-sand), 0) 60%);
+}
+
+.gal-hero__inner {
+  max-width: 82rem;
+  margin-inline: auto;
+}
+
+.gal-hero__crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink-soft);
+}
+
+.gal-hero__crumbs a {
+  color: var(--c-paper-ink-soft);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out);
+}
+
+.gal-hero__crumbs a:hover {
+  color: var(--c-teal-deep);
+}
+
+.gal-hero__crumbs [aria-current] span {
+  color: #0c1219;
+}
+
+/* headline left, lead pinned to its baseline on the right */
+.gal-hero__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.25rem, 4vw, 4rem);
+  margin-top: clamp(1.25rem, 2.6vw, 2rem);
+}
+
+.gal-hero__title {
+  margin: 0;
+  font-size: clamp(2rem, 5.4vw, 4.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.gal-hero__em {
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--c-teal-deep);
+}
+
+.gal-hero__lead {
+  margin: 0 0 0.5rem;
+  max-width: 34ch;
+  font-size: clamp(0.8125rem, 0.92vw, 0.875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.7;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+.gal-hero__count {
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding-top: clamp(0.875rem, 1.6vw, 1.25rem);
+  border-top: 1px solid rgba(20, 24, 30, 0.1);
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.02em;
+  color: var(--c-paper-ink-soft);
+}
+
+.gal-hero__count span {
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  color: #0c1219;
+}
+
+/* ==========================================================================
+   Grid
+   ========================================================================== */
+/* SIX columns with dense packing, and each card declares its own span. Six
+   divides by 2, 3 and 4, so a card can take a third, a half or two thirds of
+   the row and the run still closes — which is what lets the layout look
+   unplanned without leaving holes. `dense` is what backfills the gaps a mixed
+   run leaves behind.
+
+   Rows are a fixed track, not auto: a tall card is exactly two of them plus
+   the gap, so the irregularity stays on a rhythm instead of drifting. */
+.gal {
+  /* its own inline padding, not --gutter. The max-width cap only creates a
+     margin once the viewport is past 82rem; below that the grid ran right
+     out to the 40px gutter and read as edge-to-edge. */
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 4.5vw, 4.5rem) clamp(3rem, 6vw, 5rem);
+  background-color: #ffffff;
+}
+
+.gal__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: clamp(13rem, 35vw, 31rem);
+  grid-auto-flow: row;
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.gal__cell--s2 { grid-column: span 2; }
+.gal__cell--s4 { grid-column: span 4; }
+
+/* ---------- card ---------- */
+/* The ring is an OUTER box-shadow, not a border: a border would be part of
+   the box and would shave a pixel off the image inside a fixed grid cell.
+   This sits outside the card and costs no layout. */
+.gal__card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: clamp(10px, 1vw, 16px);
+  overflow: hidden;
+  background-color: #eff1f2;
+  cursor: zoom-in;
+  box-shadow: 0 0 0 1px rgba(20, 32, 44, 0.11);
+  transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out);
+}
+
+/* the inner hairline — a lens edge. It has to be a pseudo-element on top of
+   the photo: an inset shadow on the card itself paints UNDER the <img> and
+   would never be seen. */
+.gal__card::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  pointer-events: none;
+}
+
+.gal__card[data-type="video"] {
+  cursor: pointer;
+}
+
+.gal__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out);
+}
+
+.gal__card:hover {
+  box-shadow:
+    0 0 0 1px rgba(15, 90, 76, 0.32),
+    0 22px 44px -26px rgba(16, 24, 34, 0.5);
+}
+
+.gal__card:hover .gal__img {
+  transform: scale(1.045);
+}
+
+.gal__card:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 3px;
+}
+
+/* the caption scrim only exists on hover — a permanent one on every tile
+   would turn the whole grid grey */
+.gal__veil {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to top, rgba(8, 12, 18, 0.72) 0%, rgba(8, 12, 18, 0.18) 38%, rgba(8, 12, 18, 0) 62%);
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.gal__cap {
+  position: absolute;
+  right: 0.875rem;
+  bottom: 0.875rem;
+  left: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+  text-align: left;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.gal__card:hover .gal__veil,
+.gal__card:focus-visible .gal__veil,
+.gal__card:hover .gal__cap,
+.gal__card:focus-visible .gal__cap {
+  opacity: 1;
+}
+
+.gal__card:hover .gal__cap,
+.gal__card:focus-visible .gal__cap {
+  transform: translateY(0);
+}
+
+/* ---------- play badge ---------- */
+.gal__play {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.75rem, 4vw, 3.5rem);
+  height: clamp(2.75rem, 4vw, 3.5rem);
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background-color: rgba(12, 18, 25, 0.42);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  color: #ffffff;
+  transition: transform 320ms var(--ease-out), background-color 320ms var(--ease-out);
+}
+
+.gal__play svg {
+  width: 0.75rem;
+  height: 0.875rem;
+  margin-left: 0.125rem; /* optical centring: a triangle sits left of centre */
+}
+
+.gal__card:hover .gal__play {
+  transform: translate(-50%, -50%) scale(1.08);
+  background-color: rgba(12, 18, 25, 0.58);
+}
+
+/* ==========================================================================
+   Lightbox
+   ========================================================================== */
+.lbx {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.lbx[hidden] {
+  display: none;
+}
+
+.lbx__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(6, 9, 14, 0.86);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: lbx-fade 260ms var(--ease-out) both;
+}
+
+.lbx__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  width: min(100%, 76rem);
+  max-height: 100%;
+  animation: lbx-rise 320ms var(--ease-out) both;
+}
+
+@keyframes lbx-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lbx-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* min-height 0 lets the stage shrink inside the flex column instead of
+   pushing the caption off the bottom of the screen */
+.lbx__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  width: 100%;
+}
+
+.lbx__stage img,
+.lbx__stage video {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 9rem);
+  width: auto;
+  height: auto;
+  border-radius: clamp(8px, 0.8vw, 14px);
+  background-color: #0a0d12;
+}
+
+.lbx__cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: rgba(235, 235, 245, 0.72);
+  text-align: center;
+}
+
+.lbx__count {
+  font-variant-numeric: tabular-nums;
+  color: rgba(235, 235, 245, 0.4);
+}
+
+/* ---------- controls ---------- */
+.lbx__btn {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.09);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+.lbx__btn svg {
+  width: 1.0625rem;
+  height: 1.0625rem;
+}
+
+.lbx__btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.lbx__btn:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+.lbx__btn--close {
+  top: -0.5rem;
+  right: -0.5rem;
+}
+
+.lbx__btn--prev {
+  top: 50%;
+  left: clamp(-1rem, -1.5vw, -0.5rem);
+  transform: translateY(-50%);
+}
+
+.lbx__btn--next {
+  top: 50%;
+  right: clamp(-1rem, -1.5vw, -0.5rem);
+  transform: translateY(-50%);
+}
+
+.lbx__btn--prev:hover,
+.lbx__btn--next:hover {
+  transform: translateY(-50%) scale(1.06);
+}
+
+/* ==========================================================================
+   Gallery — tablet
+   ========================================================================== */
+/* Four columns. The six-column spans have to be remapped or a `span 4` card
+   would eat the whole row and the irregularity collapses into a single file. */
+@media (max-width: 900px) {
+  .gal__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: clamp(12rem, 34vw, 20rem);
+  }
+
+  /* the three-across row cannot survive four columns — it becomes a full
+     width card followed by pairs, which keeps a big/small rhythm going */
+  .gal__cell--s2 { grid-column: span 2; }
+  .gal__cell--s4 { grid-column: span 4; }
+}
+
+/* ==========================================================================
+   Gallery — mobile
+   ========================================================================== */
+@media (max-width: 620px) {
+  .gal-hero__row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .gal-hero__lead {
+    margin-bottom: 0;
+    max-width: none;
+  }
+
+  /* two columns, and every card takes both — the spans are meaningless at
+     this width and half-width tiles would be thumbnails, not photographs */
+  .gal__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(11rem, 46vw, 15rem);
+  }
+
+  /* the wide card keeps the whole row, the narrow ones pair off — the same
+     rhythm as the desktop pattern, just at two columns instead of six */
+  .gal__cell--s4 { grid-column: span 2; }
+  .gal__cell--s2 { grid-column: span 1; }
+
+  .lbx__btn--close {
+    top: -0.25rem;
+    right: 0;
+  }
+
+  .lbx__btn--prev { left: -0.25rem; }
+  .lbx__btn--next { right: -0.25rem; }
+
+  /* touch has no hover — the caption would never appear, so it is always on */
+  .gal__veil,
+  .gal__cap {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* ==========================================================================
+   ===== BLOG DETAIL =====
+   Banner, 8/4 article grid, sticky sidebar.
+
+   Everything here resolves from the existing tokens — --tint-*, --c-teal-deep,
+   --c-paper-ink*, --gutter, --r-pill, --ease-out, --fw-* — so this page cannot
+   drift from the rest of the site.
+   ========================================================================== */
+.bd-hero {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  /* the site header is absolutely positioned over the page, so the first
+     element has to start below it */
+  padding:
+    calc(var(--header-inset) + clamp(5.25rem, 9vw, 7.5rem))
+    var(--gutter)
+    clamp(3.25rem, 5.5vw, 4.75rem);
+  font-family: var(--font-sans);
+  color: #f3f6f8;
+
+  /* DARK, AND DELIBERATELY LOW-CONTRAST WITHIN ITSELF. One near-black ground
+     with three very wide, very low-alpha washes over it - sage from the top
+     right, navy from the top left, and a last shallow sage lift along the
+     bottom edge so the block does not die into the white article below.
+     Anything stronger than this turns a banner into a light show; the type is
+     the thing that has to be read here.
+
+     It also fixes the header. The nav is white-on-glass on every page, and it
+     was sitting on a near-white banner where it barely resolved. */
+  background-color: #070a0f;
+  background-image:
+    radial-gradient(64% 76% at 84% -20%, rgba(var(--tint-sage), 0.30) 0%, rgba(var(--tint-sage), 0) 64%),
+    radial-gradient(58% 68% at 4% 2%, rgba(var(--tint-navy), 0.26) 0%, rgba(var(--tint-navy), 0) 62%),
+    radial-gradient(92% 56% at 50% 122%, rgba(var(--tint-sage), 0.17) 0%, rgba(var(--tint-sage), 0) 70%),
+    linear-gradient(168deg, #0d1219 0%, #080b11 54%, #05070b 100%);
+}
+
+/* vignette: pulls the corners down so the eye lands on the headline rather
+   than on the brightest patch of gradient */
+.bd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(124% 92% at 50% 38%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* one hairline of light on the bottom edge, faded out at both ends - without
+   it the dark block simply stops against the white article */
+.bd-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    rgba(127, 209, 193, 0) 0%,
+    rgba(127, 209, 193, 0.32) 30%,
+    rgba(127, 209, 193, 0.32) 70%,
+    rgba(127, 209, 193, 0) 100%
+  );
+}
+
+.bd-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+/* ---------- breadcrumb ---------- */
+.bd-hero__crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  color: rgba(235, 240, 245, 0.5);
+}
+
+/* the separators sit back a step from the links they divide */
+.bd-hero__crumbs li[aria-hidden] {
+  color: rgba(235, 240, 245, 0.24);
+}
+
+.bd-hero__crumbs a {
+  color: rgba(235, 240, 245, 0.5);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out);
+}
+
+.bd-hero__crumbs a:hover {
+  color: var(--c-accent);
+}
+
+.bd-hero__crumbs [aria-current] span {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+/* ---------- tag ---------- */
+.bd-hero__tag {
+  display: inline-block;
+  margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0;
+  padding: 0.4375rem 0.875rem;
+  border: 1px solid rgba(127, 209, 193, 0.26);
+  border-radius: var(--r-pill);
+  background-color: rgba(127, 209, 193, 0.08);
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.bd-hero__title {
+  max-width: 20ch;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  font-size: clamp(1.75rem, 4.2vw, 3.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.08;
+  letter-spacing: -0.034em;
+  color: #f7fafb;
+  text-wrap: balance;
+}
+
+/* ---------- meta ---------- */
+.bd-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: clamp(1.25rem, 2.4vw, 1.875rem) 0 0;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: rgba(235, 240, 245, 0.56);
+}
+
+.bd-hero__author {
+  font-weight: var(--fw-semibold);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.bd-hero__dot {
+  width: 0.1875rem;
+  height: 0.1875rem;
+  border-radius: 50%;
+  background-color: rgba(235, 240, 245, 0.3);
+}
+
+/* ==========================================================================
+   Body grid
+   ========================================================================== */
+.bd {
+  padding: clamp(2.75rem, 5.5vw, 5rem) var(--gutter) clamp(3.5rem, 7vw, 6rem);
+  background-color: var(--c-surface);
+  font-family: var(--font-sans);
+  color: #0c1219;
+}
+
+/* 8/4 in the reference sense, expressed as fractions so the gap comes out of
+   the whole rather than out of one column */
+.bd__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  align-items: start;
+  gap: clamp(2rem, 4vw, 4rem);
+  max-width: 82rem;
+  margin-inline: auto;
+}
+
+/* ---------- article ---------- */
+.bd__figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: clamp(14px, 1.4vw, 20px);
+  background-color: #eef1f2;
+  box-shadow:
+    0 0 0 1px rgba(20, 32, 44, 0.08),
+    0 26px 52px -34px rgba(16, 24, 34, 0.45);
+}
+
+.bd__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.bd__title {
+  margin: clamp(2.25rem, 3.8vw, 3.25rem) 0 0;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+  color: var(--c-paper-ink);
+  text-wrap: balance;
+}
+
+/* The same teal mark the services eyebrow uses. There is no eyebrow element
+   in the markup and the article does not need one, but this was the only
+   major heading on the site opening with no accent at all. */
+.bd__title::before {
+  content: "";
+  display: block;
+  width: 2.125rem;
+  height: 3px;
+  margin-bottom: clamp(1rem, 1.8vw, 1.375rem);
+  border-radius: 2px;
+  background-color: var(--c-mark);
+}
+
+/* the excerpt, set larger than the body so it reads as a standfirst */
+.bd__lead {
+  margin: clamp(1rem, 1.8vw, 1.375rem) 0 0;
+  padding-bottom: clamp(1.75rem, 3vw, 2.5rem);
+  border-bottom: 1px solid rgba(20, 24, 30, 0.09);
+  font-size: clamp(1rem, 1.2vw, 1.1875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.62;
+  letter-spacing: -0.008em;
+  color: var(--c-paper-ink-soft);
+  text-wrap: pretty;
+}
+
+/* ---------- prose ----------
+   Rhythm is set once here with the lobotomised-owl selector rather than a
+   margin on every element, so a new block type inherits the spacing instead
+   of needing its own rule. */
+/*  MEASURE. This was 68ch while the title and the standfirst above it ran the
+    full column, so the body wrapped short of them and the block had two
+    different right edges. Everything in the column now shares one measure -
+    the column itself - which is what makes the page read as aligned.
+
+    COLOUR. --c-paper-ink-soft (#6b7078) is a label grey; across several
+    hundred words of running text it reads washed out. #454b55 is the same
+    hue, held back from the headline black but solid enough to actually read. */
+.bd__body {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  max-width: none;
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  font-weight: var(--fw-regular);
+  line-height: 1.82;
+  letter-spacing: -0.003em;
+  color: #454b55;
+}
+
+/* one reset for every block, so no element-level rule below can quietly
+   out-specify the rhythm rule that follows */
+.bd__body > * {
+  margin: 0;
+}
+
+/* the paragraph gap has to be clearly larger than the line gap, or a list and
+   the paragraph after it run together as a single block */
+.bd__body > * + * {
+  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+
+.bd__body p {
+  text-wrap: pretty;
+}
+
+/* space above a subheading, not below it: a heading belongs to the text that
+   follows, so it sits close to that and clear of what came before */
+.bd__h {
+  margin: 0;
+  padding-top: clamp(1.125rem, 2.2vw, 1.875rem);
+  font-size: clamp(1.125rem, 1.45vw, 1.375rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.32;
+  letter-spacing: -0.024em;
+  color: var(--c-paper-ink);
+}
+
+.bd__body > .bd__h + * {
+  margin-top: 0.8125rem;
+}
+
+/* ---------- list ----------
+   Markers are drawn, not list-style: a real bullet cannot be coloured or
+   aligned to the cap-height of the first line. */
+.bd__list {
+  padding: 0;
+  list-style: none;
+}
+
+.bd__list li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.bd__list li + li {
+  margin-top: 0.6875rem;
+}
+
+.bd__list li::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.78em;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background-color: var(--c-teal-deep);
+}
+
+/* ---------- pull quote ---------- */
+.bd__quote {
+  padding: clamp(0.625rem, 1.2vw, 1rem) 0 clamp(0.625rem, 1.2vw, 1rem) clamp(1.125rem, 2.2vw, 1.75rem);
+  border-left: 2px solid var(--c-teal-deep);
+}
+
+.bd__quote p {
+  margin: 0;
+  max-width: 52ch;
+  font-size: clamp(1rem, 1.25vw, 1.1875rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.58;
+  letter-spacing: -0.014em;
+  color: var(--c-paper-ink);
+}
+
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
+/* Sticky lives on an inner wrapper, not on .bd__side. The aside is a grid
+   item stretched to the row, and a sticky element cannot travel inside a box
+   that is already as tall as the content it is meant to scroll past. */
+.bd__sticky {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.875rem, 1.6vw, 1.25rem);
+  position: sticky;
+  top: calc(var(--header-inset) + 5.5rem);
+}
+
+.bd-card {
+  padding: clamp(1.125rem, 1.8vw, 1.5rem);
+  border: 1px solid rgba(20, 32, 44, 0.09);
+  border-radius: clamp(14px, 1.3vw, 18px);
+  background-color: #fbfcfc;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.bd-card__title {
+  margin: 0 0 clamp(0.875rem, 1.4vw, 1.125rem);
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.018em;
+  color: #0c1219;
+}
+
+.bd-card__text {
+  margin: -0.375rem 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.65;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ---------- recent ---------- */
+.bd-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bd-recent__link {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.bd-recent__img {
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: cover;
+  border-radius: 10px;
+  background-color: #eef1f2;
+  box-shadow: inset 0 0 0 1px rgba(20, 32, 44, 0.08);
+  transition: transform 300ms var(--ease-out);
+}
+
+.bd-recent__link:hover .bd-recent__img {
+  transform: scale(1.05);
+}
+
+.bd-recent__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.bd-recent__title {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: #0c1219;
+  transition: color 200ms var(--ease-out);
+}
+
+.bd-recent__link:hover .bd-recent__title {
+  color: var(--c-teal-deep);
+}
+
+.bd-recent__date {
+  font-size: 0.6875rem;
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink-soft);
+}
+
+/* ---------- categories ---------- */
+.bd-cats {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bd-cats li + li {
+  border-top: 1px solid rgba(20, 24, 30, 0.08);
+}
+
+.bd-cats__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink-soft);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out), padding-left 240ms var(--ease-out);
+}
+
+.bd-cats__link:hover {
+  padding-left: 0.3125rem;
+  color: var(--c-teal-deep);
+}
+
+.bd-cats__link.is-active {
+  font-weight: var(--fw-semibold);
+  color: var(--c-teal-deep);
+}
+
+.bd-cats__count {
+  flex: none;
+  min-width: 1.375rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--r-pill);
+  background-color: rgba(20, 32, 44, 0.06);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ---------- newsletter ---------- */
+.bd-card--news {
+  background-image: linear-gradient(160deg, rgba(var(--tint-sage), 0.16) 0%, rgba(var(--tint-sage), 0) 62%);
+}
+
+.bd-news {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* underlined field, matching the appointment form rather than inventing a
+   second input style */
+.bd-news__input {
+  width: 100%;
+  padding: 0.5rem 0.125rem;
+  border: 0;
+  border-bottom: 1px solid rgba(20, 24, 30, 0.18);
+  border-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: #0c1219;
+  transition: border-color 240ms var(--ease-out);
+}
+
+.bd-news__input::placeholder {
+  color: rgba(20, 24, 30, 0.34);
+}
+
+.bd-news__input:focus {
+  outline: none;
+  border-bottom-color: var(--c-teal-deep);
+}
+
+.bd-news__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4375rem;
+  margin-top: 0.375rem;
+  padding: 0.6875rem 1.125rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  background-color: #0c1219;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 240ms var(--ease-out), transform 240ms var(--ease-out);
+}
+
+.bd-news__submit svg {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  flex: none;
+  transition: transform 240ms var(--ease-out);
+}
+
+.bd-news__submit:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+.bd-news__submit:hover svg {
+  transform: translateX(2px);
+}
+
+.bd-news__submit:focus-visible,
+.bd-news__input:focus-visible {
+  outline: 2px solid var(--c-teal-deep);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Blog detail — stacked
+   ========================================================================== */
+@media (max-width: 900px) {
+  .bd__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* sticky is meaningless once the sidebar is under the article — it would
+     pin the widgets to the top of a section they are already at the end of */
+  .bd__sticky {
+    position: static;
+  }
+
+  /* one column now, so the measure comes back - a 900px-wide paragraph is
+     unreadable however well it is spaced */
+  .bd__body,
+  .bd__lead {
+    max-width: 68ch;
+  }
+}
+
+@media (max-width: 560px) {
+  .bd__img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+
+/* ==========================================================================
+   ===== LEGAL / POLICY =====
+   Privacy Policy, Terms & Conditions, Patient Rights — one layout, three
+   documents. A dark banner in the same family as the blog detail page, then
+   a numbered document with a sticky contents rail on the LEFT: this is
+   something you read down, so the list of what is in it belongs where the
+   eye starts rather than out on the far side of the text.
+
+   Everything resolves from the existing tokens, so these pages cannot drift
+   from the rest of the site.
+   ========================================================================== */
+.lg-hero {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  padding:
+    calc(var(--header-inset) + clamp(5.25rem, 9vw, 7.5rem))
+    var(--gutter)
+    clamp(3.25rem, 5.5vw, 4.75rem);
+  font-family: var(--font-sans);
+  color: #f3f6f8;
+
+  /* the blog banner's ground, turned a few degrees: navy leads here and sage
+     answers it, so the two dark banners read as a set without being a repeat */
+  background-color: #070a0f;
+  background-image:
+    radial-gradient(60% 72% at 8% -16%, rgba(var(--tint-navy), 0.30) 0%, rgba(var(--tint-navy), 0) 62%),
+    radial-gradient(56% 66% at 92% 6%, rgba(var(--tint-sage), 0.24) 0%, rgba(var(--tint-sage), 0) 62%),
+    radial-gradient(92% 54% at 50% 122%, rgba(var(--tint-sage), 0.15) 0%, rgba(var(--tint-sage), 0) 70%),
+    linear-gradient(168deg, #0c1119 0%, #080b11 54%, #05070b 100%);
+}
+
+.lg-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(124% 92% at 50% 38%, rgba(0, 0, 0, 0) 44%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.lg-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    rgba(127, 209, 193, 0) 0%,
+    rgba(127, 209, 193, 0.3) 30%,
+    rgba(127, 209, 193, 0.3) 70%,
+    rgba(127, 209, 193, 0) 100%
+  );
+}
+
+.lg-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+.lg-hero__crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  color: rgba(235, 240, 245, 0.5);
+}
+
+.lg-hero__crumbs li[aria-hidden] {
+  color: rgba(235, 240, 245, 0.24);
+}
+
+.lg-hero__crumbs a {
+  color: rgba(235, 240, 245, 0.5);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out);
+}
+
+.lg-hero__crumbs a:hover {
+  color: var(--c-accent);
+}
+
+.lg-hero__crumbs [aria-current] span {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.lg-hero__kicker {
+  margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.lg-hero__title {
+  max-width: 16ch;
+  margin: clamp(0.75rem, 1.6vw, 1.125rem) 0 0;
+  font-size: clamp(1.875rem, 4.4vw, 3.375rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.06;
+  letter-spacing: -0.034em;
+  color: #f7fafb;
+  text-wrap: balance;
+}
+
+.lg-hero__summary {
+  max-width: 46ch;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  font-size: clamp(0.9375rem, 1.15vw, 1.0625rem);
+  font-weight: var(--fw-medium);
+  line-height: 1.66;
+  color: rgba(235, 240, 245, 0.66);
+  text-wrap: pretty;
+}
+
+/* set apart from the summary: on a policy page the date is a fact about the
+   document rather than part of the prose */
+.lg-hero__stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: clamp(1.5rem, 2.8vw, 2.25rem) 0 0;
+  padding: 0.4375rem 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: var(--r-pill);
+  font-size: 0.75rem;
+  font-weight: var(--fw-medium);
+  color: rgba(235, 240, 245, 0.56);
+}
+
+.lg-hero__stamp time {
+  font-weight: var(--fw-semibold);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================================================
+   Document grid
+   ========================================================================== */
+.lg {
+  padding: clamp(2.75rem, 5.5vw, 5rem) var(--gutter) clamp(3.5rem, 7vw, 6rem);
+  background-color: var(--c-surface);
+  font-family: var(--font-sans);
+  color: var(--c-paper-ink);
+}
+
+.lg__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 9fr);
+  align-items: start;
+  gap: clamp(2rem, 4.5vw, 4.5rem);
+  max-width: 78rem;
+  margin-inline: auto;
+}
+
+/* sticky on the inner wrapper, not the aside: the aside is a grid item
+   stretched to the row, and a sticky element cannot travel inside a box that
+   is already as tall as the content it is meant to scroll past */
+.lg__sticky {
+  position: sticky;
+  top: calc(var(--header-inset) + 5.5rem);
+}
+
+.lg-toc__title {
+  margin: 0 0 0.875rem;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-paper-ink-soft);
+}
+
+.lg-toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid rgba(20, 24, 30, 0.1);
+}
+
+/*  The active marker is drawn on the link, over the rail's own hairline, so
+    the two can never be a pixel apart the way a separate indicator element
+    drifts when the list scrolls. */
+.lg-toc__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 0.4375rem 0 0.4375rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.45;
+  color: var(--c-paper-ink-soft);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out);
+}
+
+.lg-toc__link::before {
+  content: "";
+  position: absolute;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  left: -1px;
+  width: 2px;
+  border-radius: 2px;
+  background-color: var(--c-mark);
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+
+.lg-toc__num {
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(20, 24, 30, 0.32);
+  transition: color 200ms var(--ease-out);
+}
+
+.lg-toc__link:hover,
+.lg-toc__link.is-active {
+  color: var(--c-paper-ink);
+}
+
+.lg-toc__link.is-active {
+  font-weight: var(--fw-semibold);
+}
+
+.lg-toc__link.is-active::before {
+  opacity: 1;
+}
+
+.lg-toc__link.is-active .lg-toc__num {
+  color: var(--c-teal-deep);
+}
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+/*  scroll-margin, not a spacer: jumping to #s-3 must not park the heading
+    underneath the fixed header, and the header is ~64px plus its inset */
+.lg-sec {
+  scroll-margin-top: calc(var(--header-inset) + 5.5rem);
+}
+
+.lg-sec + .lg-sec {
+  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+  padding-top: clamp(2.25rem, 4vw, 3.25rem);
+  border-top: 1px solid rgba(20, 24, 30, 0.08);
+}
+
+.lg-sec__num {
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--c-teal-deep);
+}
+
+.lg-sec__title {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.24;
+  letter-spacing: -0.024em;
+  color: var(--c-paper-ink);
+  text-wrap: balance;
+}
+
+.lg-sec__body {
+  margin-top: clamp(0.875rem, 1.6vw, 1.25rem);
+  max-width: 62ch;
+  font-size: clamp(0.9375rem, 1.02vw, 1rem);
+  font-weight: var(--fw-regular);
+  line-height: 1.8;
+  color: #454b55;
+}
+
+/* one reset for every block, so no element rule below can out-specify the
+   rhythm rule that follows it */
+.lg-sec__body > * {
+  margin: 0;
+}
+
+.lg-sec__body > * + * {
+  margin-top: clamp(1rem, 1.8vw, 1.375rem);
+}
+
+.lg-sec__body p {
+  text-wrap: pretty;
+}
+
+/* ---------- list ----------
+   Markers are drawn, not list-style: a real bullet cannot be coloured or
+   aligned to the cap-height of the first line. */
+.lg-list {
+  padding: 0;
+  list-style: none;
+}
+
+.lg-list li {
+  position: relative;
+  padding-left: 1.375rem;
+}
+
+.lg-list li + li {
+  margin-top: 0.5625rem;
+}
+
+.lg-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.1875rem;
+  top: 0.76em;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background-color: var(--c-teal-deep);
+}
+
+/* ---------- note ----------
+   The one raised voice per section — the sentence that matters more than the
+   ones around it. A tinted panel rather than bold text, because bold inside
+   a paragraph is read as emphasis and skipped, where a block is read. */
+.lg-note {
+  padding: clamp(0.875rem, 1.6vw, 1.125rem) clamp(1rem, 1.8vw, 1.25rem);
+  border-left: 2px solid var(--c-teal-deep);
+  border-radius: 0 8px 8px 0;
+  background-color: rgba(15, 90, 76, 0.045);
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink);
+}
+
+/* ==========================================================================
+   Close + the other documents
+   ========================================================================== */
+.lg-end {
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 2.8vw, 2.25rem);
+  border-radius: clamp(14px, 1.4vw, 18px);
+  background-color: #f6f8f8;
+  background-image:
+    radial-gradient(72% 120% at 100% 0%, rgba(var(--tint-sage), 0.13) 0%, rgba(var(--tint-sage), 0) 64%);
+  box-shadow: inset 0 0 0 1px rgba(20, 32, 44, 0.07);
+}
+
+.lg-end__title {
+  margin: 0;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.02em;
+  color: var(--c-paper-ink);
+}
+
+.lg-end__text {
+  max-width: 46ch;
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: var(--fw-regular);
+  line-height: 1.7;
+  color: #454b55;
+}
+
+.lg-end__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: clamp(1.125rem, 2vw, 1.5rem);
+}
+
+.lg-end__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6875rem 1.125rem;
+  border-radius: var(--r-pill);
+  background-color: var(--c-paper-ink);
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 240ms var(--ease-out);
+}
+
+.lg-end__cta svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
+  color: var(--c-accent);
+}
+
+.lg-end__cta:hover {
+  background-color: #000000;
+}
+
+.lg-end__link {
+  font-size: 0.875rem;
+  font-weight: var(--fw-semibold);
+  color: var(--c-teal-deep);
+  text-decoration: none;
+  text-underline-offset: 0.28em;
+  transition: text-decoration-color 200ms var(--ease-out);
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 90, 76, 0.28);
+  text-decoration-thickness: 1px;
+}
+
+.lg-end__link:hover {
+  text-decoration-color: var(--c-teal-deep);
+}
+
+.lg-more {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1rem);
+  margin-top: clamp(0.75rem, 1.4vw, 1rem);
+}
+
+.lg-more__card {
+  display: grid;
+  gap: 0.1875rem;
+  padding: clamp(1rem, 1.8vw, 1.25rem);
+  border: 1px solid rgba(20, 32, 44, 0.09);
+  border-radius: clamp(12px, 1.2vw, 16px);
+  text-decoration: none;
+  transition:
+    border-color 240ms var(--ease-out),
+    background-color 240ms var(--ease-out);
+}
+
+.lg-more__card:hover {
+  border-color: rgba(15, 90, 76, 0.28);
+  background-color: rgba(15, 90, 76, 0.035);
+}
+
+.lg-more__label {
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.016em;
+  color: var(--c-paper-ink);
+}
+
+.lg-more__kicker {
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: var(--c-paper-ink-soft);
+}
+
+.lg-more__arrow {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.5rem;
+  color: var(--c-teal-deep);
+  transition: transform 240ms var(--ease-out);
+}
+
+.lg-more__card:hover .lg-more__arrow {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   Legal — stacked
+   ========================================================================== */
+@media (max-width: 900px) {
+  .lg__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /*  The rail goes above the document rather than below it: a table of
+      contents that arrives after the contents is a list of what you have
+      already read. It stops being sticky at the same time — pinning it would
+      cost a third of a phone screen for the whole page. */
+  .lg__side {
+    order: -1;
+  }
+
+  .lg__sticky {
+    position: static;
+    padding-bottom: clamp(1.5rem, 3vw, 2rem);
+    border-bottom: 1px solid rgba(20, 24, 30, 0.08);
+  }
+
+  .lg-sec__body {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .lg-more {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* ==========================================================================
+   ===== TREATMENT — PICTURE STRIP =====
+   Three photographs between Principles and Values.
+
+   Deliberately plain. It sits between two of the busiest sections on the
+   page — Principles has a tinted mesh ground and Values a clay spotlight —
+   so this one is white, and the pictures are the only thing in it. A fourth
+   texture here would make the middle of the page unreadable.
+
+   FIXED THREE-UP, not auto-fit. The row is exactly three columns because the
+   content is exactly three images; `repeat(auto-fit, minmax(...))` would
+   silently reflow to two-and-one at some in-between width, which is the one
+   arrangement that looks like a mistake rather than a layout.
+   ========================================================================== */
+.tx-gal {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.5rem, 6vw, 6rem) var(--gutter);
+  background-color: var(--c-surface);
+  color: var(--c-paper-ink);
+  font-family: var(--font-sans);
+  border-top: 1px solid rgba(20, 24, 30, 0.06);
+}
+
+.tx-gal__inner {
+  max-width: 88rem; /* same measure as .principles__inner, so the edges line up */
+  margin-inline: auto;
+}
+
+/* ---------- header ---------- */
+.tx-gal__head {
+  margin-bottom: clamp(1.5rem, 2.6vw, 2.25rem);
+}
+
+.tx-gal__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  color: var(--c-paper-ink-soft);
+}
+
+.tx-gal__mark {
+  width: 0.4375rem;
+  height: 0.4375rem;
+  flex: none;
+  border-radius: 2px;
+  background-color: var(--c-mark);
+}
+
+.tx-gal__title {
+  max-width: 26ch;
+  margin: clamp(0.5rem, 1vw, 0.75rem) 0 0;
+  font-size: clamp(1.375rem, 2.4vw, 2.125rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.16;
+  letter-spacing: -0.026em;
+  text-wrap: balance;
+}
+
+/* ---------- the row ---------- */
+.tx-gal__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tx-gal__fig {
+  margin: 0;
+}
+
+/*  ONE FIXED RATIO, and object-fit doing the rest. The hospital will upload
+    whatever its camera produced — portrait, landscape, a phone screenshot —
+    and three images of three different heights is not a row. The box decides
+    the shape; the photograph fills it and is cropped from the centre.
+
+    4/3 rather than 16/9: at a third of an 88rem measure a widescreen crop
+    comes out as a 453x255 letterbox, which is a banner, not a photograph. */
+.tx-gal__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  border-radius: clamp(12px, 1.2vw, 16px);
+  background-color: #eef1f2; /* what shows while the file is still arriving */
+  box-shadow: 0 0 0 1px rgba(20, 32, 44, 0.07);
+  transition:
+    transform 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out);
+}
+
+.tx-gal__fig:hover .tx-gal__img {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(20, 32, 44, 0.1),
+    0 22px 40px -28px rgba(16, 24, 34, 0.55);
+}
+
+.tx-gal__cap {
+  margin-top: 0.6875rem;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  line-height: 1.5;
+  color: var(--c-paper-ink-soft);
+}
+
+/* ==========================================================================
+   Picture strip — narrow
+   ========================================================================== */
+/*  Two-up would leave one image orphaned on a second row, which is exactly
+    the arrangement the fixed three-up above exists to avoid. Below the width
+    where three still read, they stack — one column, full width, and the
+    ratio opens up because a stacked image has the room for it.  */
+@media (max-width: 720px) {
+  .tx-gal__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(0.875rem, 3vw, 1.25rem);
+  }
+
+  .tx-gal__img {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* ==========================================================================
+   Floating Contact Button — Durva Helpline
+   ========================================================================== */
+
+.floating-contact {
+  position: fixed;
+  bottom: clamp(16px, 2.5vw, 24px);
+  right: clamp(16px, 2.5vw, 24px);
+  z-index: 990;
+  pointer-events: auto;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide when mobile menu is full-screen */
+.site-header.is-open ~ .floating-contact {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.floating-contact__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 18px 6px 6px;
+  background-color: var(--c-teal-deep, #0f5a4c);
+  color: #ffffff;
+  border-radius: var(--r-pill, 999px);
+  text-decoration: none;
+  box-shadow:
+    0 10px 24px -4px rgba(15, 90, 76, 0.42),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  transition:
+    transform 220ms var(--ease-out, ease),
+    background-color 200ms ease,
+    box-shadow 220ms var(--ease-out, ease);
+  user-select: none;
+}
+
+.floating-contact__btn:hover {
+  background-color: #0b453a;
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 28px -4px rgba(15, 90, 76, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+.floating-contact__btn:active {
+  transform: translateY(0);
+}
+
+.floating-contact__btn:focus-visible {
+  outline: 2px solid var(--c-accent, #7fd1c1);
+  outline-offset: 3px;
+}
+
+/* Circular icon holder with minimal padding */
+.floating-contact__icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+/* Big, bold, clean headphone icon */
+.floating-contact__icon {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+  stroke-width: 2.2;
+}
+
+.floating-contact__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.floating-contact__label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: var(--fw-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.15;
+}
+
+.floating-contact__number {
+  display: block;
+  font-size: 0.925rem;
+  font-weight: var(--fw-bold, 700);
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  font-family: "Plus Jakarta Sans", var(--font-sans);
+}
+
+@media (max-width: 480px) {
+  .floating-contact {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    right: 14px;
+  }
+
+  .floating-contact__btn {
+    padding: 5px 14px 5px 5px;
+    gap: 10px;
+  }
+
+  .floating-contact__icon-box {
+    width: 38px;
+    height: 38px;
+  }
+
+  .floating-contact__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .floating-contact__number {
+    font-size: 0.85rem;
+  }
+}
+
+

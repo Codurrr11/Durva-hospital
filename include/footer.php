@@ -44,13 +44,14 @@
         <div class="footer-col" data-footer-col>
           <h3 class="footer-col__title">Quick Links</h3>
           <ul class="footer-dash-list">
-            <li><a class="footer-dash-link" href="#acl-avulsion"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Avulsion</span></a></li>
-            <li><a class="footer-dash-link" href="#acl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Reconstruction</span></a></li>
-            <li><a class="footer-dash-link" href="#pcl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>PCL Reconstruction</span></a></li>
-            <li><a class="footer-dash-link" href="#frozen-shoulder"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Frozen Shoulder</span></a></li>
-            <li><a class="footer-dash-link" href="#synovitis"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Synovitis</span></a></li>
-            <li><a class="footer-dash-link" href="#about"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>About Us</span></a></li>
-            <li><a class="footer-dash-link" href="#contact"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Contact</span></a></li>
+            <li><a class="footer-dash-link" href="treatment.php?slug=acl-avulsion"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Avulsion</span></a></li>
+            <li><a class="footer-dash-link" href="treatment.php?slug=acl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>ACL Reconstruction</span></a></li>
+            <li><a class="footer-dash-link" href="treatment.php?slug=pcl-reconstruction"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>PCL Reconstruction</span></a></li>
+            <li><a class="footer-dash-link" href="treatment.php?slug=frozen-shoulder"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Frozen Shoulder</span></a></li>
+            <li><a class="footer-dash-link" href="treatment.php?slug=synovitis"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Synovitis</span></a></li>
+            <li><a class="footer-dash-link" href="about.php"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>About Us</span></a></li>
+            <li><a class="footer-dash-link" href="gallery.php"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Gallery</span></a></li>
+            <li><a class="footer-dash-link" href="book-appointment.php"><span class="footer-dash-mark" aria-hidden="true">&minus;</span><span>Contact</span></a></li>
           </ul>
         </div>
 
@@ -155,11 +156,11 @@
         <div class="footer-bottom__inner">
           <p class="footer-bottom__copy">&copy; 2026 Durva Hospital. All Rights Reserved.</p>
           <ul class="footer-bottom__links">
-            <li><a class="footer-bottom__link" href="#privacy">Privacy Policy</a></li>
+            <li><a class="footer-bottom__link" href="legal.php?doc=privacy">Privacy Policy</a></li>
             <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-            <li><a class="footer-bottom__link" href="#terms">Terms &amp; Conditions</a></li>
+            <li><a class="footer-bottom__link" href="legal.php?doc=terms">Terms &amp; Conditions</a></li>
             <li><span class="footer-bottom__sep" aria-hidden="true">&bull;</span></li>
-            <li><a class="footer-bottom__link" href="#patient-rights">Patient Rights</a></li>
+            <li><a class="footer-bottom__link" href="legal.php?doc=patient-rights">Patient Rights</a></li>
           </ul>
         </div>
       </div>
@@ -172,6 +173,22 @@
     </div>
 
   </footer>
+
+  <!-- ================= Floating Contact Button ================= -->
+  <aside class="floating-contact" id="floating-contact" aria-label="Direct Contact Helpline">
+    <a class="floating-contact__btn" href="tel:+917014584948" aria-label="Call Durva Hospital Helpline: +91 70145 84948">
+      <span class="floating-contact__icon-box" aria-hidden="true">
+        <svg class="floating-contact__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+        </svg>
+      </span>
+      <span class="floating-contact__content">
+        <span class="floating-contact__label">Contact Us</span>
+        <span class="floating-contact__number">+91 70145 84948</span>
+      </span>
+    </a>
+  </aside>
 
   <!-- Scripts & CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

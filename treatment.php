@@ -1,11 +1,199 @@
 <?php
-// acl-reconstruction.php — ACL Reconstruction & Knee Arthroscopy at Durva Hospital
+/*
+  treatment.php — one template for every procedure and condition page.
+
+  URL:  treatment.php?slug=acl-reconstruction
+
+  $TREATMENTS below is the stand-in for the database. When the DB lands,
+  replace the array lookup with the query and nothing else on this page has to
+  change — everything reads from $t and $g.
+
+  The slug is only ever used as an ARRAY KEY and is checked against this
+  whitelist before use, so it can never reach a query or the filesystem. Keep
+  it that way: if this becomes a DB lookup, bind the parameter.
+
+  NOTE: only the hero (title, lead, breadcrumb) is slug-driven so far. Every
+  section below it is still ACL Reconstruction copy — those come across with
+  the DB work.
+*/
+
+$TREATMENT_GROUPS = [
+    'knee'     => ['label' => 'Knee Arthroscopy',     'anchor' => '#knee-arthroscopy'],
+    'shoulder' => ['label' => 'Shoulder Arthroscopy', 'anchor' => '#shoulder-arthroscopy'],
+    'joint'    => ['label' => 'Joint Replacement',    'anchor' => '#joint-replacement'],
+    'preserve' => ['label' => 'Joint Preservation',   'anchor' => '#joint-preservation'],
+];
+
+$TREATMENTS = [
+    'acl-reconstruction' => [
+        'group'  => 'knee',
+        'lead'   => 'ACL',
+        'accent' => 'Reconstruction',
+        'desc'   => 'Minimally invasive arthroscopic ligament repair using precision anatomical graft reconstruction for rapid stability and active return to sports.',
+    ],
+    'acl-avulsion' => [
+        'group'  => 'knee',
+        'lead'   => 'ACL',
+        'accent' => 'Avulsion',
+        'desc'   => 'Fixation of the bony fragment the ligament has pulled away with, restoring the ACL at its own attachment rather than replacing it.',
+    ],
+    'mcl-tear' => [
+        'group'  => 'knee',
+        'lead'   => 'MCL',
+        'accent' => 'Tear',
+        'desc'   => 'Assessment and graded treatment of medial collateral ligament injury, from bracing and rehabilitation through to repair or reconstruction.',
+    ],
+    'pcl-reconstruction' => [
+        'group'  => 'knee',
+        'lead'   => 'PCL',
+        'accent' => 'Reconstruction',
+        'desc'   => 'Arthroscopic reconstruction of the posterior cruciate ligament to restore back-to-front stability and confident weight-bearing.',
+    ],
+    'meniscus-tears' => [
+        'group'  => 'knee',
+        'lead'   => 'Meniscus',
+        'accent' => 'Tears',
+        'desc'   => 'Repair wherever the tear pattern and blood supply allow it, because preserving meniscus tissue protects the joint for the long term.',
+    ],
+    'synovitis' => [
+        'group'  => 'knee',
+        'lead'   => 'Knee',
+        'accent' => 'Synovitis',
+        'desc'   => 'Investigation and treatment of a persistently inflamed joint lining — identifying the cause first, then settling the knee down.',
+    ],
+    'patella-dislocation' => [
+        'group'  => 'knee',
+        'lead'   => 'Patella',
+        'accent' => 'Dislocation',
+        'desc'   => 'Treatment for a kneecap that has come out of its groove, from first-time dislocation through to recurrent instability.',
+    ],
+    'frozen-shoulder' => [
+        'group'  => 'shoulder',
+        'lead'   => 'Frozen',
+        'accent' => 'Shoulder',
+        'desc'   => 'A staged approach to adhesive capsulitis — restoring range through guided rehabilitation, with intervention held in reserve.',
+    ],
+    'rotator-cuff' => [
+        'group'  => 'shoulder',
+        'lead'   => 'Rotator',
+        'accent' => 'Cuff',
+        'desc'   => 'Arthroscopic repair of the tendons that lift and rotate the arm, returning overhead strength without open surgery.',
+    ],
+    'ac-joint-dislocation' => [
+        'group'  => 'shoulder',
+        'lead'   => 'AC Joint',
+        'accent' => 'Dislocation',
+        'desc'   => 'Management of acromioclavicular separation, matched to the grade of injury and to the demands you place on the shoulder.',
+    ],
+    'knee-hto' => [
+        'group'  => 'preserve',
+        'lead'   => 'Knee',
+        'accent' => 'HTO',
+        'desc'   => 'High tibial osteotomy — realigning the leg to shift load off the worn side of the knee, so the joint you have keeps working rather than being replaced.',
+    ],
+    'mosaicoplasty' => [
+        'group'  => 'preserve',
+        /* lead and accent are joined with a space, so the word cannot be
+           split across them — "Mosaic plasty" is not a thing */
+        'lead'   => 'Cartilage',
+        'accent' => 'Mosaicoplasty',
+        'desc'   => 'Resurfacing a cartilage defect with osteochondral plugs taken from the patient\'s own joint, harvested where the surface carries no load.',
+    ],
+    'hip-preservation-core-decompression' => [
+        'group'  => 'preserve',
+        'lead'   => 'Hip Preservation —',
+        'accent' => 'Core Decompression',
+        'desc'   => 'Drilling to relieve pressure in the femoral head in early avascular necrosis, before the bone collapses and replacement becomes the only option.',
+    ],
+    'joint-replacement' => [
+        'group'  => 'joint',
+        'lead'   => 'Joint',
+        'accent' => 'Replacement',
+        'desc'   => 'Knee and hip replacement with modern implants and accelerated recovery protocols, planned around getting you moving again.',
+    ],
+    'arthritis' => [
+        'group'  => 'joint',
+        'lead'   => 'Arthritis',
+        'accent' => 'Care',
+        'desc'   => 'Staged treatment for a worn joint — injections, load management and physiotherapy first, with replacement held for when it is genuinely the right answer.',
+    ],
+    'knee-replacement' => [
+        'group'  => 'joint',
+        'lead'   => 'Knee',
+        'accent' => 'Replacement',
+        'desc'   => 'Total and partial knee replacement, sized and aligned to your own anatomy, with a rehabilitation plan written before the date is set.',
+    ],
+    'hip-replacement' => [
+        'group'  => 'joint',
+        'lead'   => 'Hip',
+        'accent' => 'Replacement',
+        'desc'   => 'Hip replacement through tissue-sparing approaches, aimed at early weight-bearing and a return to walking without a limp.',
+    ],
+    'shoulder-replacement' => [
+        'group'  => 'joint',
+        'lead'   => 'Shoulder',
+        'accent' => 'Replacement',
+        'desc'   => 'Anatomic and reverse shoulder replacement for arthritis and irreparable cuff damage, chosen on what the joint can still do.',
+    ],
+];
+
+/*  THE PICTURE STRIP.
+
+    Three images per treatment, shown between Principles and Values. This is
+    the slot the hospital will fill with its own photographs of each
+    procedure, so it is a per-treatment field, not a fixed block of markup:
+    add 'gallery' => [ ['id' => <pexels id>, 'alt' => '...'], x3 ] to any
+    entry above and that page uses its own set.
+
+    Until a treatment has its own, it falls back to this default. Exactly
+    THREE are rendered — the row is a fixed three-up and a fourth image would
+    either wrap onto a line of its own or squeeze the three that matter, so
+    the template takes the first three and ignores the rest rather than
+    silently breaking the layout.
+
+    When these become uploads, 'id' becomes a filename and tx_photo() below is
+    the single place that has to change. */
+$TREATMENT_GALLERY_DEFAULT = [
+    ['id' => 6129444, 'alt' => 'A surgeon talking a patient through their imaging'],
+    ['id' => 5793792, 'alt' => 'Post-operative movement work with a therapist'],
+    ['id' => 6111589, 'alt' => 'Guided rehabilitation in the recovery gym'],
+];
+
+if (!function_exists('tx_photo')) {
+    function tx_photo(int $id, int $w): string {
+        return htmlspecialchars(
+            sprintf(
+                'https://images.pexels.com/photos/%d/pexels-photo-%d.jpeg?auto=compress&cs=tinysrgb&w=%d',
+                $id, $id, $w
+            ),
+            ENT_QUOTES
+        );
+    }
+}
+
+/* Whitelist check. Anything unrecognised falls back rather than erroring —
+   a stray link should land on a real page, not a blank one. */
+$slug = strtolower(trim((string) ($_GET['slug'] ?? '')));
+if (!isset($TREATMENTS[$slug])) {
+    $slug = 'acl-reconstruction';
+}
+
+$t = $TREATMENTS[$slug];
+$g = $TREATMENT_GROUPS[$t['group']];
+
+$tx_gallery = array_slice($t['gallery'] ?? $TREATMENT_GALLERY_DEFAULT, 0, 3);
+
+/* header.php reads these */
+$current_slug = $slug;
+$page_title   = $t['lead'] . ' ' . $t['accent'] . ' — Durva Hospital';
+$page_desc    = $t['desc'];
+
 include __DIR__ . '/include/header.php';
 ?>
 
   <main>
-    <!-- ACL Reconstruction Hero / Header Banner -->
-    <section class="about-hero" id="acl-hero">
+    <!-- Hero / Header Banner — driven by the resolved treatment -->
+    <section class="about-hero" id="treatment-hero">
       <div class="about-hero__media" aria-hidden="true">
         <img class="about-hero__bg-img" src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=2000&q=80" alt="Advanced orthopaedic surgical theater and arthroscopy setup" loading="eager" decoding="async">
         <div class="about-hero__veil"></div>
@@ -21,11 +209,11 @@ include __DIR__ . '/include/header.php';
               </li>
               <li class="about-breadcrumbs__sep" aria-hidden="true">/</li>
               <li class="about-breadcrumbs__item">
-                <a class="about-breadcrumbs__link" href="#knee-arthroscopy">Knee Arthroscopy</a>
+                <a class="about-breadcrumbs__link" href="<?= htmlspecialchars($g['anchor'], ENT_QUOTES) ?>"><?= htmlspecialchars($g['label'], ENT_QUOTES) ?></a>
               </li>
               <li class="about-breadcrumbs__sep" aria-hidden="true">/</li>
               <li class="about-breadcrumbs__item" aria-current="page">
-                <span>ACL Reconstruction</span>
+                <span><?= htmlspecialchars($t['lead'] . ' ' . $t['accent'], ENT_QUOTES) ?></span>
               </li>
             </ol>
           </nav>
@@ -34,10 +222,10 @@ include __DIR__ . '/include/header.php';
         <!-- Right Bottom: Title and Paragraph -->
         <div class="about-hero__right">
           <h1 class="about-hero__title">
-            ACL <span class="about-hero__accent">Reconstruction</span>
+            <?= htmlspecialchars($t['lead'], ENT_QUOTES) ?> <span class="about-hero__accent"><?= htmlspecialchars($t['accent'], ENT_QUOTES) ?></span>
           </h1>
           <p class="about-hero__desc">
-            Minimally invasive arthroscopic ligament repair using precision anatomical graft reconstruction for rapid stability and active return to sports.
+            <?= htmlspecialchars($t['desc'], ENT_QUOTES) ?>
           </p>
         </div>
       </div>
@@ -58,7 +246,7 @@ include __DIR__ . '/include/header.php';
         </p>
 
         <div class="svc-intro__actions">
-          <a class="svc-btn svc-btn--solid" href="#appointment">
+          <a class="svc-btn svc-btn--solid" href="book-appointment.php">
             Schedule a Consultation
           </a>
           <a class="svc-btn svc-btn--outline" href="#procedures">
@@ -137,8 +325,54 @@ include __DIR__ . '/include/header.php';
       </div>
     </section>
 
+    <!-- ================= Procedure Gallery (three-up) ================= -->
+    <?php if (count($tx_gallery) === 3): ?>
+    <section class="tx-gal" id="treatment-gallery" aria-labelledby="tx-gal-title">
+      <div class="tx-gal__inner">
+
+        <div class="tx-gal__head" data-tx-gal-head>
+          <span class="tx-gal__eyebrow">
+            <span class="tx-gal__mark" aria-hidden="true"></span>
+            Inside the procedure
+          </span>
+          <h2 class="tx-gal__title" id="tx-gal-title">
+            <?= htmlspecialchars($t['lead'] . ' ' . $t['accent'], ENT_QUOTES) ?>, in practice
+          </h2>
+        </div>
+
+        <ul class="tx-gal__row" data-tx-gal-row>
+          <?php foreach ($tx_gallery as $shot): ?>
+            <li class="tx-gal__cell" data-tx-gal-item>
+              <figure class="tx-gal__fig">
+                <img class="tx-gal__img"
+                     src="<?= tx_photo((int) $shot['id'], 1000) ?>"
+                     alt="<?= htmlspecialchars($shot['alt'], ENT_QUOTES) ?>"
+                     width="1000" height="750" loading="lazy" decoding="async">
+                <?php if (!empty($shot['caption'])): ?>
+                  <figcaption class="tx-gal__cap"><?= htmlspecialchars($shot['caption'], ENT_QUOTES) ?></figcaption>
+                <?php endif; ?>
+              </figure>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+
+      </div>
+    </section>
+    <?php endif; ?>
+
     <!-- ================= Our Values Section (2x2 Grid with Accent Hero Card) ================= -->
     <section class="values-sec" id="values" aria-labelledby="values-title">
+
+      <?php /* The ground is a real <img>, not a CSS background, so the
+               browser can pick a size, defer it and decode it off the main
+               thread the way it does for any other picture. alt is empty
+               because it carries no information — it is wallpaper, and a
+               screen reader announcing it would be noise. */ ?>
+      <img class="values-sec__bg" aria-hidden="true" alt=""
+           src="<?= tx_photo(8459996, 1600) ?>"
+           width="1600" height="1067" loading="lazy" decoding="async">
+      <span class="values-sec__scrim" aria-hidden="true"></span>
+
       <div class="values-sec__inner">
 
         <!-- Left Column: Key Value Tag, Stacked Headline, Narrative -->
@@ -629,14 +863,195 @@ include __DIR__ . '/include/header.php';
 
         <figure class="dcta__figure" data-dcta-figure>
           <span class="dcta__ring" aria-hidden="true"></span>
-          <img class="dcta__img" src="assets/images/doctor.jpg"
-               alt="Dr. Hitesh Mangal, orthopaedic surgeon"
-               width="683" height="1024" loading="lazy" decoding="async">
+          <span class="dcta__arch">
+            <img class="dcta__img" src="assets/images/doctor.jpg"
+                 alt="Dr. Hitesh Mangal, orthopaedic surgeon"
+                 width="683" height="1024" loading="lazy" decoding="async">
+          </span>
           <figcaption class="dcta__caption">
             <span class="dcta__caption-name">Dr. Hitesh Mangal</span>
             <span class="dcta__caption-role">Knee &amp; Shoulder Specialist</span>
           </figcaption>
         </figure>
+
+      </div>
+    </section>
+
+    <!-- ================= Scope / Let's talk ================= -->
+    <section class="duo" id="scope" aria-labelledby="duo-title">
+      <div class="duo__grid">
+
+        <!-- ---------- left: the light panel ---------- -->
+        <article class="duo__panel duo__panel--light" data-duo-item>
+          <svg class="duo__art" viewBox="0 0 320 320" fill="none" aria-hidden="true">
+            <g stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 250 160 110l140 140"/>
+              <path d="M20 300 160 160l140 140"/>
+              <path d="M20 200 160 60l140 140"/>
+              <path d="M20 150 160 10l140 140"/>
+              <path d="M20 100 160-40l140 140"/>
+            </g>
+          </svg>
+
+          <h2 class="duo__title" id="duo-title">
+            The care we<br>provide<span class="duo__star" aria-hidden="true">*</span>
+          </h2>
+
+          <div class="duo__copy">
+            <p>
+              A torn ACL is rarely just a torn ACL. Meniscus tears, cartilage
+              damage and collateral ligament injury often travel with it, and
+              each one changes what the operation actually has to do.
+            </p>
+            <p>
+              So every knee is assessed on its own — examination, imaging, and
+              what you need the joint to do afterwards — before a graft choice
+              or a date is set. The rehabilitation plan is written at the same
+              time, not handed over once the surgery is done.
+            </p>
+          </div>
+        </article>
+
+        <!-- ---------- right: the dark panel ---------- -->
+        <!-- same composition as the light panel, inverted: cropped line-art,
+             heading at the top, content pushed to the floor -->
+        <article class="duo__panel duo__panel--dark" data-duo-item>
+          <svg class="duo__art duo__art--dark" viewBox="0 0 320 320" fill="none" aria-hidden="true">
+            <g stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 250 160 110l140 140"/>
+              <path d="M20 300 160 160l140 140"/>
+              <path d="M20 200 160 60l140 140"/>
+              <path d="M20 150 160 10l140 140"/>
+              <path d="M20 100 160-40l140 140"/>
+            </g>
+          </svg>
+
+          <h2 class="duo__title duo__title--light">Let&rsquo;s talk!</h2>
+
+          <div class="duo__copy duo__copy--light">
+            <p>
+              Bring the scan, the diagnosis, or just a knee that keeps giving
+              way. A consultation takes an hour and tells you something worth
+              knowing either way — including whether surgery is the right
+              answer at all.
+            </p>
+            <p class="duo__copy-quiet">
+              Knee &amp; shoulder arthroscopy &middot; ACL and PCL reconstruction &middot;
+              meniscus and cartilage repair &middot; joint replacement &middot; sports
+              injury rehabilitation.
+            </p>
+
+            <a class="duo__action" href="tel:+917014584948">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.6 2.7 7 5.4 5.6 6.9c.5 1.4 2.1 3 3.5 3.5l1.5-1.4 2.7 1.4-.3 2.2c-.1.6-.6 1-1.2 1C7.4 13.5 2.5 8.6 2.4 3.2c0-.6.4-1.1 1-1.2l2.2-.3Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Call +91 70145 84948
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <!--
+      CLINICAL CONTENT: the five answers below are written in general terms
+      and defer to consultation throughout. Have the surgeons read them before
+      this goes live — timelines in particular vary by patient.
+    -->
+    <?php
+      $acl_faqs = [
+        [
+          'q' => 'How long does an ACL reconstruction take?',
+          'a' => [
+            'The procedure itself usually takes between one and two hours, and it is done arthroscopically through small incisions rather than as open surgery.',
+            'Most patients are admitted and discharged within the same day or the following morning, depending on anaesthetic recovery and any associated meniscus or cartilage work carried out at the same time.',
+          ],
+        ],
+        [
+          'q' => 'When will I be able to walk again?',
+          'a' => [
+            'Most patients are up and moving with support on the same day, and walking without crutches within two to three weeks.',
+            'Early movement is deliberate, not a shortcut — controlled loading protects the graft and keeps the knee from stiffening. Your own timeline is set at each follow-up rather than in advance.',
+          ],
+        ],
+        [
+          'q' => 'Does every ACL tear need surgery?',
+          'a' => [
+            'No. Some partial tears and some lower-demand lifestyles do well with a structured rehabilitation programme and no operation at all.',
+            'Reconstruction is usually recommended where the knee gives way during daily activity, where there is an associated meniscus or cartilage injury, or where you intend to return to pivoting sport. That decision is made after examination and imaging, not from a scan alone.',
+          ],
+        ],
+        [
+          'q' => 'How long before I can return to sport?',
+          'a' => [
+            'Return to pivoting sport is typically somewhere between nine and twelve months, and it is decided by testing rather than by the calendar.',
+            'Strength symmetry, hop testing and movement quality all have to reach target before clearance. Returning on a date instead of on readiness is the single largest risk factor for a re-tear.',
+          ],
+        ],
+        [
+          'q' => 'What does the rehabilitation programme involve?',
+          'a' => [
+            'Rehabilitation runs in phases: protecting the graft and restoring full extension first, then strength, then landing mechanics and change of direction.',
+            'You are reviewed throughout rather than handed a sheet at discharge, and the programme is adjusted to how the knee is actually responding.',
+          ],
+        ],
+      ];
+    ?>
+
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="faq__inner">
+
+        <p class="faq__badge" data-faq-item>
+          <span class="faq__badge-num"><?= str_pad((string) count($acl_faqs), 3, '0', STR_PAD_LEFT) ?></span>
+          <span class="faq__badge-dot" aria-hidden="true"></span>
+          FAQs
+        </p>
+
+        <h2 class="faq__title" id="faq-title" data-faq-item>
+          Common <em class="faq__title-em">Questions</em>
+        </h2>
+
+        <ul class="faq__list" data-faq>
+          <?php foreach ($acl_faqs as $i => $faq): $n = $i + 1; ?>
+            <li class="faq__item" data-faq-item>
+              <h3 class="faq__heading">
+                <button class="faq__trigger" type="button"
+                        id="faq-btn-<?= $n ?>" aria-controls="faq-panel-<?= $n ?>"
+                        aria-expanded="false" data-faq-trigger>
+                  <span class="faq__num" aria-hidden="true"><?= $n ?></span>
+                  <span class="faq__label"><?= htmlspecialchars($faq['q'], ENT_QUOTES) ?></span>
+                  <span class="faq__icon" aria-hidden="true">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path d="M7 1.75v10.5M1.75 7h10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </h3>
+
+              <div class="faq__panel" id="faq-panel-<?= $n ?>" role="region"
+                   aria-labelledby="faq-btn-<?= $n ?>" data-faq-panel>
+                <div class="faq__panel-inner">
+                  <div class="faq__answer">
+                    <?php foreach ($faq['a'] as $para): ?>
+                      <p><?= htmlspecialchars($para, ENT_QUOTES) ?></p>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+
+        <div class="faq__foot" data-faq-item>
+          <span class="faq__foot-text">Have any other questions?</span>
+          <a class="faq__contact" href="tel:+917014584948">
+            Talk to us
+            <span class="faq__contact-arrow" aria-hidden="true">
+              <svg viewBox="0 0 12 12" fill="none">
+                <path d="M3.25 8.75 8.75 3.25M4.5 3.25h4.25V7.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </div>
 
       </div>
     </section>
